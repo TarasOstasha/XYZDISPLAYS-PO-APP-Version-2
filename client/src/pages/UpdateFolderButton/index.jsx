@@ -35,7 +35,7 @@ function FetchFolderButton() {
         <div style={{ textAlign: 'center' }}>
           <Header />
             <button style={{ padding: '100px' }} onClick={handleFetchFolder} disabled={loading}>
-                {loading ? 'Fetching...' : 'Fetch Build Folder Data'}
+                {loading ? 'Fetching...' : 'Update APP'}
             </button>
             {message && <p>{message}</p>}
           <Footer />

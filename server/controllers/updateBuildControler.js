@@ -6,7 +6,7 @@ module.exports.updateBuildFolder = async (req, res, next) => {
         const ftpConfig = {
             host: 'ftp.tarasostasha.com',
             user: 'tonyjoss@tarasostasha.com',
-            password: 'ostasha19901102',
+            password: process.env.FTPPASSWORD,
             secure: false // Use true if you're using FTPS
         };
 
