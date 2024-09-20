@@ -1,9 +1,13 @@
 node_modules/
 
-.vscode/
+server/.vscode/
 
-.env/
+server/node_modules/
 
-tests/
+server/tests/
 
 server/.env
+
+client/build
+
+client/node_modules
