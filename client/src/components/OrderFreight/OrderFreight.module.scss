@@ -1,0 +1,55 @@
+
+.orderHead {
+    display:flex;
+    align-items: center;
+    justify-content:space-between ;
+}        
+.inHand {
+    background: yellow;
+}    
+.notes {
+    width: 100%;   
+}    
+
+$base-error: coral;
+$base-success: aquamarine;
+
+.errorDiv {
+  color: $base-error;
+}
+.valid {
+  background-color: $base-success;
+}
+.invalid {
+  background-color: $base-error;
+}
+.myTd {
+  border: 1px solid;
+  width: 600px;
+  padding: 10px;
+}       
+// modal popup possible option
+.modalBottom {
+  position: fixed!important;
+  //left: 0!important;
+  right: 0!important;
+  bottom: 25%!important;
+  left: 25%;
+  transform: translateX(-50%);
+  margin: 0!important;
+}
+
+.modalWarning {
+  background-color: #ffcc00;
+  border-color: #ffcc00;
+}
+
+.modalWarning .modalHeader,
+.modalWarning .modalFooter {
+  border-color: #ffcc00;
+}
+
+.modalWarning .modalTitle,
+.modalWarning .modalBody p {
+  color: #856404;
+}

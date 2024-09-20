@@ -1,0 +1,79 @@
+
+.orderHead {
+    display:flex;
+    align-items: center;
+    justify-content:space-between ;
+}        
+.inHand {
+    background: yellow;
+}    
+.notes {
+    width: 100%;   
+}    
+
+$base-error: coral;
+$base-success: aquamarine;
+
+.errorDiv {
+  color: $base-error;
+}
+.valid {
+  background-color: $base-success;
+}
+.invalid {
+  background-color: $base-error;
+}
+.myTd {
+  border: 1px solid #000;
+  //width: 600px;
+  padding: 10px;
+}       
+.groupedTd {
+  display: flex;
+}
+.productNameInput {
+  width: 100%;
+}
+.regSizeInput {
+  width: 100px;
+}
+.quantityInput {
+  width: 50px;
+}
+.regDiv {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid;
+  margin-bottom: 10px;
+  span {
+    color: brown;
+  }
+}
+.divGroup {
+  display: flex;
+  align-items: center;
+  button {
+    margin: 10px 10px 10px 0px;
+  }
+}
+.warning {
+  color: $base-error;
+}
+.orderNotes {
+  // display: none;
+  width: 100%;
+  margin: 15px 0;
+  padding: 5px;
+}
+.orderNotesBold {
+  padding: 5px;
+}
+.topBlockTd {
+  width: 50%;
+}
+#ship {
+  background: yellow;
+}
+.rangeText {
+  font-size: 10px;
+}

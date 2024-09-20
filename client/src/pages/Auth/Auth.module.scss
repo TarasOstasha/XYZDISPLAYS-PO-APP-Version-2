@@ -1,0 +1,52 @@
+$base-error: red;
+$base-success: aquamarine;
+.formWrapper {
+    margin-top: 500px!important;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    h2 {
+        text-align: center;
+    }
+    background: #e7e0e0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.loginInput, .passwordInput {
+    width: 87%;
+}
+.buttonWrapper {
+    text-align: right;
+    padding-bottom: 15px;
+}
+.loginForm {
+    margin: 15px;
+}
+html, body {
+    // height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+}
+.headForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+        width: 50%;
+    }
+}  
+
+.errorDiv {
+    color: $base-error;
+}
+.valid {
+    background-color: $base-success;
+}
+.invalid {
+    background-color: $base-error;
+}
+.logoImg {
+    padding-top: 15px;
+}
