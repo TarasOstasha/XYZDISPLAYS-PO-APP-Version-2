@@ -1,0 +1,21 @@
+.note {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    &:hover {
+        &::after {
+            content: ' Low/High Murkup Amount';
+            font-size: 10px;
+            position: absolute;
+            top: 35px;
+            background: white;
+        }
+    }
+    .flag {
+        font-size: 35px;
+        color: red;
+        padding: 5px;
+    }
+}
