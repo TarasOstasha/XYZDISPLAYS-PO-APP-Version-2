@@ -1,5 +1,6 @@
 import styles from './Header.module.sass';
 import logo from './Logo-Master.jpg';
+import { Link } from 'react-router-dom';
 
 
 function Header() {
@@ -9,9 +10,12 @@ function Header() {
   return (
     <div className={styles.headerWrapper}>
       {/* <img src="https://www.xyzdisplays.com/v/vspfiles/templates/Charmed/images/template/header_bg.jpg" alt="xyzdisplays" /> */}
-      <a onClick={handleClick}>
+      {/* <a onClick={handleClick}>
       <img src={logo} alt="xyzdisplays" />
-      </a>
+      </a> */}
+      <Link to="/">
+        <img src={logo} alt="xyzdisplays" />
+      </Link>
       {/* <h4 className={styles.test}>XYZ Displays Shipping Freight</h4> */}
     </div>
   )

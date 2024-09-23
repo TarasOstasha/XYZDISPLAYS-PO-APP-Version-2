@@ -543,13 +543,11 @@ function OrderFreight() {
         // Process the product details
         const product = Products[0];
         let vendorPartNo = product.Vendor_PartNo ? product.Vendor_PartNo[0] : '';
-    
         // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
         const productCode = product.ProductCode ? product.ProductCode[0] : '';
         if (/^or$/i.test(productCode.substring(0, 2))) {
           vendorPartNo = product.Google_Age_Group ? product.Google_Age_Group[0] : vendorPartNo;
         }
-    
         return {
           Vendor_PartNo: [vendorPartNo],
           ProductCode: [productCode],
@@ -592,7 +590,7 @@ function OrderFreight() {
         const matchingVendor = validVendors.find((vendor) => vendor.ProductCode[0].toLowerCase() === order.ProductCode[0].toLowerCase());
         return matchingVendor ? { ...order, ...matchingVendor } : order;
       });
-      //console.log(updatedOrderListWithVendorCodes);
+
       setRerenderOrderList(updatedOrderListWithVendorCodes);
       applyDiscounts(updatedOrderListWithVendorCodes);
     };
