@@ -888,7 +888,7 @@ const renderShipInfoInput = () => {
                                   name={`vendorCode[${index}]`}
                                   value={
                                     formikProps.values.vendorCode[index] || ''
-                                  }
+                                  }fdgdfg
                                   onChange={formikProps.handleChange}
                                   onClick={(e) =>
                                     handleChangeInput(e, index, formikProps)

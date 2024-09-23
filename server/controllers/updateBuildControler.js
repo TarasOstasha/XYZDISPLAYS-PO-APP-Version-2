@@ -10,7 +10,7 @@ module.exports.updateBuildFolder = async (req, res, next) => {
             secure: false // Use true if you're using FTPS
         };
 
-        const remoteFolder = '/'; //'/build';
+        const remoteFolder = '/prod'; //'/build';
         const localFolder = path.join(__dirname, '../../client/build'); // Path to your local build folder
         console.log(localFolder, '---BUILD FOLDER');
         // Download the folder from FTP
