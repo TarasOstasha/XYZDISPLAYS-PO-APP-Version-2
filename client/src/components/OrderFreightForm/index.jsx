@@ -77,7 +77,7 @@ function OrderFreightForm({
   }
 
   
-  console.log(orderDetailsOptions);
+  //console.log(orderDetailsOptions);
   const handleSubmit = async (values, formikBag) => {
 
     const checkIfCustom = rerenderOrderList.some(item => {

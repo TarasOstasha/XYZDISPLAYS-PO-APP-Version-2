@@ -366,8 +366,8 @@ function OrderFreight() {
       try {
         const orderResponse = await axios.get(orderUrl);
         const { xmldata: { Orders } } = orderResponse.data;
-        console.log(Orders, '<< Orders');
-        if (Orders && Orders[0]) {
+        //console.log(Orders, '<< Orders');
+        if (Orders && Orders[0] && Orders[0].OrderDetails.length > 0) {
           setOrderClientAddress(Orders[0]);
           const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || [];
           //console.log(Orders, '<< Orders');
@@ -378,7 +378,7 @@ function OrderFreight() {
               productPrice: item.ProductPrice?.[0] || 'UnknownPrice'
             }
           }) || [];
-          console.log(productDetails, '<< productDetails');
+          //console.log(productDetails, '<< productDetails');
           const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
           const productResponses = await fetchProductData(productUrls);
           const validVendors = processProductResponses(productResponses, productDetails);
@@ -450,7 +450,7 @@ function OrderFreight() {
 
     const compareProductPrices = (products, orderProductDetails) => {
       const productPriceMap = {};
-      console.log(products, '<< products');
+      //console.log(products, '<< products');
       // Create a lookup map for product prices based on ProductCode
       products.forEach(product => {
         const productCode = product.ProductCode[0];
@@ -515,10 +515,10 @@ function OrderFreight() {
     //   return vendors.filter((vendor) => vendor !== null);
     // };
     const processProductResponses = (productResponses, orderProductDetails) => {
-      console.log(productResponses, '<< productResponses');
+      //console.log(productResponses, '<< productResponses');
     
       const vendors = productResponses.map((response) => {
-        console.log(response, '<< response');
+        //console.log(response, '<< response');
     
         // Handle cases where xmldata might be undefined or an empty string
         const xmldata = response.data.xmldata || {};

@@ -7,16 +7,18 @@ function Header() {
   const handleClick = () => {
     window.location.reload(); // This will reload the entire page
   };
+  const isHomePage = window.location.pathname === '/';
   return (
     <div className={styles.headerWrapper}>
-      {/* <img src="https://www.xyzdisplays.com/v/vspfiles/templates/Charmed/images/template/header_bg.jpg" alt="xyzdisplays" /> */}
-      {/* <a onClick={handleClick}>
-      <img src={logo} alt="xyzdisplays" />
-      </a> */}
-      <Link to="/">
-        <img src={logo} alt="xyzdisplays" />
-      </Link>
-      {/* <h4 className={styles.test}>XYZ Displays Shipping Freight</h4> */}
+      {isHomePage ? (
+        <a onClick={handleClick}>
+          <img src={logo} alt="xyzdisplays" />
+        </a>
+      ) : (
+        <Link to="/">
+          <img src={logo} alt="xyzdisplays" />
+        </Link>
+      )}
     </div>
   )
 }

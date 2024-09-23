@@ -24,13 +24,3 @@ module.exports.updateBuildFolder = async (req, res, next) => {
 };
 
 
-// TEST
-// module.exports.updateBuildFolder = async (req, res, next) => {
-//     try {
-//         // For testing, just send a simple message instead of performing the FTP operation
-//         res.status(200).json({ message: "Test message from backend!" });
-//     } catch (error) {
-//         console.error("Error:", error);
-//         res.status(500).json({ message: "Error in backend", error: error.message });
-//     }
-// };
