@@ -7,3 +7,6 @@ node_modules/
 tests/
 
 server/.env
+
+# production
+client/build
