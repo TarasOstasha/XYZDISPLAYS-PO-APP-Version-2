@@ -1,0 +1,3 @@
+Outlook permisions restricted
+To allow open window outlook we need to set rules
+Window POwer Shell open as admin and paste this - Set-ExecutionPolicy Unrestricted, than press Y
