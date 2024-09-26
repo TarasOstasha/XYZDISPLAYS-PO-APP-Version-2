@@ -42,11 +42,12 @@ function OrderFreight() {
 
 
   const handleToRemove = (index, array) => {
+    console.log(index,array);
     if (index >= 0 && index < array.length) {
       setRremoveOnclick(array.splice(index, 1))
-      console.log(array);
+      //console.log(array);
     }
-    //console.log(array, '<< array');
+    console.log(removeOnclick, rerenderOrderList,'<< removeOnclick');
   }
 
   const handleToEdit = (index, formikProps) => {

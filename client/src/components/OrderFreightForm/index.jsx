@@ -747,7 +747,7 @@ const renderShipInfoInput = () => {
                             <td className={styles.groupedTd}>
                               <button
                                 onClick={() =>
-                                  handleToRemove(index, rerenderOrderList)
+                                  handleToRemove(index, filteredOrderList)
                                 }
                                 type="button"
                                 className="btn btn-danger"
