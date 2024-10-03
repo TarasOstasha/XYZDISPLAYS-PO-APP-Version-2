@@ -27,6 +27,7 @@ function OrderFreightForm({
   // shipState,
   // shipPostalCode,
   rerenderOrderList,
+  filteredOrderList,
   handleToRemove,
   handleToEdit,
   handleToEditTop,
@@ -124,7 +125,7 @@ function OrderFreightForm({
   }
 
 
-  const [filteredOrderList, setFilteredOrderList] = useState([])
+  //const [filteredOrderList, setFilteredOrderList] = useState([])
   const [selectedVendor, setSelectedVendorCode] = useState(false)
   const [checkByVendor, setCheckByVendor] = useState(false)
   const [checkboxFilteredIndex, setCheckboxFilteredIndex] = useState([])
@@ -189,6 +190,10 @@ function OrderFreightForm({
     }
     return false // Next value starts with the same two letters as previous one for all elements
   }
+  // Function to check if all rows have "Website order item"
+  // const allWebsiteOrderItems = rerenderOrderList.every(
+  //   (item) => item.Vendor_Price?.[0] && isNaN(item.Vendor_Price[0])
+  // );
 
   const handleChange = (e, i) => {
     console.log(e, i)
@@ -197,6 +202,7 @@ function OrderFreightForm({
   useEffect(() => {
     const initialShipInfo = renderShipInfoInput();
     setShipInfo(initialShipInfo); // Set the initial value
+
   }, [rerenderOrderList]); 
   // render shipping info input
   // const renderShipInfoInput = () => {

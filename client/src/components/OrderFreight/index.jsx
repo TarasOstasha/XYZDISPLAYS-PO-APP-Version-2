@@ -24,6 +24,7 @@ function OrderFreight() {
 
   // *** order Detail ***
   const [rerenderOrderList, setRerenderOrderList] = useState([]) // rerender when inserting discount value to our object
+  const [filteredOrderList, setFilteredOrderList] = useState([])
 
   // *** order ship to ***
   const [orderClientAddress, setOrderClientAddress] = useState(null)
@@ -47,7 +48,7 @@ function OrderFreight() {
       setRremoveOnclick(array.splice(index, 1))
       //console.log(array);
     }
-    console.log(removeOnclick, rerenderOrderList,'<< removeOnclick');
+    console.log(array, index, '<< array');
   }
 
   const handleToEdit = (index, formikProps) => {
@@ -59,6 +60,16 @@ function OrderFreight() {
     formikProps.values.productName = rerenderOrderList[index].ProductName[0]
     formikProps.values.productQuantity = rerenderOrderList[index].Quantity[0]
   }
+  // const handleToEdit = (index, formikProps) => {
+  //   setIsEditing(index === isEditing ? null : index);
+  //   const orderItem = rerenderOrderList[index];
+  //   if (orderItem?.Vendor_Price?.[0]) {
+  //     formikProps.setFieldValue('productPrice', orderItem.Vendor_Price[0]);
+  //   }
+  //   formikProps.setFieldValue('productCode', orderItem.ProductCode?.[0] || '');
+  //   formikProps.setFieldValue('productName', orderItem.ProductName?.[0] || '');
+  //   formikProps.setFieldValue('productQuantity', orderItem.Quantity?.[0] || '');
+  // };
 
   const handleChangeInput = (e, i, formikProps) => {
     setInputIndex(i)
@@ -638,6 +649,7 @@ function OrderFreight() {
         handleToSaveTop={handleToSaveTop}
         setOrderId={setOrderId}
         rerenderOrderList={rerenderOrderList}
+        filteredOrderList={filteredOrderList}
         handleChangeInput={handleChangeInput}
         setVendorAddress={handleVendorAddressChange}
         setShipInfoDescription={handleVendorShipInfoDescription}
