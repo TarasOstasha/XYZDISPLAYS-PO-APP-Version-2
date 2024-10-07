@@ -96,6 +96,10 @@ function OrderFreightForm({
     values.shipInfoDescription = document.getElementById('shipInfoBottom').innerText;
     values.vendorEmails = renderEmails();
     values.inHand = setCustomFieldInHand;
+ 
+    if(rerenderVendorName('or')) {
+      values.orderNotes = '-20% off per Josh'
+    }
 
     if (rerenderOrderList.length === 1) {
       const updatedValues = rerenderOrderList.reduce((acc, p) => {
@@ -202,7 +206,6 @@ function OrderFreightForm({
   useEffect(() => {
     const initialShipInfo = renderShipInfoInput();
     setShipInfo(initialShipInfo); // Set the initial value
-
   }, [rerenderOrderList]); 
   // render shipping info input
   // const renderShipInfoInput = () => {
@@ -251,6 +254,12 @@ const renderShipInfoInput = () => {
       )) : 
       'Not Found';
   };
+  // rerender vendor name
+  const rerenderVendorName = (vendorN) => {
+    return rerenderOrderList.some(item => {
+      return item.ProductCode[0].startsWith(vendorN)
+    })
+  }
   // render customer address
   const renderCustomerAddress = () => {
     const {ShipCompanyName = [], ShipAddress1 = [], ShipAddress2 = [],ShipFirstName = [],ShipLastName = [],ShipCity = [],ShipState = [],ShipPostalCode = [],ShipCountry = [],ShipPhoneNumber = []} = orderClientAddress || {};
@@ -352,6 +361,7 @@ const renderShipInfoInput = () => {
                           onChange={(e) => {
                             formikProps.handleChange(e)
                             setOrderId(e.target.value)
+                            rerenderVendorName('or')
                           }}
                         />
                         <ErrorMessage
@@ -429,15 +439,15 @@ const renderShipInfoInput = () => {
                       )}
                     </td>
                   </tr>
-                  <tr>
+                  <tr>{console.log(rerenderVendorName())}
                     <td colSpan='2'>
                       <Field
                         style={{ background: 'yellow' }}
                         name="orderNotes"
                         type="text"
                         className={styles.orderNotes}
-                        // value={formikProps.values.orderNotes}
-                        value={formikProps.values.orderNotes}
+                        //value={formikProps.values.orderNotes}
+                        value={rerenderVendorName('or') ? '-20% off per Josh' : formikProps.values.orderNotes}
                         onChange={formikProps.handleChange}
                         placeholder="Order Notes FOR VENDOR"
                       />
