@@ -370,6 +370,7 @@ const renderShipInfoInput = () => {
                           component="div"
                         />
                       </div>
+                      {/* { console.log(rerenderOrderList, 'rerenderOrderList') } */}
                       {rerenderOrderList.length !== 0 && (
                         <>
                           <div className="input-group mb-3">

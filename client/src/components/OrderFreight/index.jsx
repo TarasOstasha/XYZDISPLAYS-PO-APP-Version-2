@@ -385,12 +385,16 @@ function OrderFreight() {
           //console.log(Orders, '<< Orders');
           const productDetails = Orders[0].OrderDetails?.map(item => {
             //console.log(item, '<< order details map');
+            const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || [];
             return {
               productCode: item.ProductCode?.[0] || 'UnknownCode',
-              productPrice: item.ProductPrice?.[0] || 'UnknownPrice'
+              productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
+              optionIDs
             }
           }) || [];
-          //console.log(productDetails, '<< productDetails');
+
+          //console.log(orderOptions, "<< Extracted OrderDetails_Options");
+          console.log(productDetails, '<< productDetails');
           const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
           const productResponses = await fetchProductData(productUrls);
           const validVendors = processProductResponses(productResponses, productDetails);
