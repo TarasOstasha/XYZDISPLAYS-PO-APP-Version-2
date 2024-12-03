@@ -13,6 +13,7 @@ import { VENDOR_LIST } from '../../utils/vendorsData'
 import OrderFreightForm from '../OrderFreightForm'
 import AddProductPopUp from '../AddProductPopUp';
 import MismatchedPricesModal from './MismatchedPricesModal';
+import { OPTION_DATA } from '../../utils/optionsData';
 
 function OrderFreight() {
   let discountRenderFlag = false;
@@ -373,42 +374,168 @@ function OrderFreight() {
     //   }
     // };
     
-    
+    // ***** OLD MAIN OPTION *** \\\
+    // const fetchOrderData = async (orderUrl) => {
+    //   try {
+    //     const orderResponse = await axios.get(orderUrl);
+    //     const { xmldata: { Orders } } = orderResponse.data;
+    //     //console.log(Orders, '<< Orders');
+    //     if (Orders && Orders[0] && Orders[0].OrderDetails.length > 0) {
+    //       setOrderClientAddress(Orders[0]);
+    //       const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || [];
+    //       //console.log(Orders, '<< Orders');
+    //       const productDetails = Orders[0].OrderDetails?.map(item => {
+    //         //console.log(item, '<< order details map');
+    //         const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || [];
+    //         return {
+    //           productCode: item.ProductCode?.[0] || 'UnknownCode',
+    //           productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
+    //           optionIDs
+    //         }
+    //       }) || [];
+
+    //       const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
+    //       const productResponses = await fetchProductData(productUrls);
+    //       console.log(productResponses, 'productResponses');
+    //       const validVendors = processProductResponses(productResponses, productDetails);
+    //       updateVendorState(validVendors);
+    //       updateOrderListWithVendorCodes(Orders[0].OrderDetails, validVendors);
+    //       processOrderDetails(Orders[0]);
+    //       setOrderProductDetails(productDetails);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching order data:', error);
+    //     //alert('Not Found');
+    //   }
+    // };
     const fetchOrderData = async (orderUrl) => {
       try {
-        const orderResponse = await axios.get(orderUrl);
-        const { xmldata: { Orders } } = orderResponse.data;
-        //console.log(Orders, '<< Orders');
+        const orderResponse = await axios.get(orderUrl)
+        const {
+          xmldata: { Orders },
+        } = orderResponse.data
+        console.log(rerenderOrderList, 'rerenderOrderList');
         if (Orders && Orders[0] && Orders[0].OrderDetails.length > 0) {
-          setOrderClientAddress(Orders[0]);
-          const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || [];
-          //console.log(Orders, '<< Orders');
-          const productDetails = Orders[0].OrderDetails?.map(item => {
-            //console.log(item, '<< order details map');
-            const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || [];
-            return {
-              productCode: item.ProductCode?.[0] || 'UnknownCode',
-              productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
-              optionIDs
-            }
-          }) || [];
+          setOrderClientAddress(Orders[0])
+          const productCodes =
+            Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
 
-          //console.log(orderOptions, "<< Extracted OrderDetails_Options");
-          console.log(productDetails, '<< productDetails');
-          const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
-          const productResponses = await fetchProductData(productUrls);
-          const validVendors = processProductResponses(productResponses, productDetails);
-          updateVendorState(validVendors);
-          updateOrderListWithVendorCodes(Orders[0].OrderDetails, validVendors);
-          processOrderDetails(Orders[0]);
-          setOrderProductDetails(productDetails);
+          // const productDetails =
+          //   Orders[0].OrderDetails?.flatMap((item) => {
+          //     const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || []
+          //     // Base product
+          //     const baseProduct = {
+          //       productCode: item.ProductCode?.[0] || 'UnknownCode',
+          //       productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
+          //       optionIDs,
+          //     }
+
+          //     // Extra products for options with pricediff > 0
+          //     const extraProducts = optionIDs
+          //       .map((id) => {
+          //         const matchingOption = OPTION_DATA.find(
+          //           (option) => option.id === parseInt(id, 10),
+          //         )
+          //         if (matchingOption && matchingOption.pricediff > 0) {
+          //           return {
+          //             productCode: `Extra-${Math.random()
+          //               .toString(36)
+          //               .substr(2, 9)}`, // Random unique code
+          //             productPrice: matchingOption.pricediff.toString(), // Use pricediff as the price
+          //             optionDescription:
+          //               matchingOption.optionsdesc || 'UnknownOption',
+          //           }
+          //         }
+          //         return null
+          //       })
+          //       .filter(Boolean) // Remove null values
+
+          //     return [baseProduct, ...extraProducts]
+          //   }) || []
+
+          const productDetails =
+            Orders[0].OrderDetails?.flatMap((item) => {
+              const optionIDs =
+                item.OrderDetails_Options?.map(
+                  (option) => option.OptionID?.[0],
+                ) || [];
+              // Base product
+              const baseProduct = {
+                productCode: item.ProductCode?.[0] || 'UnknownCode',
+                productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
+              };
+
+              return baseProduct; 
+            }) || [];
+          console.log(productDetails);
+          const productOption = Orders[0].OrderDetails?.flatMap((item) => {
+            const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || []
+            const extraProducts = optionIDs
+            .map((id) => {
+              const matchingOption = OPTION_DATA.find(
+                (option) => option.id === parseInt(id, 10),
+              )
+              
+              if (matchingOption && matchingOption.pricediff > 0) {
+                return {
+                  // data: {
+                  //   xmldata: {
+                  //     Products: [{
+                  //       productCode: [`Extra-${Math.random().toString(36).substr(2, 9)}`], 
+                  //       productPrice: [matchingOption.pricediff.toString()], // Use pricediff as the price
+                  //       ProductName: [matchingOption.optionsdesc || 'UnknownOption'],
+                  //       Vendor_Price: [matchingOption.pricediff.toString()], 
+                  //       Vendor_PartNo: ['Extra'], 
+                  //     }]
+                  //   }
+                  // }
+                  //OrderDetailID: ['50677'],
+                  //OrderDetails_Options: [],
+                  //OrderID: ['35500'],
+                  ProductCode: ['be4013'],
+                  //ProductID: ['46140'],
+                  ProductName: [matchingOption.optiondesc || 'UnknownOption'],
+                  ProductPrice: [matchingOption.pricediff?.toString() ?? '0.00'],
+                  Quantity: ['1'],
+                  // TotalPrice: ['3116.0000'],
+                  Vendor_PartNo: ['BRST+BRC-H+L6000D'],
+                  Vendor_Price: [matchingOption.vendorpricediff?.toString() ?? '0.00' ],
+                  discount: [15],
+                }
+              }
+              return null
+            })
+            .filter(Boolean) // Remove null values
+            return extraProducts;
+          });
+          const combinedOrderDetails = [
+            ...Orders[0].OrderDetails,
+            ...productOption,
+          ];
+          console.log(combinedOrderDetails);
+          // Fetch product URLs and process vendors
+          const productUrls = productCodes.map(
+            (code) => `http://localhost:5000/api/products/${code}`,
+          )
+          const productResponses = await fetchProductData(productUrls)
+
+          const validVendors = processProductResponses(
+            productResponses,
+            combinedOrderDetails
+            //productDetails,
+          )
+          console.log(validVendors);
+          updateVendorState(validVendors)
+          //updateOrderListWithVendorCodes(Orders[0].OrderDetails, validVendors)
+          updateOrderListWithVendorCodes(combinedOrderDetails, validVendors);
+          processOrderDetails(Orders[0])
+          //setOrderProductDetails(productDetails)
+          setOrderProductDetails(combinedOrderDetails);
         }
       } catch (error) {
-        console.error('Error fetching order data:', error);
-        //alert('Not Found');
+        console.error('Error fetching order data:', error)
       }
-    };
-    
+    }
     
     const fetchProductData = async (productUrls) => {
       try {
@@ -531,20 +658,17 @@ function OrderFreight() {
     //   return vendors.filter((vendor) => vendor !== null);
     // };
     const processProductResponses = (productResponses, orderProductDetails) => {
-      //console.log(productResponses, '<< productResponses');
-    
+      console.log(rerenderOrderList, 'rerenderOrderList');
+      console.log('rerenderOrderList');
       const vendors = productResponses.map((response) => {
-        //console.log(response, '<< response');
-    
         // Handle cases where xmldata might be undefined or an empty string
         const xmldata = response.data.xmldata || {};
         const Products = xmldata.Products || [];
-    
+        
         if (!Products.length) {
           console.log('No Products found in response');
           return null;
         }
-    
         // Compare product prices
         const mismatchedPrices = compareProductPrices(Products, orderProductDetails);
         if (mismatchedPrices.length > 0) {
@@ -558,6 +682,7 @@ function OrderFreight() {
     
         // Process the product details
         const product = Products[0];
+        //console.log(product, 'product');
         let vendorPartNo = product.Vendor_PartNo ? product.Vendor_PartNo[0] : '';
         // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
         const productCode = product.ProductCode ? product.ProductCode[0] : '';
@@ -597,6 +722,7 @@ function OrderFreight() {
     };
     
     const updateVendorState = (validVendors) => {
+      console.log(validVendors, 'validVendors');
       setVendor((prevVendor) => [...prevVendor, ...validVendors]);
       setRerenderOrderList(validVendors);
     };

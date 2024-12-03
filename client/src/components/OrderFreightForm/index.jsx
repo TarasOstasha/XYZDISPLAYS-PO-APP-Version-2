@@ -204,6 +204,7 @@ function OrderFreightForm({
   }
 
   useEffect(() => {
+    console.log(rerenderOrderList, 'rerenderOrderList');
     const initialShipInfo = renderShipInfoInput();
     setShipInfo(initialShipInfo); // Set the initial value
   }, [rerenderOrderList]); 
@@ -370,7 +371,7 @@ const renderShipInfoInput = () => {
                           component="div"
                         />
                       </div>
-                      {/* { console.log(rerenderOrderList, 'rerenderOrderList') } */}
+                  
                       {rerenderOrderList.length !== 0 && (
                         <>
                           <div className="input-group mb-3">
@@ -791,6 +792,7 @@ const renderShipInfoInput = () => {
                   </>
                   {/* MAIN TABLE */}
                   <>
+                    { console.log(rerenderOrderList, 'rerenderOrderList') }
                     {rerenderOrderList.length !== 0 &&
                       filteredOrderList.length === 0 &&
                       rerenderOrderList.map((o, index) => (
