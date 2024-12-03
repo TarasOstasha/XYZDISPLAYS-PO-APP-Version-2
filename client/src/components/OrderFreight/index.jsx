@@ -1,25 +1,25 @@
-import axios from 'axios';
+import axios from 'axios'
 
 // import { Formik, Form, Field, ErrorMessage } from 'formik'
 import styles from './OrderFreight.module.scss'
 // import * as API from '../../api'
-import { Button, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Modal } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 // import { ORDER_VALIDATION_SCHEMA } from '../../utils/orderValidationSchema'
 import { useEffect, useState } from 'react'
 
 import { VENDOR_LIST } from '../../utils/vendorsData'
 // import { yellow, descriptionWidth, attension } from '../../stylesConstants'
 import OrderFreightForm from '../OrderFreightForm'
-import AddProductPopUp from '../AddProductPopUp';
-import MismatchedPricesModal from './MismatchedPricesModal';
-import { OPTION_DATA } from '../../utils/optionsData';
+import AddProductPopUp from '../AddProductPopUp'
+import MismatchedPricesModal from './MismatchedPricesModal'
+import { OPTION_DATA } from '../../utils/optionsData'
 
 function OrderFreight() {
-  let discountRenderFlag = false;
-  const [mismatchedPrices, setMismatchedPrices] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const handleClose = () => setShowModal(false);
+  let discountRenderFlag = false
+  const [mismatchedPrices, setMismatchedPrices] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const handleClose = () => setShowModal(false)
 
   const [orderId, setOrderId] = useState('')
 
@@ -38,18 +38,17 @@ function OrderFreight() {
   const [shipInfo, setShipInfoDescription] = useState()
 
   const [customFieldInHand, setCustomFieldInHand] = useState()
-  const [orderComments,setOrderComments] = useState()
+  const [orderComments, setOrderComments] = useState()
   const [vendor, setVendor] = useState([])
-  const [orderProductDetails, setOrderProductDetails] = useState(null);
-
+  const [orderProductDetails, setOrderProductDetails] = useState(null)
 
   const handleToRemove = (index, array) => {
-    console.log(index,array);
+    console.log(index, array)
     if (index >= 0 && index < array.length) {
       setRremoveOnclick(array.splice(index, 1))
       //console.log(array);
     }
-    console.log(array, index, '<< array');
+    console.log(array, index, '<< array')
   }
 
   const handleToEdit = (index, formikProps) => {
@@ -99,26 +98,25 @@ function OrderFreight() {
   // }
   // refactor handleToEditTop
   const handleToEditTop = (formikProps) => {
-    setIsEditingTop(true);
-    const mapProperty = (property) => rerenderOrderList.map((p) => p[property]?.[0] || '');
+    setIsEditingTop(true)
+    const mapProperty = (property) =>
+      rerenderOrderList.map((p) => p[property]?.[0] || '')
     const valuesToUpdate = {
-        productCode: mapProperty('ProductCode'),
-        vendorCode: mapProperty('Vendor_PartNo'),
-        productName: mapProperty('ProductName'),
-        productQuantity: mapProperty('Quantity'),
-        vendorPrice: mapProperty('Vendor_Price'),
-        productPrice: mapProperty('ProductPrice'),
-        productDiscount: mapProperty('discount'),
-    }; 
+      productCode: mapProperty('ProductCode'),
+      vendorCode: mapProperty('Vendor_PartNo'),
+      productName: mapProperty('ProductName'),
+      productQuantity: mapProperty('Quantity'),
+      vendorPrice: mapProperty('Vendor_Price'),
+      productPrice: mapProperty('ProductPrice'),
+      productDiscount: mapProperty('discount'),
+    }
     formikProps.setValues({
-        ...formikProps.values,
-        ...valuesToUpdate,
-    });
-};
-
+      ...formikProps.values,
+      ...valuesToUpdate,
+    })
+  }
 
   const handleFormValuesChange = (newValues) => {
-    
     const newProduct = [newValues]
     setRerenderOrderList((rerenderOrderList) => [
       ...rerenderOrderList,
@@ -136,7 +134,6 @@ function OrderFreight() {
       rerenderOrderList[index].ProductPrice[0] = formikProps.values.productPrice
       rerenderOrderList[index].TotalPrice[0] = formikProps.values.totalAmount
       setIsEditing(null)
-
     } else {
       alert(
         `Vendor Price is missing! or ${rerenderOrderList[index].ProductCode[0]} is Website order item`,
@@ -184,18 +181,15 @@ function OrderFreight() {
     setShipInfoDescription(vendor)
   }
 
-
-
-
   useEffect(() => {}, [removeOnclick])
   useEffect(() => {
     if (orderId.length < 5) {
-      return;
+      return
     }
-    
-    const orderUrl = `http://localhost:5000/api/orders/${orderId}`;
+
+    const orderUrl = `http://localhost:5000/api/orders/${orderId}`
     // const orderUrl = `https://xyzdisplays-po-app.onrender.com/api/orders/${orderId}`;
-    
+
     // axios
     //   .get(orderUrl)
     //   .then((orderResponse) => {
@@ -225,7 +219,6 @@ function OrderFreight() {
     //           const { xmldata: { Products } } = response.data;
     //           //console.log(Products, '>> Products');
 
-              
     //           //console.log(Products[0].EAN[0]);
     //           if(Products && Products[0] && Products[0].EAN && Products[0].EAN[0]) {
     //             const kits = Products[0].EAN[0].split(',');
@@ -271,7 +264,6 @@ function OrderFreight() {
     //               .catch(err => console.log(err));
 
     //           }
-
 
     //           return Products && Products.length > 0
     //             ? {
@@ -348,7 +340,7 @@ function OrderFreight() {
     //     const orderResponse = await axios.get(orderUrl);
     //     const { xmldata: { Orders } } = orderResponse.data;
     //     console.log(Orders[0], '<< Orders');
-        
+
     //     if (Orders && Orders[0]) {
     //       setOrderClientAddress(Orders[0]);
     //       const productCodes = Orders[0].OrderDetails.map((item) => item.ProductCode[0]);
@@ -373,7 +365,7 @@ function OrderFreight() {
     //     //alert('Not Found');
     //   }
     // };
-    
+
     // ***** OLD MAIN OPTION *** \\\
     // const fetchOrderData = async (orderUrl) => {
     //   try {
@@ -414,8 +406,8 @@ function OrderFreight() {
         const {
           xmldata: { Orders },
         } = orderResponse.data
-        console.log(rerenderOrderList, 'rerenderOrderList');
-        if (Orders && Orders[0] && Orders[0].OrderDetails.length > 0) {
+        console.log(rerenderOrderList, 'rerenderOrderList')
+        if (Orders && Orders[0] && Orders?.[0]?.OrderDetails?.length > 0) {
           setOrderClientAddress(Orders[0])
           const productCodes =
             Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
@@ -455,64 +447,55 @@ function OrderFreight() {
 
           const productDetails =
             Orders[0].OrderDetails?.flatMap((item) => {
-              const optionIDs =
-                item.OrderDetails_Options?.map(
-                  (option) => option.OptionID?.[0],
-                ) || [];
               // Base product
               const baseProduct = {
                 productCode: item.ProductCode?.[0] || 'UnknownCode',
                 productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
-              };
-
-              return baseProduct; 
-            }) || [];
-          console.log(productDetails);
-          const productOption = Orders[0].OrderDetails?.flatMap((item) => {
-            const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || []
-            const extraProducts = optionIDs
-            .map((id) => {
-              const matchingOption = OPTION_DATA.find(
-                (option) => option.id === parseInt(id, 10),
-              )
-              
-              if (matchingOption && matchingOption.pricediff > 0) {
-                return {
-                  // data: {
-                  //   xmldata: {
-                  //     Products: [{
-                  //       productCode: [`Extra-${Math.random().toString(36).substr(2, 9)}`], 
-                  //       productPrice: [matchingOption.pricediff.toString()], // Use pricediff as the price
-                  //       ProductName: [matchingOption.optionsdesc || 'UnknownOption'],
-                  //       Vendor_Price: [matchingOption.pricediff.toString()], 
-                  //       Vendor_PartNo: ['Extra'], 
-                  //     }]
-                  //   }
-                  // }
-                  //OrderDetailID: ['50677'],
-                  //OrderDetails_Options: [],
-                  //OrderID: ['35500'],
-                  ProductCode: ['be4013'],
-                  //ProductID: ['46140'],
-                  ProductName: [matchingOption.optiondesc || 'UnknownOption'],
-                  ProductPrice: [matchingOption.pricediff?.toString() ?? '0.00'],
-                  Quantity: ['1'],
-                  // TotalPrice: ['3116.0000'],
-                  Vendor_PartNo: ['BRST+BRC-H+L6000D'],
-                  Vendor_Price: [matchingOption.vendorpricediff?.toString() ?? '0.00' ],
-                  discount: [15],
-                }
               }
-              return null
-            })
-            .filter(Boolean) // Remove null values
-            return extraProducts;
-          });
-          const combinedOrderDetails = [
-            ...Orders[0].OrderDetails,
-            ...productOption,
-          ];
-          console.log(combinedOrderDetails);
+
+              return baseProduct
+            }) || []
+
+          const productOption =
+            Orders[0].OrderDetails?.flatMap((item) => {
+              const optionIDs =
+                item.OrderDetails_Options?.map(
+                  (option) => option.OptionID?.[0],
+                ) || []
+              const extraProducts = optionIDs
+                .map((id) => {
+                  const matchingOption = OPTION_DATA.find(
+                    (option) => option.id === parseInt(id, 10),
+                  )
+                  if (matchingOption && matchingOption.pricediff > 0) {
+                    return {
+                      ProductCode: ['be4013'],
+                      ProductName: [
+                        matchingOption.optiondesc || 'UnknownOption',
+                      ],
+                      ProductPrice: [
+                        matchingOption.pricediff?.toString() ?? '0.00',
+                      ],
+                      Quantity: ['1'],
+                      Vendor_PartNo: ['BRST+BRC-H+L6000D'],
+                      Vendor_Price: [
+                        matchingOption.vendorpricediff?.toString() ?? '0.00',
+                      ],
+                      discount: [15],
+                    }
+                  }
+                  return null
+                })
+                .filter(Boolean) // Remove null values
+              return extraProducts
+            }) || []
+
+          //
+          const combinedOrderDetails =
+            productOption.length > 0
+              ? [...Orders[0].OrderDetails, ...productOption]
+              : Orders[0].OrderDetails
+
           // Fetch product URLs and process vendors
           const productUrls = productCodes.map(
             (code) => `http://localhost:5000/api/products/${code}`,
@@ -521,32 +504,28 @@ function OrderFreight() {
 
           const validVendors = processProductResponses(
             productResponses,
-            combinedOrderDetails
-            //productDetails,
+            combinedOrderDetails,
           )
-          console.log(validVendors);
           updateVendorState(validVendors)
-          //updateOrderListWithVendorCodes(Orders[0].OrderDetails, validVendors)
-          updateOrderListWithVendorCodes(combinedOrderDetails, validVendors);
+          updateOrderListWithVendorCodes(combinedOrderDetails, validVendors)
           processOrderDetails(Orders[0])
-          //setOrderProductDetails(productDetails)
-          setOrderProductDetails(combinedOrderDetails);
+          setOrderProductDetails(combinedOrderDetails)
         }
       } catch (error) {
         console.error('Error fetching order data:', error)
       }
     }
-    
+
     const fetchProductData = async (productUrls) => {
       try {
-        return await Promise.all(productUrls.map((url) => axios.get(url)));
+        return await Promise.all(productUrls.map((url) => axios.get(url)))
       } catch (error) {
-        console.error('Error fetching product data:', error);
-        return [];
+        console.error('Error fetching product data:', error)
+        return []
       }
-    };
-    
-    let quantityItemObject = [];
+    }
+
+    let quantityItemObject = []
     // const processProductResponses = (productResponses) => {
     //   const vendors = productResponses.map((response) => {
     //     const { xmldata: { Products } } = response.data;
@@ -586,32 +565,31 @@ function OrderFreight() {
     //         }
     //       : null;
     //   });
-    
+
     //   return vendors.filter((vendor) => vendor !== null);
     // };
 
-
     const compareProductPrices = (products, orderProductDetails) => {
-      const productPriceMap = {};
+      const productPriceMap = {}
       //console.log(products, '<< products');
       // Create a lookup map for product prices based on ProductCode
-      products.forEach(product => {
-        const productCode = product.ProductCode[0];
-        const productPrice = product.ProductPrice[0];
-        productPriceMap[productCode] = productPrice;
-      });
-    
+      products.forEach((product) => {
+        const productCode = product.ProductCode[0]
+        const productPrice = product.ProductPrice[0]
+        productPriceMap[productCode] = productPrice
+      })
+
       // Compare the prices
-      const mismatchedPrices = orderProductDetails.filter(orderProduct => {
-        const productCode = orderProduct.productCode;
-        const orderProductPrice = orderProduct.productPrice;
-        const productPrice = productPriceMap[productCode];
-        
-        return productPrice && productPrice !== orderProductPrice;
-      });
-    
-      return mismatchedPrices;
-    };
+      const mismatchedPrices = orderProductDetails.filter((orderProduct) => {
+        const productCode = orderProduct.productCode
+        const orderProductPrice = orderProduct.productPrice
+        const productPrice = productPriceMap[productCode]
+
+        return productPrice && productPrice !== orderProductPrice
+      })
+
+      return mismatchedPrices
+    }
 
     // const processProductResponses = (productResponses, orderProductDetails) => {
     //   console.log(productResponses, '<< productResponses');
@@ -632,17 +610,17 @@ function OrderFreight() {
     //     } else {
     //       console.log('All product prices match.');
     //     }
-    
+
     //     if (Products && Products.length > 0) {
     //       const product = Products[0];
     //       let vendorPartNo = product.Vendor_PartNo[0];
-   
+
     //       // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
     //       const productCode = product.ProductCode[0];
     //       if (/^or$/i.test(productCode.substring(0, 2))) {
     //         vendorPartNo = product.Google_Age_Group[0];
     //       }
-    
+
     //       return {
     //         Vendor_PartNo: [vendorPartNo],
     //         ProductCode: [productCode],
@@ -654,40 +632,45 @@ function OrderFreight() {
     //     }
     //     return null;
     //   });
-    
+
     //   return vendors.filter((vendor) => vendor !== null);
     // };
     const processProductResponses = (productResponses, orderProductDetails) => {
-      console.log(rerenderOrderList, 'rerenderOrderList');
-      console.log('rerenderOrderList');
+      console.log(rerenderOrderList, 'rerenderOrderList')
+      console.log('rerenderOrderList')
       const vendors = productResponses.map((response) => {
         // Handle cases where xmldata might be undefined or an empty string
-        const xmldata = response.data.xmldata || {};
-        const Products = xmldata.Products || [];
-        
+        const xmldata = response.data.xmldata || {}
+        const Products = xmldata.Products || []
+
         if (!Products.length) {
-          console.log('No Products found in response');
-          return null;
+          console.log('No Products found in response')
+          return null
         }
         // Compare product prices
-        const mismatchedPrices = compareProductPrices(Products, orderProductDetails);
+        const mismatchedPrices = compareProductPrices(
+          Products,
+          orderProductDetails,
+        )
         if (mismatchedPrices.length > 0) {
-          mismatchedPrices.forEach(item => {
-            setMismatchedPrices(mismatchedPrices);
-            setShowModal(true);
-          });
+          mismatchedPrices.forEach((item) => {
+            setMismatchedPrices(mismatchedPrices)
+            setShowModal(true)
+          })
         } else {
-          console.log('All product prices match.');
+          console.log('All product prices match.')
         }
-    
+
         // Process the product details
-        const product = Products[0];
+        const product = Products[0]
         //console.log(product, 'product');
-        let vendorPartNo = product.Vendor_PartNo ? product.Vendor_PartNo[0] : '';
+        let vendorPartNo = product.Vendor_PartNo ? product.Vendor_PartNo[0] : ''
         // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
-        const productCode = product.ProductCode ? product.ProductCode[0] : '';
+        const productCode = product.ProductCode ? product.ProductCode[0] : ''
         if (/^or$/i.test(productCode.substring(0, 2))) {
-          vendorPartNo = product.Google_Age_Group ? product.Google_Age_Group[0] : vendorPartNo;
+          vendorPartNo = product.Google_Age_Group
+            ? product.Google_Age_Group[0]
+            : vendorPartNo
         }
         return {
           Vendor_PartNo: [vendorPartNo],
@@ -695,78 +678,88 @@ function OrderFreight() {
           ProductName: [product.ProductName ? product.ProductName[0] : ''],
           ProductPrice: [product.ProductPrice ? product.ProductPrice[0] : ''],
           Vendor_Price: [product.Vendor_Price ? product.Vendor_Price[0] : ''],
-        };
-      });
-    
-      return vendors.filter((vendor) => vendor !== null);
-    };
-    
-    const replaceQuantities = (products, replacements) => {
-      products.forEach(product => {
-        const code = product.ProductCode[0];
-        if (replacements.hasOwnProperty(code)) {
-          product.Quantity = [replacements[code]];
         }
-      });
+      })
+
+      return vendors.filter((vendor) => vendor !== null)
+    }
+
+    const replaceQuantities = (products, replacements) => {
+      products.forEach((product) => {
+        const code = product.ProductCode[0]
+        if (replacements.hasOwnProperty(code)) {
+          product.Quantity = [replacements[code]]
+        }
+      })
     }
     const fetchKitData = async (kitUrls) => {
       try {
-        const kitResponses = await Promise.all(kitUrls.map((url) => axios.get(url)));
-        const kitVendors = processProductResponses(kitResponses);
-        replaceQuantities(kitVendors, quantityItemObject); // update quantity
-        updateVendorState(kitVendors);
+        const kitResponses = await Promise.all(
+          kitUrls.map((url) => axios.get(url)),
+        )
+        const kitVendors = processProductResponses(kitResponses)
+        replaceQuantities(kitVendors, quantityItemObject) // update quantity
+        updateVendorState(kitVendors)
         applyDiscounts(kitVendors)
       } catch (error) {
-        console.error('Error fetching kit data:', error);
+        console.error('Error fetching kit data:', error)
       }
-    };
-    
+    }
+
     const updateVendorState = (validVendors) => {
-      console.log(validVendors, 'validVendors');
-      setVendor((prevVendor) => [...prevVendor, ...validVendors]);
-      setRerenderOrderList(validVendors);
-    };
-    
+      console.log(validVendors, 'validVendors')
+      setVendor((prevVendor) => [...prevVendor, ...validVendors])
+      setRerenderOrderList(validVendors)
+    }
+
     const updateOrderListWithVendorCodes = (orderDetails, validVendors) => {
       const updatedOrderListWithVendorCodes = orderDetails.map((order) => {
-        const matchingVendor = validVendors.find((vendor) => vendor.ProductCode[0].toLowerCase() === order.ProductCode[0].toLowerCase());
-        return matchingVendor ? { ...order, ...matchingVendor } : order;
-      });
+        const matchingVendor = validVendors.find(
+          (vendor) =>
+            vendor.ProductCode[0].toLowerCase() ===
+            order.ProductCode[0].toLowerCase(),
+        )
+        return matchingVendor ? { ...order, ...matchingVendor } : order
+      })
 
-      setRerenderOrderList(updatedOrderListWithVendorCodes);
-      applyDiscounts(updatedOrderListWithVendorCodes);
-    };
-    
+      setRerenderOrderList(updatedOrderListWithVendorCodes)
+      applyDiscounts(updatedOrderListWithVendorCodes)
+    }
+
     const applyDiscounts = (orderList) => {
       orderList.forEach((order) => {
         VENDOR_LIST.forEach((vendor) => {
-          const code = order.ProductCode.toString();
+          const code = order.ProductCode.toString()
           if (code.toLowerCase().startsWith(vendor.code)) {
-            order.discount = [vendor.discount];
-            discountRenderFlag = true;
+            order.discount = [vendor.discount]
+            discountRenderFlag = true
           }
-        });
-      });
-    };
-    
-    const processOrderDetails = (order) => {
+        })
+      })
+    }
 
+    const processOrderDetails = (order) => {
       //const customFieldInHandDate = order.Custom_Field_InHand[0];
       //const orderComments = order.Order_Comments[0];
-      const customFieldInHandDate = order.Custom_Field_InHand && order.Custom_Field_InHand[0] ? order.Custom_Field_InHand[0] : "Not Found";
-      const orderComments = order.Order_Comments && order.Order_Comments[0] ? order.Order_Comments[0] : "Not Found";
-      setCustomFieldInHand(customFieldInHandDate);
-      setOrderComments(orderComments);
-    };
-    
-    // Call the function with your order URL
-    fetchOrderData(orderUrl);
+      const customFieldInHandDate =
+        order.Custom_Field_InHand && order.Custom_Field_InHand[0]
+          ? order.Custom_Field_InHand[0]
+          : 'Not Found'
+      const orderComments =
+        order.Order_Comments && order.Order_Comments[0]
+          ? order.Order_Comments[0]
+          : 'Not Found'
+      setCustomFieldInHand(customFieldInHandDate)
+      setOrderComments(orderComments)
+    }
 
-  }, [orderId, discountRenderFlag]);
-      // Log updated orderClientAddress
-      useEffect(() => {
-        console.log(orderClientAddress);
-    }, [orderClientAddress]);
+    // Call the function with your order URL
+    fetchOrderData(orderUrl)
+  }, [orderId, discountRenderFlag])
+  // Log updated orderClientAddress
+  useEffect(() => {
+    console.log(orderClientAddress)
+  }, [orderClientAddress])
   return (
     <div className={styles.orderWrapper}>
       <OrderFreightForm
@@ -789,16 +782,23 @@ function OrderFreight() {
         handleFormValuesChange={handleFormValuesChange}
         orderClientAddress={orderClientAddress}
       />
-   
-      <Modal show={showModal} onHide={handleClose} dialogClassName={`${styles.modalBottom} ${styles.modalWarning}`}>
-        <Modal.Header closeButton className={styles.modalHeader}> 
-          <Modal.Title className={styles.modalTitle}>Mismatched Prices</Modal.Title>
+
+      <Modal
+        show={showModal}
+        onHide={handleClose}
+        dialogClassName={`${styles.modalBottom} ${styles.modalWarning}`}
+      >
+        <Modal.Header closeButton className={styles.modalHeader}>
+          <Modal.Title className={styles.modalTitle}>
+            Mismatched Prices
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className={styles.modalBody}>
           {mismatchedPrices.length > 0 ? (
             mismatchedPrices.map((item, index) => (
               <p key={index}>
-                Possible added option! Double check manually! <br /> ProductCode: {item.productCode}
+                Possible added option! Double check manually! <br />{' '}
+                ProductCode: {item.productCode}
               </p>
             ))
           ) : (
