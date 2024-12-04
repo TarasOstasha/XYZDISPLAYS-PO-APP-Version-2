@@ -14,6 +14,7 @@ productRouter
 productRouter
   .route('/:id')
   .get(productController.getProductById)
+  
 
 
 
