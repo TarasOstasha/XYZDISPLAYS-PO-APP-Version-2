@@ -14,6 +14,7 @@ import OrderFreightForm from '../OrderFreightForm'
 import AddProductPopUp from '../AddProductPopUp'
 import MismatchedPricesModal from './MismatchedPricesModal'
 import { OPTION_DATA } from '../../utils/optionsData'
+import ProductSplitPopup from '../SplitProductPopup/SplitProductPopup'
 
 function OrderFreight() {
   let discountRenderFlag = false
@@ -22,6 +23,9 @@ function OrderFreight() {
   const handleClose = () => setShowModal(false)
 
   const [orderId, setOrderId] = useState('')
+
+  // Vendor Kits Popup
+  const [showVendorKitPopup, setShowVendorKitPopup] = useState(false);
 
   // *** order Detail ***
   const [rerenderOrderList, setRerenderOrderList] = useState([]) // rerender when inserting discount value to our object
@@ -41,6 +45,10 @@ function OrderFreight() {
   const [orderComments, setOrderComments] = useState()
   const [vendor, setVendor] = useState([])
   const [orderProductDetails, setOrderProductDetails] = useState(null)
+  const [vendorKitsLenght, setVendorKitsLenght] = useState(0);
+  const [vendorKitItem, setVendorKitItem] = useState([])
+
+
 
   const handleToRemove = (index, array) => {
     console.log(index, array)
@@ -60,43 +68,12 @@ function OrderFreight() {
     formikProps.values.productName = rerenderOrderList[index].ProductName[0]
     formikProps.values.productQuantity = rerenderOrderList[index].Quantity[0]
   }
-  // const handleToEdit = (index, formikProps) => {
-  //   setIsEditing(index === isEditing ? null : index);
-  //   const orderItem = rerenderOrderList[index];
-  //   if (orderItem?.Vendor_Price?.[0]) {
-  //     formikProps.setFieldValue('productPrice', orderItem.Vendor_Price[0]);
-  //   }
-  //   formikProps.setFieldValue('productCode', orderItem.ProductCode?.[0] || '');
-  //   formikProps.setFieldValue('productName', orderItem.ProductName?.[0] || '');
-  //   formikProps.setFieldValue('productQuantity', orderItem.Quantity?.[0] || '');
-  // };
 
   const handleChangeInput = (e, i, formikProps) => {
     setInputIndex(i)
     console.log(i)
   }
 
-  // const handleToEditTop = (formikProps) => {
-  //   setIsEditingTop(true)
-  //   const productCodes = rerenderOrderList.map((p) => p.ProductCode?.[0])
-  //   const vendorCodes = rerenderOrderList.map(p => p.Vendor_PartNo?.[0])
-  //   const productNames = rerenderOrderList.map((p) => p.ProductName?.[0])
-  //   const quantities = rerenderOrderList.map((p) => p.Quantity?.[0])
-  //   const vendorPrices = rerenderOrderList.map((p) => p.Vendor_Price?.[0])
-  //   const discounts = rerenderOrderList.map((p) => p.discount?.[0])
-  //   const productPrices = rerenderOrderList.map((p) => p.ProductPrice?.[0])
-  //   formikProps.setValues({
-  //     ...formikProps.values,
-  //     productCode: productCodes,
-  //     vendorCode: vendorCodes,
-  //     productName: productNames,
-  //     productQuantity: quantities,
-  //     vendorPrice: vendorPrices,
-  //     productPrice: productPrices,
-  //     productDiscount: discounts,
-  //   })
-  // }
-  // refactor handleToEditTop
   const handleToEditTop = (formikProps) => {
     setIsEditingTop(true)
     const mapProperty = (property) =>
@@ -188,263 +165,19 @@ function OrderFreight() {
     }
 
     const orderUrl = `http://localhost:5000/api/orders/${orderId}`
-    // const orderUrl = `https://xyzdisplays-po-app.onrender.com/api/orders/${orderId}`;
 
-    // axios
-    //   .get(orderUrl)
-    //   .then((orderResponse) => {
-    //     //console.log(orderResponse, '<< orderResponse');
-    //     const {
-    //       xmldata: { Orders },
-    //     } = orderResponse.data;
-    //     //console.log(Orders[0], '<< Orders');
-    //     setOrderClientAddress(Orders[0])
-    //     //console.log(Orders[0].ShipAddress1[0],) //Orders[0].ShipCity[0], Orders[0].ShipCompanyName[0], Orders[0].ShipState[0], Orders[0].ShipPostalCode[0], Orders[0].ShipFirstName[0], Orders[0].ShipLastName[0], Orders[0].ShipPhoneNumber[0]);
-    //     //console.log(orderClientAddress);
-    //     // Extracting Product Codes from Order Details
-    //     const productCodes = Orders[0].OrderDetails.map((item) => item.ProductCode[0]);
-    //     //console.log(productCodes, '<< productCodes');
-    //     // Generating URLs for product requests
-    //     const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
-    //     // const productUrls = productCodes.map((code) => `https://xyzdisplays-po-app.onrender.com/api/products/${code}`);
 
-    //     //console.log(productUrls);
-    //     // Fetching product data for all product codes in parallel
-    //     Promise.all(productUrls.map((url) => axios.get(url)))
-    //       .then((productResponses) => {
-    //         //console.log(productResponses, '<< productResponses');
-    //         // Extracting Vendor_PartNo and ProductCode from product responses
-    //         const vendors = productResponses.map((response) => {
-    //           //console.log(response);
-    //           const { xmldata: { Products } } = response.data;
-    //           //console.log(Products, '>> Products');
-
-    //           //console.log(Products[0].EAN[0]);
-    //           if(Products && Products[0] && Products[0].EAN && Products[0].EAN[0]) {
-    //             const kits = Products[0].EAN[0].split(',');
-    //             const productUrls = kits.map((code) => `http://localhost:5000/api/products/${code}`);
-    //             //console.log(productUrls, '<< productUrls');
-    //             Promise.all(productUrls.map((url) => axios.get(url)))
-    //               .then((productResponses) => {
-    //                 const vendors = productResponses.map((response) => {
-    //                   const { xmldata: { Products } } = response.data;
-    //                   console.log(Products);
-    //                   return Products && Products.length > 0
-    //                   ? {
-    //                       Vendor_PartNo: [Products[0].Vendor_PartNo[0]],
-    //                       ProductCode: [Products[0].ProductCode[0]],
-    //                       ProductName: [Products[0].ProductName[0]],
-    //                       ProductPrice: [Products[0].ProductPrice[0]],
-    //                       Vendor_Price: [Products[0].Vendor_Price[0]],
-    //                       Quantity: [1]
-    //                     }
-    //                   : null;
-    //                 });
-
-    //                 const validVendors = vendors.filter((vendor) => vendor !== null);
-    //                 setVendor((prevVendor) => {
-    //                   const updatedVendor = [...prevVendor, ...validVendors];
-    //                   return updatedVendor;
-    //                 });
-    //                 setRerenderOrderList(vendors);
-    //                 console.log(updatedOrderListWithVendorCodes);
-    //                 // add discount
-    //                 vendors.map((order, index) => {
-    //                   VENDOR_LIST.map((vendor, index) => {
-    //                     const code = order.ProductCode.toString();
-    //                     if (code.toLowerCase().startsWith(vendor.code)) {
-    //                       order.discount = [vendor.discount]
-    //                       discountRenderFlag = true
-    //                     }
-    //                   })
-    //                 })
-    //                 console.log(rerenderOrderList);
-
-    //               })
-    //               .catch(err => console.log(err));
-
-    //           }
-
-    //           return Products && Products.length > 0
-    //             ? {
-    //                 Vendor_PartNo: [Products[0].Vendor_PartNo[0]],
-    //                 ProductCode: [Products[0].ProductCode[0]],
-    //               }
-    //             : null;
-    //         });
-    //         //console.log(vendors, '<< vendors');
-    //         // Filtering out null values from vendors
-    //         const validVendors = vendors.filter((vendor) => vendor !== null);
-    //         //console.log(validVendors, '>> validVendors');
-    //         // Update the vendor state with valid vendor data
-    //         setVendor((prevVendor) => {
-    //           const updatedVendor = [...prevVendor, ...validVendors];
-    //           return updatedVendor;
-    //         });
-    //         //console.log(vendor,'>> vendor');
-    //         // Update order details with vendor codes
-    //         const updatedOrderListWithVendorCodes = Orders[0].OrderDetails.map((order, index) => {
-    //           //console.log(order.ProductCode[0], '<< order');
-    //           const matchingVendor = validVendors.find((vendor) => vendor.ProductCode[0].toLowerCase() === order.ProductCode[0].toLowerCase());
-    //           return matchingVendor ? { ...order, ...matchingVendor } : order;
-    //         });
-    //         //console.log(updatedOrderListWithVendorCodes, '<< updatedOrderListWithVendorCodes');
-    //         setRerenderOrderList(updatedOrderListWithVendorCodes);
-    //         // add discount
-    //         updatedOrderListWithVendorCodes.map((order, index) => {
-    //           VENDOR_LIST.map((vendor, index) => {
-    //             const code = order.ProductCode.toString();
-    //             if (code.toLowerCase().startsWith(vendor.code)) {
-    //               order.discount = [vendor.discount]
-    //               discountRenderFlag = true
-    //             }
-    //           })
-    //         })
-    //         // Set the updated order list state
-    //         //setRerenderOrderList(updatedOrderListWithVendorCodes);
-    //         //console.log(Orders[0], '>> Orders[0]');
-    //         // Process further if needed
-    //         // const shippingAddress1 = Orders[0].ShipAddress1[0];
-    //         // const shipCity = Orders[0].ShipCity[0];
-    //         // const shipCompanyName = Orders[0]?.ShipCompanyName[0];
-    //         // const shipState = Orders[0].ShipState[0];
-    //         // const shipCountry = Orders[0].ShipCountry[0]
-    //         // const shipPostalCode = Orders[0].ShipPostalCode[0];
-    //         // const shipName = Orders[0].ShipFirstName[0];
-    //         // const shipLastName = Orders[0].ShipLastName[0];
-    //         // const shipPhoneNumber = Orders[0].ShipPhoneNumber[0];
-    //         const customFieldInHandDate = Orders[0].Custom_Field_InHand[0];
-    //         const orderComments = Orders[0].Order_Comments[0];
-    //         // console.log(shippingAddress1);
-    //         // setShipCompanyName(shipCompanyName)
-    //         // setShippingAddress1(shippingAddress1)
-    //         // setShipCity(shipCity)
-    //         // setShipState(shipState)
-    //         // setShipCountry(shipCountry)
-    //         // setShipPostalCode(shipPostalCode)
-    //         // setShipName(shipName)
-    //         // setShipLastName(shipLastName)
-    //         // setShipPhoneNumber(shipPhoneNumber)
-    //         setCustomFieldInHand(customFieldInHandDate)
-    //         setOrderComments(orderComments)
-    //       })
-    //       .catch((productError) => {
-    //         console.error('Error fetching product data:', productError);
-    //       });
-    //   })
-    //   .catch((orderError) => {
-    //     console.error('Error fetching order data:', orderError);
-    //   });
-    // const fetchOrderData = async (orderUrl) => {
-    //   try {
-    //     const orderResponse = await axios.get(orderUrl);
-    //     const { xmldata: { Orders } } = orderResponse.data;
-    //     console.log(Orders[0], '<< Orders');
-
-    //     if (Orders && Orders[0]) {
-    //       setOrderClientAddress(Orders[0]);
-    //       const productCodes = Orders[0].OrderDetails.map((item) => item.ProductCode[0]);
-    //       const productDetails = await Orders[0].OrderDetails.map(item => {
-    //         return {
-    //           productCode: item.ProductCode[0] || 'UnknownCode',
-    //           productPrice: item.ProductPrice[0] || 'UnknownPrice'
-    //         }
-    //       });
-    //       //console.log(productDetails, '<< productDetails');
-    //       const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
-    //       const productResponses = await fetchProductData(productUrls);
-    //       const validVendors = processProductResponses(productResponses, productDetails);
-    //       updateVendorState(validVendors);
-    //       updateOrderListWithVendorCodes(Orders[0].OrderDetails, validVendors);
-    //       console.log(productResponses, '<< productResponses');
-    //       processOrderDetails(Orders[0]);
-    //       setOrderProductDetails(productDetails);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching order data:', error);
-    //     //alert('Not Found');
-    //   }
-    // };
-
-    // ***** OLD MAIN OPTION *** \\\
-    // const fetchOrderData = async (orderUrl) => {
-    //   try {
-    //     const orderResponse = await axios.get(orderUrl);
-    //     const { xmldata: { Orders } } = orderResponse.data;
-    //     //console.log(Orders, '<< Orders');
-    //     if (Orders && Orders[0] && Orders[0].OrderDetails.length > 0) {
-    //       setOrderClientAddress(Orders[0]);
-    //       const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || [];
-    //       //console.log(Orders, '<< Orders');
-    //       const productDetails = Orders[0].OrderDetails?.map(item => {
-    //         //console.log(item, '<< order details map');
-    //         const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || [];
-    //         return {
-    //           productCode: item.ProductCode?.[0] || 'UnknownCode',
-    //           productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
-    //           optionIDs
-    //         }
-    //       }) || [];
-
-    //       const productUrls = productCodes.map((code) => `http://localhost:5000/api/products/${code}`);
-    //       const productResponses = await fetchProductData(productUrls);
-    //       console.log(productResponses, 'productResponses');
-    //       const validVendors = processProductResponses(productResponses, productDetails);
-    //       updateVendorState(validVendors);
-    //       updateOrderListWithVendorCodes(Orders[0].OrderDetails, validVendors);
-    //       processOrderDetails(Orders[0]);
-    //       setOrderProductDetails(productDetails);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching order data:', error);
-    //     //alert('Not Found');
-    //   }
-    // };
+    
     const fetchOrderData = async (orderUrl) => {
       try {
         const orderResponse = await axios.get(orderUrl)
-        const {
-          xmldata: { Orders },
-        } = orderResponse.data
-        console.log(rerenderOrderList, 'rerenderOrderList')
+        const {xmldata: { Orders }} = orderResponse.data
+        console.log(Orders[0], '***Orders[0]***');
         if (Orders && Orders[0] && Orders?.[0]?.OrderDetails?.length > 0) {
           setOrderClientAddress(Orders[0])
-          const productCodes =
-            Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
 
-          // const productDetails =
-          //   Orders[0].OrderDetails?.flatMap((item) => {
-          //     const optionIDs = item.OrderDetails_Options?.map((option) => option.OptionID?.[0]) || []
-          //     // Base product
-          //     const baseProduct = {
-          //       productCode: item.ProductCode?.[0] || 'UnknownCode',
-          //       productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
-          //       optionIDs,
-          //     }
-
-          //     // Extra products for options with pricediff > 0
-          //     const extraProducts = optionIDs
-          //       .map((id) => {
-          //         const matchingOption = OPTION_DATA.find(
-          //           (option) => option.id === parseInt(id, 10),
-          //         )
-          //         if (matchingOption && matchingOption.pricediff > 0) {
-          //           return {
-          //             productCode: `Extra-${Math.random()
-          //               .toString(36)
-          //               .substr(2, 9)}`, // Random unique code
-          //             productPrice: matchingOption.pricediff.toString(), // Use pricediff as the price
-          //             optionDescription:
-          //               matchingOption.optionsdesc || 'UnknownOption',
-          //           }
-          //         }
-          //         return null
-          //       })
-          //       .filter(Boolean) // Remove null values
-
-          //     return [baseProduct, ...extraProducts]
-          //   }) || []
-
+          const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
+        
           const productDetails =
             Orders[0].OrderDetails?.flatMap((item) => {
               // Base product
@@ -496,13 +229,21 @@ function OrderFreight() {
               ? [...Orders[0].OrderDetails, ...productOption]
               : Orders[0].OrderDetails
 
-          // Fetch product URLs and process vendors
-          const productUrls = productCodes.map(
-            (code) => `http://localhost:5000/api/products/${code}`,
-          )
-          const productResponses = await fetchProductData(productUrls)
 
-          const validVendors = processProductResponses(
+          // Fetch product URLs and process vendors
+          const productUrls = productCodes.map( (code) => `http://localhost:5000/api/products/${code}`)
+          const productResponses = await fetchProductData(productUrls, 'product')
+   
+          // get product length with Google_Age_Group values
+          const vendorKits = extractVendorKits(productResponses);
+          setVendorKitsLenght(vendorKits.length)
+
+          if (vendorKits.length > 0) {
+            setShowVendorKitPopup(true);
+            setVendorKitItem(vendorKits)
+          }
+
+          const validVendors = await processProductResponses(
             productResponses,
             combinedOrderDetails,
           )
@@ -516,12 +257,41 @@ function OrderFreight() {
       }
     }
 
-    const fetchProductData = async (productUrls) => {
+    const extractVendorKits = (productResponses) => {
+      return productResponses
+        .map((item) => {
+          const { xmldata: { Products } } = item.data;
+          return Products.map((product) => {
+            if (Array.isArray(product.Google_Age_Group)) {
+              return product.Google_Age_Group.join(' // ').split(' // ');
+            }
+            return [];
+          });
+        })
+        .flat(2);
+    };
+     
+
+    // const fetchProductData = async (productUrls, type) => {
+    //   try {
+    //     return await Promise.all(productUrls.map((url) => axios.get(url, { params: { type } })))
+    //   } catch (error) {
+    //     console.error('Error fetching product data:', error)
+    //     return []
+    //   }
+    // }
+
+    const fetchKitData = async (kitUrls) => {
       try {
-        return await Promise.all(productUrls.map((url) => axios.get(url)))
+        const kitResponses = await Promise.all(
+          kitUrls.map((url) => axios.get(url)),
+        )
+        const kitVendors = processProductResponses(kitResponses)
+        replaceQuantities(kitVendors, quantityItemObject) // update quantity
+        updateVendorState(kitVendors)
+        applyDiscounts(kitVendors)
       } catch (error) {
-        console.error('Error fetching product data:', error)
-        return []
+        console.error('Error fetching kit data:', error)
       }
     }
 
@@ -635,9 +405,8 @@ function OrderFreight() {
 
     //   return vendors.filter((vendor) => vendor !== null);
     // };
-    const processProductResponses = (productResponses, orderProductDetails) => {
-      console.log(rerenderOrderList, 'rerenderOrderList')
-      console.log('rerenderOrderList')
+    const processProductResponses = async (productResponses, orderProductDetails) => {
+
       const vendors = productResponses.map((response) => {
         // Handle cases where xmldata might be undefined or an empty string
         const xmldata = response.data.xmldata || {}
@@ -664,6 +433,17 @@ function OrderFreight() {
         // Process the product details
         const product = Products[0]
         //console.log(product, 'product');
+        // const hasGoogleAgeGroup = p => p.Google_Age_Group?.[0] ? true : false;
+ 
+        // //console.log(hasGoogleAgeGroup(product), 'hasGoogleAgeGroup');
+        // if(hasGoogleAgeGroup(product)) {
+        //   const productKitsSplit = product.Google_Age_Group[0].split(' // ');
+        //   // here we should make a call to API
+        //   //const productUrls = productKitsSplit.map( (vcode) => `http://localhost:5000/api/products/${vcode}`)
+        //   //const productResponses = await fetchProductData(productUrls, 'vendor)
+        //   //console.log(productResponses, 'productResponses VENDOR');
+        // } 
+  
         let vendorPartNo = product.Vendor_PartNo ? product.Vendor_PartNo[0] : ''
         // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
         const productCode = product.ProductCode ? product.ProductCode[0] : ''
@@ -692,22 +472,9 @@ function OrderFreight() {
         }
       })
     }
-    const fetchKitData = async (kitUrls) => {
-      try {
-        const kitResponses = await Promise.all(
-          kitUrls.map((url) => axios.get(url)),
-        )
-        const kitVendors = processProductResponses(kitResponses)
-        replaceQuantities(kitVendors, quantityItemObject) // update quantity
-        updateVendorState(kitVendors)
-        applyDiscounts(kitVendors)
-      } catch (error) {
-        console.error('Error fetching kit data:', error)
-      }
-    }
 
     const updateVendorState = (validVendors) => {
-      console.log(validVendors, 'validVendors')
+
       setVendor((prevVendor) => [...prevVendor, ...validVendors])
       setRerenderOrderList(validVendors)
     }
@@ -755,11 +522,67 @@ function OrderFreight() {
 
     // Call the function with your order URL
     fetchOrderData(orderUrl)
-  }, [orderId, discountRenderFlag])
+  }, [orderId, discountRenderFlag, vendorKitsLenght])
+
+
   // Log updated orderClientAddress
   useEffect(() => {
     console.log(orderClientAddress)
   }, [orderClientAddress])
+
+  const fetchProductData = async (productUrls, type) => {
+    try {
+      return await Promise.all(productUrls.map((url) => axios.get(url, { params: { type } })))
+    } catch (error) {
+      console.error('Error fetching product data:', error)
+      return []
+    }
+  }
+
+  const handleConfirmSplit = async () => {
+    console.log('Confirmed splitting products!');
+  
+    const vendorUrls = vendorKitItem.map((code) => `http://localhost:5000/api/vendors/${code}`);
+    const vendorResponses = await fetchProductData(vendorUrls, 'vendor');
+  
+    const updatedProducts = vendorResponses.flatMap((item) => {
+      const { xmldata: { Products } = {} } = item.data || {};
+      console.log(Products, 'Extracted Products');
+      return Products || [];
+    });
+  
+    // Define keys to copy from old rerenderOrderList
+    const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount'];
+    const updatedOrderList = updatedProducts.map((product) => {
+      const source = rerenderOrderList[0] || {}; 
+      // Copy specified keys
+      const copiedData = keysToCopy.reduce((acc, key) => {
+        if (source[key]) {
+          acc[key] = source[key];
+        }
+        return acc;
+      }, {});
+      return {
+        ...product,
+        ...copiedData,
+      };
+    });
+    setRerenderOrderList(updatedOrderList);
+  
+    // Log for debugging
+    console.log(updatedOrderList, '***Updated rerenderOrderList***');
+  
+    // Close the popup
+    setShowVendorKitPopup(false);
+  };
+  
+
+
+  const handleCancelSplit = () => {
+    console.log('Canceled splitting products.');
+    setShowVendorKitPopup(false);
+  };
+
   return (
     <div className={styles.orderWrapper}>
       <OrderFreightForm
@@ -782,6 +605,24 @@ function OrderFreight() {
         handleFormValuesChange={handleFormValuesChange}
         orderClientAddress={orderClientAddress}
       />
+
+      {/* Vendor Kits Popup */}
+      <Modal show={showVendorKitPopup} onHide={handleCancelSplit}>
+        <Modal.Header closeButton>
+          <Modal.Title>Split Products</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          There are {vendorKitsLenght} products. Do you want to split the kits?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelSplit}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmSplit}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Modal
         show={showModal}

@@ -2,34 +2,25 @@ const axios = require('../node_modules/axios/dist/node/axios.cjs')
 const xml2js = require('xml2js') // xml parser
 const createHttpError = require('http-errors')
 
-//const clipboardy = require('clipboardy')
-const { exec } = require('child_process')
-const outlook = require('node-outlook')
-const nodemailer = require('nodemailer')
+
 
 // many prod
-module.exports.getProducts = async (req, res, next) => {
+module.exports.getvendors = async (req, res, next) => {
   try {
   } catch (error) {
     console.log('err')
   }
 }
 
-// single prod
-module.exports.getProductById = async (req, res, next) => {
-    // console.log('getProductById router***');
+// single vendor
+module.exports.getvendorById = async (req, res, next) => {
+    
   try {
     const { id } = req.params;
     const { type } = req.query;
-    //let url;
-    const url = `${process.env.PRODUCT}${id}`
-    // if (type === 'product') {
-    //   url = `${process.env.PRODUCT}${id}`;
-    // } else if (type === 'vendor') {
-    //   url = `${process.env.VENDORPRODUCT}${id}`;
-    // } else {
-    //   return res.status(400).send({ error: 'Invalid type parameter' });
-    // }
+    console.log(id);
+    const url = `${process.env.VENDORPRODUCT}${id}`
+    console.log( url );
     axios
       .get(url)
       .then((response) => {
@@ -40,6 +31,7 @@ module.exports.getProductById = async (req, res, next) => {
             console.error('Error parsing XML:', err)
           } else {
             const productJson = JSON.stringify(result, null, 2)
+            console.log(productJson, 'productJson vendor');
             res.status(200).send(productJson)
           }
         })
@@ -59,10 +51,8 @@ module.exports.getProductById = async (req, res, next) => {
         }
       })
   } catch (error) {
-    //console.log('err');
     next(error)
   }
+
 }
-
-
 
