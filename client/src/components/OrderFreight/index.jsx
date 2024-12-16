@@ -14,7 +14,9 @@ import OrderFreightForm from '../OrderFreightForm'
 import AddProductPopUp from '../AddProductPopUp'
 import MismatchedPricesModal from './MismatchedPricesModal'
 import { OPTION_DATA } from '../../utils/optionsData'
-import ProductSplitPopup from '../SplitProductPopup/SplitProductPopup'
+import ProductSplitPopup from '../SplitProductPopup/SplitProductPopup';
+
+
 
 function OrderFreight() {
   let discountRenderFlag = false
@@ -47,6 +49,7 @@ function OrderFreight() {
   const [orderProductDetails, setOrderProductDetails] = useState(null)
   const [vendorKitsLenght, setVendorKitsLenght] = useState(0);
   const [vendorKitItem, setVendorKitItem] = useState([])
+  const [optionProducts, setoptionProducts] = useState()
 
 
 
@@ -173,10 +176,12 @@ function OrderFreight() {
         const orderResponse = await axios.get(orderUrl)
         const {xmldata: { Orders }} = orderResponse.data
         console.log(Orders[0], '***Orders[0]***');
+        //console.log(rerenderOrderList, '***rerenderOrderList***');
         if (Orders && Orders[0] && Orders?.[0]?.OrderDetails?.length > 0) {
           setOrderClientAddress(Orders[0])
 
           const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
+          //console.log(productCodes, '*** product codes ***');
         
           const productDetails =
             Orders[0].OrderDetails?.flatMap((item) => {
@@ -201,21 +206,32 @@ function OrderFreight() {
                     (option) => option.id === parseInt(id, 10),
                   )
                   if (matchingOption && matchingOption.pricediff > 0) {
-                    return {
-                      ProductCode: ['be4013'],
-                      ProductName: [
-                        matchingOption.optiondesc || 'UnknownOption',
-                      ],
-                      ProductPrice: [
-                        matchingOption.pricediff?.toString() ?? '0.00',
-                      ],
-                      Quantity: ['1'],
-                      Vendor_PartNo: ['BRST+BRC-H+L6000D'],
-                      Vendor_Price: [
-                        matchingOption.vendorpricediff?.toString() ?? '0.00',
-                      ],
-                      discount: [15],
-                    }
+                    console.log(matchingOption, '***matchingOption');
+                    // below data should be replaced from real file
+                    const optionsData = [{
+                      id: 6666,
+                      ProductName: 'Low Tack Tape 2in x 75ft KS650',
+                      ProductCode: 'test',
+                      Quantity: '1',
+                      Vendor_PartNo: 'BRST+BRC-H+L6000D',
+                      Vendor_Price: '100',
+                      discount: 15
+                    }]
+                    //
+                    return (() => {
+                      const option = optionsData.find((o) => o.id === matchingOption.id); // Find a single match
+                      if (!option) return {}; // Fallback if no matching option is found
+                      return {
+                        ProductCode: [option.ProductCode || 'UnknownProduct'],
+                        ProductName: [matchingOption.optiondesc || option.ProductName || 'UnknownOption'],
+                        ProductPrice: [matchingOption.pricediff?.toString() || option.Vendor_Price?.toString() || '0.00'],
+                        Quantity: [option.Quantity?.toString() || '1'],
+                        Vendor_PartNo: [option.Vendor_PartNo || 'Unknown'],
+                        Vendor_Price: [matchingOption.vendorpricediff?.toString() || option.Vendor_Price?.toString() || '0.00'],
+                        discount: [option.discount || 15],
+                      };
+                    })();
+      
                   }
                   return null
                 })
@@ -229,16 +245,20 @@ function OrderFreight() {
               ? [...Orders[0].OrderDetails, ...productOption]
               : Orders[0].OrderDetails
 
-
+          const optionOrderProducts = combinedOrderDetails.filter(
+            (item) => !item.hasOwnProperty('OrderDetailID')
+          );  
+          setoptionProducts(optionOrderProducts)
           // Fetch product URLs and process vendors
           const productUrls = productCodes.map( (code) => `http://localhost:5000/api/products/${code}`)
           const productResponses = await fetchProductData(productUrls, 'product')
-   
+          console.log(productResponses, '***productResponses***');
           // get product length with Google_Age_Group values
           const vendorKits = extractVendorKits(productResponses);
+          console.log(vendorKits.length,'***vendorKits.length***'); // does not call
           setVendorKitsLenght(vendorKits.length)
 
-          if (vendorKits.length > 0) {
+          if (vendorKits.length > 1) {
             setShowVendorKitPopup(true);
             setVendorKitItem(vendorKits)
           }
@@ -247,6 +267,7 @@ function OrderFreight() {
             productResponses,
             combinedOrderDetails,
           )
+          //console.log(optionOrderProducts, 'optionOrderProducts');
           updateVendorState(validVendors)
           updateOrderListWithVendorCodes(combinedOrderDetails, validVendors)
           processOrderDetails(Orders[0])
@@ -257,20 +278,59 @@ function OrderFreight() {
       }
     }
 
+    // const extractVendorKits = (productResponses) => {
+    //   //console.log(productResponses, '** productResponses***')
+    //   return productResponses
+    //     .map((item) => {
+    //       //console.log(item, '**item productResponses***')
+    //       const { xmldata: { Products } } = item.data;
+    //       //console.log(Products, '***Products***');
+    //       return Products.map((product) => {
+    //         if (Array.isArray(product.Google_Age_Group)) {
+    //           return product.Google_Age_Group.join(' // ').split(' // ');
+    //         }
+    //         return [];
+    //       });
+    //     })
+    //     .flat(2);
+    // };
     const extractVendorKits = (productResponses) => {
-      return productResponses
-        .map((item) => {
-          const { xmldata: { Products } } = item.data;
-          return Products.map((product) => {
-            if (Array.isArray(product.Google_Age_Group)) {
-              return product.Google_Age_Group.join(' // ').split(' // ');
-            }
-            return [];
-          });
-        })
-        .flat(2);
+      let alertShown = false; // Flag to track if the alert has been shown
+      return productResponses.flatMap((item, index) => {
+        // Check if xmldata is empty
+        if (!item?.data?.xmldata || item.data.xmldata === '') {
+          if (!alertShown) {
+            alertShown = true; // Set the flag to true after showing the alert
+            console.warn(
+              "Custom item applied before. Could not proceed because a product does not exist in the list."
+            );
+            alert(
+              "Custom item applied before. Could not proceed because a product does not exist in the list."
+            );
+          }
+          return []; // Skip invalid item
+        }
+    
+        const { xmldata: { Products } = {} } = item.data;
+        // Validate Products array
+        if (!Array.isArray(Products)) {
+          console.warn(`Invalid Products at index ${index}`);
+          return [];
+        }
+        // Process each product
+        return Products.flatMap((product) => {
+          if (Array.isArray(product.Google_Age_Group)) {
+            return product.Google_Age_Group.flatMap((group) =>
+              group.split(' // ')
+            );
+          }
+          return [];
+        });
+      });
     };
-     
+    
+    
+
 
     // const fetchProductData = async (productUrls, type) => {
     //   try {
@@ -541,6 +601,7 @@ function OrderFreight() {
 
   const handleConfirmSplit = async () => {
     console.log('Confirmed splitting products!');
+    console.log(optionProducts, '***optionProducts***');
   
     const vendorUrls = vendorKitItem.map((code) => `http://localhost:5000/api/vendors/${code}`);
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor');
