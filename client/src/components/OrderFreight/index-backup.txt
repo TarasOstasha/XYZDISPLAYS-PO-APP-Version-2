@@ -57,6 +57,7 @@ function OrderFreight() {
     console.log(index, array)
     if (index >= 0 && index < array.length) {
       setRremoveOnclick(array.splice(index, 1))
+      //console.log(array);
     }
     console.log(array, index, '<< array')
   }
@@ -123,7 +124,6 @@ function OrderFreight() {
       return
     }
   }
-
   const handleToSaveTop = (formikProps) => {
     setIsEditingTop(false)
     // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KIST THESE
@@ -157,7 +157,6 @@ function OrderFreight() {
   const handleVendorAddressChange = (address) => {
     setVendorAddress(address)
   }
-
   const handleVendorShipInfoDescription = (vendor) => {
     setShipInfoDescription(vendor)
   }
@@ -601,15 +600,15 @@ function OrderFreight() {
   }
 
   const handleConfirmSplit = async () => {
-    //console.log('Confirmed splitting products!');
-    //console.log(optionProducts, '***optionProducts***');
+    console.log('Confirmed splitting products!');
+    console.log(optionProducts, '***optionProducts***');
   
     const vendorUrls = vendorKitItem.map((code) => `http://localhost:5000/api/vendors/${code}`);
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor');
   
     const updatedProducts = vendorResponses.flatMap((item) => {
       const { xmldata: { Products } = {} } = item.data || {};
-      //console.log(Products, 'Extracted Products');
+      console.log(Products, 'Extracted Products');
       return Products || [];
     });
   
@@ -632,7 +631,7 @@ function OrderFreight() {
     setRerenderOrderList(updatedOrderList);
   
     // Log for debugging
-    //console.log(updatedOrderList, '***Updated rerenderOrderList***');
+    console.log(updatedOrderList, '***Updated rerenderOrderList***');
   
     // Close the popup
     setShowVendorKitPopup(false);
