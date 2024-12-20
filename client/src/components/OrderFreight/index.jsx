@@ -14,9 +14,7 @@ import OrderFreightForm from '../OrderFreightForm'
 import AddProductPopUp from '../AddProductPopUp'
 import MismatchedPricesModal from './MismatchedPricesModal'
 import { OPTION_DATA } from '../../utils/optionsData'
-import ProductSplitPopup from '../SplitProductPopup/SplitProductPopup';
-
-
+import ProductSplitPopup from '../SplitProductPopup/SplitProductPopup'
 
 function OrderFreight() {
   let discountRenderFlag = false
@@ -27,7 +25,7 @@ function OrderFreight() {
   const [orderId, setOrderId] = useState('')
 
   // Vendor Kits Popup
-  const [showVendorKitPopup, setShowVendorKitPopup] = useState(false);
+  const [showVendorKitPopup, setShowVendorKitPopup] = useState(false)
 
   // *** order Detail ***
   const [rerenderOrderList, setRerenderOrderList] = useState([]) // rerender when inserting discount value to our object
@@ -47,11 +45,10 @@ function OrderFreight() {
   const [orderComments, setOrderComments] = useState()
   const [vendor, setVendor] = useState([])
   const [orderProductDetails, setOrderProductDetails] = useState(null)
-  const [vendorKitsLenght, setVendorKitsLenght] = useState(0);
+  const [vendorKitsLenght, setVendorKitsLenght] = useState(0)
   const [vendorKitItem, setVendorKitItem] = useState([])
   const [optionProducts, setoptionProducts] = useState()
-
-
+  const [userCustomProducts, setUserCustomProducts] = useState([])
 
   const handleToRemove = (index, array) => {
     console.log(index, array)
@@ -170,31 +167,33 @@ function OrderFreight() {
 
     const orderUrl = `http://localhost:5000/api/orders/${orderId}`
 
-
-    
     const fetchOrderData = async (orderUrl) => {
       try {
         const orderResponse = await axios.get(orderUrl)
-        const {xmldata: { Orders }} = orderResponse.data
-        console.log(Orders[0], '***Orders[0]***');
+        const {
+          xmldata: { Orders },
+        } = orderResponse.data
+        //console.log(Orders[0], '***Orders[0]***')
         //console.log(rerenderOrderList, '***rerenderOrderList***');
         if (Orders && Orders[0] && Orders?.[0]?.OrderDetails?.length > 0) {
           setOrderClientAddress(Orders[0])
 
-          const productCodes = Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
+          const productCodes =
+            Orders[0].OrderDetails?.map((item) => item.ProductCode?.[0]) || []
           //console.log(productCodes, '*** product codes ***');
-        
+
           const productDetails =
             Orders[0].OrderDetails?.flatMap((item) => {
               // Base product
               const baseProduct = {
                 productCode: item.ProductCode?.[0] || 'UnknownCode',
                 productPrice: item.ProductPrice?.[0] || 'UnknownPrice',
+                productName: item.ProductName?.[0] || 'UnknownProductName',
+                Quantity: item.Quantity?.[0] || '0',
               }
-
               return baseProduct
             }) || []
-
+          //console.log(productDetails,'productDetails');
           const productOption =
             Orders[0].OrderDetails?.flatMap((item) => {
               const optionIDs =
@@ -207,32 +206,47 @@ function OrderFreight() {
                     (option) => option.id === parseInt(id, 10),
                   )
                   if (matchingOption && matchingOption.pricediff > 0) {
-                    console.log(matchingOption, '***matchingOption');
+                    //console.log(matchingOption, '***matchingOption')
                     // below data should be replaced from real file !!!!!
-                    const optionsData = [{
-                      id: 6666,
-                      ProductName: 'Low Tack Tape 2in x 75ft KS650',
-                      ProductCode: 'test',
-                      Quantity: '1',
-                      Vendor_PartNo: 'BRST+BRC-H+L6000D',
-                      Vendor_Price: '100',
-                      discount: 15
-                    }]
+                    const optionsData = [
+                      {
+                        id: 6666,
+                        ProductName: 'Low Tack Tape 2in x 75ft KS650',
+                        ProductCode: 'test',
+                        Quantity: '1',
+                        Vendor_PartNo: 'BRST+BRC-H+L6000D',
+                        Vendor_Price: '100',
+                        discount: 15,
+                      },
+                    ]
                     //
                     return (() => {
-                      const option = optionsData.find((o) => o.id === matchingOption.id); // Find a single match
-                      if (!option) return {}; // Fallback if no matching option is found
+                      const option = optionsData.find(
+                        (o) => o.id === matchingOption.id,
+                      ) // Find a single match
+                      if (!option) return {} // Fallback if no matching option is found
                       return {
                         ProductCode: [option.ProductCode || 'UnknownProduct'],
-                        ProductName: [matchingOption.optiondesc || option.ProductName || 'UnknownOption'],
-                        ProductPrice: [matchingOption.pricediff?.toString() || option.Vendor_Price?.toString() || '0.00'],
+                        ProductName: [
+                          matchingOption.optiondesc ||
+                            option.ProductName ||
+                            'UnknownOption',
+                        ],
+                        ProductPrice: [
+                          matchingOption.pricediff?.toString() ||
+                            option.Vendor_Price?.toString() ||
+                            '0.00',
+                        ],
                         Quantity: [option.Quantity?.toString() || '1'],
                         Vendor_PartNo: [option.Vendor_PartNo || 'Unknown'],
-                        Vendor_Price: [matchingOption.vendorpricediff?.toString() || option.Vendor_Price?.toString() || '0.00'],
+                        Vendor_Price: [
+                          matchingOption.vendorpricediff?.toString() ||
+                            option.Vendor_Price?.toString() ||
+                            '0.00',
+                        ],
                         discount: [option.discount || 15],
-                      };
-                    })();
-      
+                      }
+                    })()
                   }
                   return null
                 })
@@ -241,26 +255,53 @@ function OrderFreight() {
             }) || []
 
           //
+          const filteredProductOption = Array.isArray(productOption)
+            ? productOption.filter((item) => Object.keys(item).length > 0)
+            : []
+
           const combinedOrderDetails =
-            productOption.length > 0
-              ? [...Orders[0].OrderDetails, ...productOption]
+            filteredProductOption.length > 0
+              ? [...Orders[0].OrderDetails, ...filteredProductOption]
               : Orders[0].OrderDetails
 
           const optionOrderProducts = combinedOrderDetails.filter(
-            (item) => !item.hasOwnProperty('OrderDetailID')
-          );  
+            (item) => !item.hasOwnProperty('OrderDetailID'),
+          )
           setoptionProducts(optionOrderProducts)
           // Fetch product URLs and process vendors
-          const productUrls = productCodes.map( (code) => `http://localhost:5000/api/products/${code}`)
-          const productResponses = await fetchProductData(productUrls, 'product')
-          console.log(productResponses, '***productResponses***');
+          const productUrls = productCodes.map(
+            (code) => `http://localhost:5000/api/products/${code}`,
+          )
+          const productResponses = await fetchProductData(
+            productUrls,
+            'product',
+          )
+          //console.log(productResponses, '***productResponses***');
+          // Extract existing product codes as a flat array, ensuring unique entries
+          const existingProductCodes = new Set(
+            productResponses.flatMap((response) =>
+              (response.data?.xmldata?.Products || []).map((product) =>
+                product.ProductCode[0].trim().toLowerCase(),
+              ),
+            ),
+          )
+          const nonExistingCustomProducts = productDetails.filter((detail) => {
+            const productCode = detail.productCode.trim().toLowerCase()
+            return !existingProductCodes.has(productCode)
+          })
+          //console.log(nonExistingCustomProducts,'nonExistingCustomProducts');
+          setUserCustomProducts(nonExistingCustomProducts)
+
+          //console.log(productResponses, 'productResponses');
+
           // get product length with Google_Age_Group values
-          const vendorKits = extractVendorKits(productResponses);
-          console.log(vendorKits.length,'***vendorKits.length***'); // does not call
+          const vendorKits = extractVendorKits(productResponses)
+          //console.log(vendorKits, '***vendorKits***')
+          //console.log(vendorKits.length, '***vendorKits.length***') // does not call
           setVendorKitsLenght(vendorKits.length)
 
           if (vendorKits.length > 1) {
-            setShowVendorKitPopup(true);
+            setShowVendorKitPopup(true)
             setVendorKitItem(vendorKits)
           }
 
@@ -268,6 +309,8 @@ function OrderFreight() {
             productResponses,
             combinedOrderDetails,
           )
+          console.log(validVendors, '***validVendors***')
+          console.log(combinedOrderDetails, '***combinedOrderDetails***')
           //console.log(optionOrderProducts, 'optionOrderProducts');
           updateVendorState(validVendors)
           updateOrderListWithVendorCodes(combinedOrderDetails, validVendors)
@@ -296,42 +339,49 @@ function OrderFreight() {
     //     .flat(2);
     // };
     const extractVendorKits = (productResponses) => {
-      let alertShown = false; // Flag to track if the alert has been shown
-      return productResponses.flatMap((item, index) => {
-        // Check if xmldata is empty
-        if (!item?.data?.xmldata || item.data.xmldata === '') {
-          if (!alertShown) {
-            alertShown = true; // Set the flag to true after showing the alert
-            console.warn(
-              "Custom item applied before. Could not proceed because a product does not exist in the list."
-            );
-            alert(
-              "Custom item applied before. Could not proceed because a product does not exist in the list."
-            );
-          }
-          return []; // Skip invalid item
+      let alertShown = false // Flag to track if the alert has been shown
+      //console.log(userCustomProducts,'userCustomProducts');
+      const mergetItems = [
+        ...productResponses.map((response) => ({
+          ...response,
+          data: {
+            ...response.data,
+            xmldata: {
+              Products: response.data?.xmldata?.Products || [],
+            },
+          },
+        })),
+        ...userCustomProducts.map((product) => ({
+          data: {
+            xmldata: {
+              Products: [
+                {
+                  ProductCode: product.productCode,
+                  ProductPrice: product.productPrice,
+                  ProductName: product.productName,
+                },
+              ],
+            },
+          },
+        })),
+      ]
+      return mergetItems.flatMap((item, index) => {
+        const { xmldata: { Products } = {} } = item.data
+        if (!Array.isArray(Products) || Products.length === 0) {
+          console.warn(`Invalid Products at index ${index}`)
+          return []
         }
-    
-        const { xmldata: { Products } = {} } = item.data;
-        // Validate Products array
-        if (!Array.isArray(Products)) {
-          console.warn(`Invalid Products at index ${index}`);
-          return [];
-        }
-        // Process each product
+
         return Products.flatMap((product) => {
           if (Array.isArray(product.Google_Age_Group)) {
             return product.Google_Age_Group.flatMap((group) =>
-              group.split(' // ')
-            );
+              group.split(' // '),
+            )
           }
-          return [];
-        });
-      });
-    };
-    
-    
-
+          return []
+        })
+      })
+    }
 
     // const fetchProductData = async (productUrls, type) => {
     //   try {
@@ -466,8 +516,10 @@ function OrderFreight() {
 
     //   return vendors.filter((vendor) => vendor !== null);
     // };
-    const processProductResponses = async (productResponses, orderProductDetails) => {
-
+    const processProductResponses = async (
+      productResponses,
+      orderProductDetails,
+    ) => {
       const vendors = productResponses.map((response) => {
         // Handle cases where xmldata might be undefined or an empty string
         const xmldata = response.data.xmldata || {}
@@ -493,18 +545,6 @@ function OrderFreight() {
 
         // Process the product details
         const product = Products[0]
-        //console.log(product, 'product');
-        // const hasGoogleAgeGroup = p => p.Google_Age_Group?.[0] ? true : false;
- 
-        // //console.log(hasGoogleAgeGroup(product), 'hasGoogleAgeGroup');
-        // if(hasGoogleAgeGroup(product)) {
-        //   const productKitsSplit = product.Google_Age_Group[0].split(' // ');
-        //   // here we should make a call to API
-        //   //const productUrls = productKitsSplit.map( (vcode) => `http://localhost:5000/api/products/${vcode}`)
-        //   //const productResponses = await fetchProductData(productUrls, 'vendor)
-        //   //console.log(productResponses, 'productResponses VENDOR');
-        // } 
-  
         let vendorPartNo = product.Vendor_PartNo ? product.Vendor_PartNo[0] : ''
         // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
         const productCode = product.ProductCode ? product.ProductCode[0] : ''
@@ -521,7 +561,6 @@ function OrderFreight() {
           Vendor_Price: [product.Vendor_Price ? product.Vendor_Price[0] : ''],
         }
       })
-
       return vendors.filter((vendor) => vendor !== null)
     }
 
@@ -535,27 +574,36 @@ function OrderFreight() {
     }
 
     const updateVendorState = (validVendors) => {
-
+      console.log(validVendors, 'validVendors')
       setVendor((prevVendor) => [...prevVendor, ...validVendors])
       setRerenderOrderList(validVendors)
     }
 
     const updateOrderListWithVendorCodes = (orderDetails, validVendors) => {
-      const updatedOrderListWithVendorCodes = orderDetails.map((order) => {
+      //console.log(orderDetails, '***orderDetails**');
+      //console.log(rerenderOrderList,'***rerenderOrderList***');
+      // console.log(validVendors, '***validVendors***');
+      const updatedOrderWithVendorCodes = orderDetails.map((order) => {
+        console.log(
+          orderDetails,
+          '***order from updatedOrderListWithVendorCodes',
+        )
         const matchingVendor = validVendors.find(
           (vendor) =>
             vendor.ProductCode[0].toLowerCase() ===
             order.ProductCode[0].toLowerCase(),
         )
+        console.log(matchingVendor, 'matchingVendor')
         return matchingVendor ? { ...order, ...matchingVendor } : order
       })
-
-      setRerenderOrderList(updatedOrderListWithVendorCodes)
-      applyDiscounts(updatedOrderListWithVendorCodes)
+      //console.log(updatedOrderWithVendorCodes, '***updatedOrderWithVendorCodes***');
+      setRerenderOrderList(updatedOrderWithVendorCodes)
+      applyDiscounts(updatedOrderWithVendorCodes)
     }
 
     const applyDiscounts = (orderList) => {
       orderList.forEach((order) => {
+        console.log(order, '***order applyDiscounts')
         VENDOR_LIST.forEach((vendor) => {
           const code = order.ProductCode.toString()
           if (code.toLowerCase().startsWith(vendor.code)) {
@@ -585,7 +633,6 @@ function OrderFreight() {
     fetchOrderData(orderUrl)
   }, [orderId, discountRenderFlag, vendorKitsLenght])
 
-
   // Log updated orderClientAddress
   useEffect(() => {
     console.log(orderClientAddress)
@@ -593,57 +640,94 @@ function OrderFreight() {
 
   const fetchProductData = async (productUrls, type) => {
     try {
-      return await Promise.all(productUrls.map((url) => axios.get(url, { params: { type } })))
+      return await Promise.all(
+        productUrls.map((url) => axios.get(url, { params: { type } })),
+      )
     } catch (error) {
       console.error('Error fetching product data:', error)
       return []
     }
   }
 
+  // method to transform data in handleConfirmSplit
+  const transformUpdatedProductsToUserCustomFormat = (val) => {
+    return val.map((product) => {
+      return {
+        Quantity: [product.Quantity] || ['1'],
+        ProductCode: Array.isArray(product.productCode)
+          ? [product.productCode[0]]
+          : [product.productCode],
+        ProductName: Array.isArray(product.productName)
+          ? [product.productName[0]]
+          : [product.productName],
+        ProductPrice: Array.isArray(product.productPrice)
+          ? [product.productPrice[0]]
+          : [product.productPrice],
+        discount: ['0'],
+        Vendor_Price: Array.isArray(product.productPrice)
+          ? [product.productPrice[0]]
+          : [product.productPrice],
+        Vendor_PartNo: ['custom'],
+      }
+    })
+  }
+
   const handleConfirmSplit = async () => {
     //console.log('Confirmed splitting products!');
     //console.log(optionProducts, '***optionProducts***');
-  
-    const vendorUrls = vendorKitItem.map((code) => `http://localhost:5000/api/vendors/${code}`);
-    const vendorResponses = await fetchProductData(vendorUrls, 'vendor');
-  
+
+    const vendorUrls = vendorKitItem.map(
+      (code) => `http://localhost:5000/api/vendors/${code}`,
+    )
+    //console.log(vendorUrls, '***vendorUrls***');
+    const vendorResponses = await fetchProductData(vendorUrls, 'vendor')
+    //console.log(vendorResponses, '***vendorResponses***')
+
     const updatedProducts = vendorResponses.flatMap((item) => {
-      const { xmldata: { Products } = {} } = item.data || {};
+      const { xmldata: { Products } = {} } = item.data || {}
       //console.log(Products, 'Extracted Products');
-      return Products || [];
-    });
-  
+      return Products || []
+    })
+    //console.log(updatedProducts, '*updatedProducts*')
     // Define keys to copy from old rerenderOrderList
-    const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount'];
+    const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount']
     const updatedOrderList = updatedProducts.map((product) => {
-      const source = rerenderOrderList[0] || {}; 
+      const source = rerenderOrderList[0] || {}
       // Copy specified keys
       const copiedData = keysToCopy.reduce((acc, key) => {
         if (source[key]) {
-          acc[key] = source[key];
+          acc[key] = source[key]
         }
-        return acc;
-      }, {});
+        return acc
+      }, {})
       return {
         ...product,
         ...copiedData,
-      };
-    });
-    setRerenderOrderList(updatedOrderList);
-  
+      }
+    })
+    const normalizedUpdatedProducts = transformUpdatedProductsToUserCustomFormat(
+      userCustomProducts,
+    )
+    //console.log(normalizedUpdatedProducts, 'normalizedUpdatedProducts');
+
+    const modOrderList = [
+      ...normalizedUpdatedProducts,
+      ...updatedOrderList.flat(Infinity),
+    ]
+    //console.log(modOrderList, 'modOrderList');
+    setRerenderOrderList(modOrderList)
+
     // Log for debugging
     //console.log(updatedOrderList, '***Updated rerenderOrderList***');
-  
-    // Close the popup
-    setShowVendorKitPopup(false);
-  };
-  
 
+    // Close the popup
+    setShowVendorKitPopup(false)
+  }
 
   const handleCancelSplit = () => {
-    console.log('Canceled splitting products.');
-    setShowVendorKitPopup(false);
-  };
+    console.log('Canceled splitting products.')
+    setShowVendorKitPopup(false)
+  }
 
   return (
     <div className={styles.orderWrapper}>
