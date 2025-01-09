@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9a114229.css",
+    "main.js": "/static/js/main.5032687c.js",
+    "static/js/453.258b012d.chunk.js": "/static/js/453.258b012d.chunk.js",
+    "static/media/Logo-Master.png": "/static/media/Logo-Master.d93c507084d27d80df7a.png",
+    "static/media/Logo-Master.jpg": "/static/media/Logo-Master.a27f4b1ef33e6a4da00a.jpg",
+    "index.html": "/index.html",
+    "main.9a114229.css.map": "/static/css/main.9a114229.css.map",
+    "main.5032687c.js.map": "/static/js/main.5032687c.js.map",
+    "453.258b012d.chunk.js.map": "/static/js/453.258b012d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9a114229.css",
+    "static/js/main.5032687c.js"
+  ]
+}

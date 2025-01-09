@@ -3,6 +3,11 @@ import  Header from '../../components/Header';
 import  Footer from '../../components/Footer';
 
 function FetchFolderButton() {
+    const API_BASE_URL =
+    window.location.hostname === 'localhost'
+      ? 'http://localhost:5000'
+      : 'http://server:5000'; 
+
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -11,7 +16,7 @@ function FetchFolderButton() {
         setMessage('');
         try {
           // Fetch the message from the backend
-          const response = await fetch('http://localhost:5000/api/updateFolder', {
+          const response = await fetch(`${API_BASE_URL}/api/updateFolder`, {
               method: 'GET',
           });
   

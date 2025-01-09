@@ -1,29 +1,14 @@
-# Use the specified architecture
-FROM --platform=linux/amd64 node:14-alpine as build
-
-# Set the working directory
+# Stage 1: Build the React app
+FROM node:18-alpine as build
 WORKDIR /app
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
-
-# Copy the rest of the application code
-COPY / .
-
-# Build the application
+COPY . .
 RUN npm run build
 
-# Use nginx to serve the static files
+# Stage 2: Serve the app with nginx
 FROM nginx:alpine
-
-# Copy the built files from the previous stage
 COPY --from=build /app/build /usr/share/nginx/html
-
-# Expose the port
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf  
 EXPOSE 80
-
-# Command to run nginx
 CMD ["nginx", "-g", "daemon off;"]
