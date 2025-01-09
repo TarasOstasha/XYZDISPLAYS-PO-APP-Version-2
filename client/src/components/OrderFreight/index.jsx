@@ -17,6 +17,11 @@ import { OPTION_DATA } from '../../utils/optionsData'
 import ProductSplitPopup from '../SplitProductPopup/SplitProductPopup'
 
 function OrderFreight() {
+  const API_BASE_URL =
+    window.location.hostname === 'localhost'
+      ? 'http://localhost:5000'
+      : 'http://server:5000'; 
+
   let discountRenderFlag = false
   const [mismatchedPrices, setMismatchedPrices] = useState([])
   const [showModal, setShowModal] = useState(false)
@@ -165,7 +170,7 @@ function OrderFreight() {
       return
     }
 
-    const orderUrl = `http://localhost:5000/api/orders/${orderId}`
+    const orderUrl = `${API_BASE_URL}/api/orders/${orderId}`
 
     const fetchOrderData = async (orderUrl) => {
       try {
@@ -208,20 +213,20 @@ function OrderFreight() {
                   if (matchingOption && matchingOption.pricediff > 0) {
                     //console.log(matchingOption, '***matchingOption')
                     // below data should be replaced from real file !!!!!
-                    const optionsData = [
-                      {
-                        id: 6666,
-                        ProductName: 'Low Tack Tape 2in x 75ft KS650',
-                        ProductCode: 'test',
-                        Quantity: '1',
-                        Vendor_PartNo: 'BRST+BRC-H+L6000D',
-                        Vendor_Price: '100',
-                        discount: 15,
-                      },
-                    ]
+                    // const optionsData = [
+                    //   {
+                    //     id: 6666,
+                    //     ProductName: 'Low Tack Tape 2in x 75ft KS650',
+                    //     ProductCode: 'test',
+                    //     Quantity: '1',
+                    //     Vendor_PartNo: 'BRST+BRC-H+L6000D',
+                    //     Vendor_Price: '100',
+                    //     discount: 15,
+                    //   },
+                    // ]
                     //
                     return (() => {
-                      const option = optionsData.find(
+                      const option = OPTION_DATA.find(
                         (o) => o.id === matchingOption.id,
                       ) // Find a single match
                       if (!option) return {} // Fallback if no matching option is found
@@ -270,7 +275,7 @@ function OrderFreight() {
           setoptionProducts(optionOrderProducts)
           // Fetch product URLs and process vendors
           const productUrls = productCodes.map(
-            (code) => `http://localhost:5000/api/products/${code}`,
+            (code) => `${API_BASE_URL}/api/products/${code}`,
           )
           const productResponses = await fetchProductData(
             productUrls,
@@ -677,7 +682,7 @@ function OrderFreight() {
     //console.log(optionProducts, '***optionProducts***');
 
     const vendorUrls = vendorKitItem.map(
-      (code) => `http://localhost:5000/api/vendors/${code}`,
+      (code) => `${API_BASE_URL}/api/vendors/${code}`,
     )
     //console.log(vendorUrls, '***vendorUrls***');
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor')

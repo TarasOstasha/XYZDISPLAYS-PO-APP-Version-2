@@ -1,3 +1,16 @@
 Outlook permisions restricted
 To allow open window outlook we need to set rules
 Window POwer Shell open as admin and paste this - Set-ExecutionPolicy Unrestricted, than press Y
+/////////////////////
+run docker
+ Enable Docker Desktop to Start on Boot:
+ - Settings → General, Enable the option: "Start Docker Desktop when you log in"
+ Create a Scheduled Task to Run Docker Compose:
+ -Press Win + R, type taskschd.msc
+ -Create Task
+ -General Tab: Name your task, e.g., Start Docker Compose, Check "Run only when the user is logged on", Check "Run with highest privileges".
+ -Triggers Tab: Click New, Set Begin the task to At startup, OK
+ -Actions Tab: Click New, In Program/script, enter: cmd and In Add arguments, enter: /c "cd C:\path\to\your\docker-compose.yml && docker-compose up -d"
+ -Settings Tab:Check "Allow task to be run on demand", Check "Restart the task if it fails"
+TEST
+ run in terminal docker ps

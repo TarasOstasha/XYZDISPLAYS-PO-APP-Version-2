@@ -11,6 +11,11 @@ import { getProductById } from '../../api'
 import { VENDOR_LIST } from '../../utils/vendorsData'
 
 function AddProductPopUp({ rerenderOrderList, onFormValuesChange }) {
+  const API_BASE_URL =
+    window.location.hostname === 'localhost'
+      ? 'http://localhost:5000'
+      : 'http://server:5000'; 
+
   let formikPropss = React.useRef();
   const [show, setShow] = useState(false)
   const [productCode, setProductCode] = useState('')
@@ -54,7 +59,7 @@ function AddProductPopUp({ rerenderOrderList, onFormValuesChange }) {
   useEffect(() => {
     if (!productCode) return;
     //console.log('useEffect triggered with productCode:', productCode);
-    const productUrl = `http://localhost:5000/api/products/${productCode}`
+    const productUrl = `${API_BASE_URL}/api/products/${productCode}`
     // const productUrl = `https://xyzdisplays-po-app.onrender.com/api/products/${productCode}`
     axios
       .get(productUrl)
