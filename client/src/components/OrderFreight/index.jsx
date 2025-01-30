@@ -54,6 +54,7 @@ function OrderFreight() {
   const [vendorKitItem, setVendorKitItem] = useState([])
   const [optionProducts, setoptionProducts] = useState()
   const [userCustomProducts, setUserCustomProducts] = useState([])
+  const [productOptionsArr, setProductOptionsArr] = useState([]);
 
   const handleToRemove = (index, array) => {
     console.log(index, array)
@@ -205,12 +206,15 @@ function OrderFreight() {
                 item.OrderDetails_Options?.map(
                   (option) => option.OptionID?.[0],
                 ) || []
+                //console.log(optionIDs, '***optionIDs***'); //-----------------------------------------------
               const extraProducts = optionIDs
                 .map((id) => {
                   const matchingOption = OPTION_DATA.find(
                     (option) => option.id === parseInt(id, 10),
                   )
-                  if (matchingOption && matchingOption.pricediff > 0) {
+                  console.log(matchingOption, '***matchingOption***'); //-----------------------------------------------
+                  //if (matchingOption && matchingOption.pricediff > 0) { // this method also check option price, if price > 0
+                  if (matchingOption) {
                     //console.log(matchingOption, '***matchingOption')
                     // below data should be replaced from real file !!!!!
                     // const optionsData = [
@@ -260,6 +264,10 @@ function OrderFreight() {
             }) || []
 
           //
+          console.log(productOption, '***productOption***');
+          if (Array.isArray(productOption) && productOption.length > 0) {
+            setProductOptionsArr(productOption);
+          }
           const filteredProductOption = Array.isArray(productOption)
             ? productOption.filter((item) => Object.keys(item).length > 0)
             : []
@@ -314,8 +322,8 @@ function OrderFreight() {
             productResponses,
             combinedOrderDetails,
           )
-          console.log(validVendors, '***validVendors***')
-          console.log(combinedOrderDetails, '***combinedOrderDetails***')
+          //console.log(validVendors, '***validVendors***')
+          //console.log(combinedOrderDetails, '***combinedOrderDetails***')
           //console.log(optionOrderProducts, 'optionOrderProducts');
           updateVendorState(validVendors)
           updateOrderListWithVendorCodes(combinedOrderDetails, validVendors)
@@ -579,7 +587,7 @@ function OrderFreight() {
     }
 
     const updateVendorState = (validVendors) => {
-      console.log(validVendors, 'validVendors')
+      //console.log(validVendors, 'validVendors')
       setVendor((prevVendor) => [...prevVendor, ...validVendors])
       setRerenderOrderList(validVendors)
     }
@@ -589,16 +597,16 @@ function OrderFreight() {
       //console.log(rerenderOrderList,'***rerenderOrderList***');
       // console.log(validVendors, '***validVendors***');
       const updatedOrderWithVendorCodes = orderDetails.map((order) => {
-        console.log(
-          orderDetails,
-          '***order from updatedOrderListWithVendorCodes',
-        )
+        // console.log(
+        //   orderDetails,
+        //   '***order from updatedOrderListWithVendorCodes',
+        // )
         const matchingVendor = validVendors.find(
           (vendor) =>
             vendor.ProductCode[0].toLowerCase() ===
             order.ProductCode[0].toLowerCase(),
         )
-        console.log(matchingVendor, 'matchingVendor')
+        //console.log(matchingVendor, 'matchingVendor')
         return matchingVendor ? { ...order, ...matchingVendor } : order
       })
       //console.log(updatedOrderWithVendorCodes, '***updatedOrderWithVendorCodes***');
@@ -608,7 +616,7 @@ function OrderFreight() {
 
     const applyDiscounts = (orderList) => {
       orderList.forEach((order) => {
-        console.log(order, '***order applyDiscounts')
+        //console.log(order, '***order applyDiscounts')
         VENDOR_LIST.forEach((vendor) => {
           const code = order.ProductCode.toString()
           if (code.toLowerCase().startsWith(vendor.code)) {
@@ -680,11 +688,15 @@ function OrderFreight() {
   const handleConfirmSplit = async () => {
     //console.log('Confirmed splitting products!');
     //console.log(optionProducts, '***optionProducts***');
-
-    const vendorUrls = vendorKitItem.map(
+    console.log(productOptionsArr, '***productOptionsArr***');
+    const vendorKitCodes = productOptionsArr.map(item => item.Vendor_PartNo);
+    console.log(vendorKitCodes, '***vendorKitCodes***');
+    const combinedOptionsAndKits = [...vendorKitCodes, ...vendorKitItem];
+    //console.log(combinedOptionsAndKits, '***combinedOptionsAndKits***');
+    const vendorUrls = combinedOptionsAndKits.map(
       (code) => `${API_BASE_URL}/api/vendors/${code}`,
     )
-    //console.log(vendorUrls, '***vendorUrls***');
+    console.log(vendorUrls, '***vendorUrls***');
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor')
     //console.log(vendorResponses, '***vendorResponses***')
 
