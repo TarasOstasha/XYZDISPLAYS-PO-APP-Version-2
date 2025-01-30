@@ -768,13 +768,20 @@ function OrderFreight() {
 
     // merge products with same product code
     const mergedProducts = mergeDuplicatedProducts(updatedProducts)
-
+    console.log(mergedProducts, '***mergedProducts***');
     // Define keys to copy from old rerenderOrderList
     const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount']
     const updatedOrderList = mergedProducts.map((product) => {
-      const source = rerenderOrderList.find(item => 
-        JSON.stringify(item.ProductCode).trim().toLowerCase() === JSON.stringify(product.ProductCode).trim().toLowerCase()
-      ) || {};
+      let source = rerenderOrderList[0] || {}; 
+      if (Object.keys(source).length === 0) {
+        source = rerenderOrderList.find(item => 
+            JSON.stringify(item.ProductCode).trim().toLowerCase() === JSON.stringify(product.ProductCode).trim().toLowerCase()
+          ) || {};
+      }
+      // const source = rerenderOrderList.find(item => 
+      //   JSON.stringify(item.ProductCode).trim().toLowerCase() === JSON.stringify(product.ProductCode).trim().toLowerCase()
+      // ) || {};
+     
       console.log(source, 'source');
       // Copy specified keys
       const copiedData = keysToCopy.reduce((acc, key) => {
