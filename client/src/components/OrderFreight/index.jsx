@@ -128,31 +128,39 @@ function OrderFreight() {
   }
 
   const handleToSaveTop = (formikProps) => {
+    console.log(formikProps.values, '***formikProps***');
     setIsEditingTop(false)
-    // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KIST THESE
+    // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KITS THESE
     let foundMissingVendorPrice = false
     rerenderOrderList.forEach((item, index) => {
+      console.log(item, '***item***');
       if (!item || !item.hasOwnProperty('Vendor_Price')) {
-        if (!foundMissingVendorPrice) {
-          alert(
-            'Vendor_Price is missing for an item!\n Please remove Website order Items from PO!',
-          )
-          foundMissingVendorPrice = true
-        }
+        item.Vendor_Price = ['0'];
+        item.discount = [0]
+        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index]
+        item.discount[0] = formikProps?.values.productDiscount[index]
+        // if (!foundMissingVendorPrice) {
+        //   alert(
+        //     'Vendor_Price is missing for an item!\n Please remove Website order Items from PO!',
+        //   )
+        //   foundMissingVendorPrice = true
+        //}
         return
       } else {
         if (!Array.isArray(item.ProductCode)) item.ProductCode = []
         if (!Array.isArray(item.ProductName)) item.ProductName = []
         if (!Array.isArray(item.Quantity)) item.Quantity = []
         if (!Array.isArray(item.discount)) item.discount = []
+        if (!Array.isArray(item.Vendor_Price)) item.Vendor_Price = []
+        
 
         item.ProductCode[0] = formikProps.values.productCode[index]
         item.Vendor_PartNo[0] = formikProps.values.vendorCode[index]
         item.ProductName[0] = formikProps.values.productName[index]
         item.Quantity[0] = formikProps.values.productQuantity[index]
-        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index]
+        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
         item.ProductPrice[0] = formikProps.values.productPrice[index]
-        item.discount[0] = formikProps?.values.productDiscount[index]
+        item.discount[0] = formikProps?.values.productDiscount[index] || item.discount[0]
       }
     })
   }
@@ -688,24 +696,21 @@ function OrderFreight() {
   const handleConfirmSplit = async () => {
     //console.log('Confirmed splitting products!');
     //console.log(optionProducts, '***optionProducts***');
-    console.log(productOptionsArr, '***productOptionsArr***');
+    // console.log(productOptionsArr, '***productOptionsArr***');
     const vendorKitCodes = productOptionsArr.map(item => item.Vendor_PartNo);
-    console.log(vendorKitCodes, '***vendorKitCodes***');
     const combinedOptionsAndKits = [...vendorKitCodes, ...vendorKitItem];
-    //console.log(combinedOptionsAndKits, '***combinedOptionsAndKits***');
+
     const vendorUrls = combinedOptionsAndKits.map(
       (code) => `${API_BASE_URL}/api/vendors/${code}`,
     )
-    console.log(vendorUrls, '***vendorUrls***');
+
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor')
-    //console.log(vendorResponses, '***vendorResponses***')
 
     const updatedProducts = vendorResponses.flatMap((item) => {
       const { xmldata: { Products } = {} } = item.data || {}
-      //console.log(Products, 'Extracted Products');
       return Products || []
     })
-    //console.log(updatedProducts, '*updatedProducts*')
+
     // Define keys to copy from old rerenderOrderList
     const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount']
     const updatedOrderList = updatedProducts.map((product) => {

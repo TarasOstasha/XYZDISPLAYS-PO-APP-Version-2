@@ -330,7 +330,7 @@ export const OPTION_DATA = [
     { id: 7238,optioncatid: 576, ProductName: "2 x Shelves", ProductCode: "nv970", Vendor_PartNo: "A123189012", pricediff: 280, vendorpricediff: 129, discount: 40 },
     { id: 7159,optioncatid: 578, ProductName: "1 x Backlit Counter", ProductCode: "nv932", Vendor_PartNo: "nv39x39-ds", pricediff: 529, vendorpricediff: 539, discount: 40 },
     { id: 7226,optioncatid: 578, ProductName: "1 x Backlit Counter w/ Battery", ProductCode: "option", Vendor_PartNo: "Counter battery 100x100", pricediff: 1297, vendorpricediff: 777, discount: 40 },
-    { id: 7243,optioncatid: 54, ProductName: "Dye-Sub Backlit Textile (Recommended)", ProductCode: "xyz", Vendor_PartNo: "xyz", pricediff: 0, vendorpricediff: 0, discount: 0 },
+    { id: 7243,optioncatid: 54, ProductName: "Dye-Sub Backlit Textile (Recommended)", ProductCode: "or-xyz", Vendor_PartNo: "VF-LB-R-07-S-G", pricediff: 0, vendorpricediff: 0, discount: 0 },
     { id: 7244,optioncatid: 54, ProductName: "UV Intensity Fabric (Used Before May 2024)", ProductCode: "xyz", Vendor_PartNo: "xyz", pricediff: 0, vendorpricediff: 0, discount: 0 },
     { id: 7245,optioncatid: 578, ProductName: "2 x Backlit Counters", ProductCode: "nv932", Vendor_PartNo: "nv39x39-ds", pricediff: 1058, vendorpricediff: 539, discount: 40 },
     { id: 7246,optioncatid: 578, ProductName: "2 x Backlit Counters w/ Battery", ProductCode: "option", Vendor_PartNo: "Counter battery 100x100", pricediff: 2594, vendorpricediff: 777, discount: 40 },

@@ -720,7 +720,7 @@ const renderShipInfoInput = () => {
                               )}
                             </td>
                             <td>
-                              {/* DISCOUNT */}
+                              {/* DISCOUNT */} 
                               {isEditingTop === true ? (
                                 <Field
                                   name={`productDiscount[${index}]`}
@@ -735,7 +735,7 @@ const renderShipInfoInput = () => {
                                   id={`productDiscount[${index}]`}
                                 />
                               ) : (
-                                discountAmount(o.discount)
+                                discountAmount(o.discount) 
                               )}
                             </td>
                             <td>
@@ -988,8 +988,9 @@ const renderShipInfoInput = () => {
                               ) : (
                                 <span>
                                   {isNumber(o.Vendor_Price?.[0])
-                                    ? (() => {
-                                        ;<b style={attension}>
+                                    ? 
+                                    (() => {
+                                        <b style={attension}>
                                           Website order item
                                         </b>
                                       })()
