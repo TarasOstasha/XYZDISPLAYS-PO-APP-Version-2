@@ -693,6 +693,60 @@ function OrderFreight() {
     })
   }
 
+  const mergeDuplicatedProducts = (products) => {
+   
+    return products.reduce((acc, product) => {
+        // Extract and normalize ProductCode safely
+        const productCode = JSON.stringify(product.ProductCode).trim().toLowerCase();
+        // add discount
+        VENDOR_LIST.forEach((vendor) => {
+          const code = Array.isArray(product.ProductCode) 
+          ? product.ProductCode[0].trim().toLowerCase() 
+          : product.ProductCode.trim().toLowerCase();
+          console.log(code,'code');
+          if (code.toLowerCase().startsWith(vendor.code)) {
+            product.discount = [vendor.discount]
+          }
+        })
+    
+        if (!productCode) {
+            console.warn('Skipping product with missing ProductCode:', product);
+            return acc;
+        }
+
+        // Find an existing product with the same ProductCode
+        const existingProduct = acc.find(p => {
+            const existingCode = JSON.stringify(p.ProductCode).trim().toLowerCase();
+            return existingCode === productCode;
+        });
+
+        if (existingProduct) {
+            // Merge Quantity Safely
+            const existingQuantity = parseInt(existingProduct.Quantity?.[0] || '1', 10);
+            const newQuantity = parseInt(product.Quantity?.[0] || '1', 10);
+            const totalQuantity = existingQuantity + newQuantity;
+            existingProduct.Quantity = [totalQuantity.toString()];
+
+            // Fix Vendor_Price NaN issue
+            const existingVendorPrice = parseFloat(existingProduct.Vendor_Price?.[0]) || 0;
+            const newVendorPrice = parseFloat(product.Vendor_Price?.[0]) || 0;
+
+            if (existingVendorPrice > 0 && newVendorPrice > 0) {
+                const totalVendorCost =
+                    (existingVendorPrice * existingQuantity) + (newVendorPrice * newQuantity);
+                existingProduct.Vendor_Price[0] = (totalVendorCost / totalQuantity).toFixed(2);
+            } else {
+                existingProduct.Vendor_Price[0] = (existingVendorPrice || newVendorPrice).toString();
+            }
+        } else {
+            acc.push({ ...product });
+        }
+
+        return acc;
+    }, []);
+};
+
+
   const handleConfirmSplit = async () => {
     //console.log('Confirmed splitting products!');
     //console.log(optionProducts, '***optionProducts***');
@@ -710,11 +764,18 @@ function OrderFreight() {
       const { xmldata: { Products } = {} } = item.data || {}
       return Products || []
     })
+    //console.log(updatedProducts, '***updatedProducts***');
+
+    // merge products with same product code
+    const mergedProducts = mergeDuplicatedProducts(updatedProducts)
 
     // Define keys to copy from old rerenderOrderList
     const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount']
-    const updatedOrderList = updatedProducts.map((product) => {
-      const source = rerenderOrderList[0] || {}
+    const updatedOrderList = mergedProducts.map((product) => {
+      const source = rerenderOrderList.find(item => 
+        JSON.stringify(item.ProductCode).trim().toLowerCase() === JSON.stringify(product.ProductCode).trim().toLowerCase()
+      ) || {};
+      console.log(source, 'source');
       // Copy specified keys
       const copiedData = keysToCopy.reduce((acc, key) => {
         if (source[key]) {
@@ -722,11 +783,13 @@ function OrderFreight() {
         }
         return acc
       }, {})
+  
       return {
         ...product,
         ...copiedData,
       }
     })
+    console.log(updatedOrderList,'updatedOrderList');
     const normalizedUpdatedProducts = transformUpdatedProductsToUserCustomFormat(
       userCustomProducts,
     )
