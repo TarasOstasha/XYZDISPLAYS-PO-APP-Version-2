@@ -1,34 +1,22 @@
-# Base Image
-FROM node:18-alpine
+# Use a Windows Server Core image with Node.js
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
-# Install PowerShell dependencies (optional)
-RUN apk add --no-cache \
-    ca-certificates \
-    wget \
-    tar \
-    icu-libs
-
-# Download and install PowerShell (optional)
-RUN wget -q https://github.com/PowerShell/PowerShell/releases/download/v7.2.7/powershell-7.2.7-linux-alpine-x64.tar.gz -O /tmp/powershell.tar.gz \
-    && mkdir -p /opt/microsoft/powershell/7 \
-    && tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
-    && chmod +x /opt/microsoft/powershell/7/pwsh \
-    && ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+# Install PowerShell
+RUN powershell -Command Install-Module -Name PSReadLine -Force -SkipPublisherCheck
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Copy the rest of the files
+# Copy files to the container
 COPY . .
 
-# Expose port 5000
+# Install Node.js (if needed)
+RUN powershell -Command Invoke-WebRequest -Uri https://nodejs.org/dist/v18.15.0/node-v18.15.0-x64.msi -OutFile node.msi; \
+    Start-Process msiexec.exe -ArgumentList '/i', 'node.msi', '/quiet' -NoNewWindow -Wait; \
+    Remove-Item -Force node.msi
+
+# Expose the port
 EXPOSE 5000
 
+# Start the application
 CMD ["node", "index.js"]
-
-# Start the server
-# CMD ["npm", "run", "dev"]
