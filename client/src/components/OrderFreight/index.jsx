@@ -20,7 +20,7 @@ function OrderFreight() {
   const API_BASE_URL =
     window.location.hostname === 'localhost'
       ? 'http://localhost:5000'
-      : 'http://server:5000'; 
+      : 'http://server:5000'
 
   let discountRenderFlag = false
   const [mismatchedPrices, setMismatchedPrices] = useState([])
@@ -54,7 +54,7 @@ function OrderFreight() {
   const [vendorKitItem, setVendorKitItem] = useState([])
   const [optionProducts, setoptionProducts] = useState()
   const [userCustomProducts, setUserCustomProducts] = useState([])
-  const [productOptionsArr, setProductOptionsArr] = useState([]);
+  const [productOptionsArr, setProductOptionsArr] = useState([])
 
   const handleToRemove = (index, array) => {
     console.log(index, array)
@@ -128,17 +128,19 @@ function OrderFreight() {
   }
 
   const handleToSaveTop = (formikProps) => {
-    console.log(formikProps.values, '***formikProps***');
+    console.log(formikProps.values, '***formikProps***')
     setIsEditingTop(false)
     // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KITS THESE
     let foundMissingVendorPrice = false
     rerenderOrderList.forEach((item, index) => {
-      console.log(item, '***item***');
+      console.log(item, '***item***')
       if (!item || !item.hasOwnProperty('Vendor_Price')) {
-        item.Vendor_Price = ['0'];
+        item.Vendor_Price = ['0']
         item.discount = [0]
         item.Vendor_Price[0] = formikProps?.values.vendorPrice[index]
         item.discount[0] = formikProps?.values.productDiscount[index]
+        console.log(formikProps?.values, 'formikProps?.values')
+
         // if (!foundMissingVendorPrice) {
         //   alert(
         //     'Vendor_Price is missing for an item!\n Please remove Website order Items from PO!',
@@ -152,15 +154,16 @@ function OrderFreight() {
         if (!Array.isArray(item.Quantity)) item.Quantity = []
         if (!Array.isArray(item.discount)) item.discount = []
         if (!Array.isArray(item.Vendor_Price)) item.Vendor_Price = []
-        
 
         item.ProductCode[0] = formikProps.values.productCode[index]
         item.Vendor_PartNo[0] = formikProps.values.vendorCode[index]
         item.ProductName[0] = formikProps.values.productName[index]
         item.Quantity[0] = formikProps.values.productQuantity[index]
-        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
+        item.Vendor_Price[0] =
+          formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
         item.ProductPrice[0] = formikProps.values.productPrice[index]
-        item.discount[0] = formikProps?.values.productDiscount[index] || item.discount[0]
+        item.discount[0] =
+          formikProps?.values.productDiscount[index] || item.discount[0]
       }
     })
   }
@@ -214,13 +217,13 @@ function OrderFreight() {
                 item.OrderDetails_Options?.map(
                   (option) => option.OptionID?.[0],
                 ) || []
-                //console.log(optionIDs, '***optionIDs***'); //-----------------------------------------------
+              //console.log(optionIDs, '***optionIDs***'); //-----------------------------------------------
               const extraProducts = optionIDs
                 .map((id) => {
                   const matchingOption = OPTION_DATA.find(
                     (option) => option.id === parseInt(id, 10),
                   )
-                  console.log(matchingOption, '***matchingOption***'); //-----------------------------------------------
+                  console.log(matchingOption, '***matchingOption***') //-----------------------------------------------
                   //if (matchingOption && matchingOption.pricediff > 0) { // this method also check option price, if price > 0
                   if (matchingOption) {
                     //console.log(matchingOption, '***matchingOption')
@@ -272,9 +275,9 @@ function OrderFreight() {
             }) || []
 
           //
-          console.log(productOption, '***productOption***');
+          //console.log(productOption, '***productOption***');
           if (Array.isArray(productOption) && productOption.length > 0) {
-            setProductOptionsArr(productOption);
+            setProductOptionsArr(productOption)
           }
           const filteredProductOption = Array.isArray(productOption)
             ? productOption.filter((item) => Object.keys(item).length > 0)
@@ -284,7 +287,7 @@ function OrderFreight() {
             filteredProductOption.length > 0
               ? [...Orders[0].OrderDetails, ...filteredProductOption]
               : Orders[0].OrderDetails
-
+          //console.log(combinedOrderDetails, 'combinedOrderDetails');
           const optionOrderProducts = combinedOrderDetails.filter(
             (item) => !item.hasOwnProperty('OrderDetailID'),
           )
@@ -306,6 +309,7 @@ function OrderFreight() {
               ),
             ),
           )
+          //console.log(existingProductCodes, 'existingProductCodes');
           const nonExistingCustomProducts = productDetails.filter((detail) => {
             const productCode = detail.productCode.trim().toLowerCase()
             return !existingProductCodes.has(productCode)
@@ -313,21 +317,80 @@ function OrderFreight() {
           //console.log(nonExistingCustomProducts,'nonExistingCustomProducts');
           setUserCustomProducts(nonExistingCustomProducts)
 
-          //console.log(productResponses, 'productResponses');
+          console.log(productResponses, '****productResponses')
+          //console.log(combinedOrderDetails, '***combinedOrderDetails')
+          const quantityMap = combinedOrderDetails.reduce((acc, order) => {
+            // Since ProductCode and Quantity are arrays, we take the first element.
+            acc[order.ProductCode[0]] = order.Quantity[0]
+            return acc
+          }, {})
+          console.log(quantityMap, 'quantityMap')
+          // Step 2: Map through productResponses to add the Quantity for each product.
+          const updatedProductResponses = productResponses.map((response) => {
+            const productsArray = Array.isArray(
+              response.data?.xmldata?.Products,
+            )
+              ? response.data.xmldata.Products
+              : [response.data.xmldata.Products]
 
+            console.log(productsArray, 'productsArray')
+            // Update each product in the Products array
+            // const updatedProducts = productsArray.map((product) => {
+            //   console.log(product.ProductCode[0],'product.ProductCode***');
+            //   const productCode = product.ProductCode[0]
+            //   // Look up the quantity using the product code
+            //   const quantity = quantityMap[productCode] || null // you can set a default value if not found
+            //   console.log(quantity,'quantity');
+            //   // Return a new product object with Quantity added
+            //   return { ...product, Quantity: [quantity] }
+            // })
+
+            const updatedProducts = productsArray
+              .map((product) => {
+                if (!product) {
+                  // Skip this iteration by returning null (or you could return an empty object)
+                  return null
+                }
+                // Ensure that product.ProductCode exists and is an array
+                const productCode = Array.isArray(product.ProductCode)
+                  ? product.ProductCode[0]
+                  : null
+                const quantity = productCode
+                  ? quantityMap[productCode] || null
+                  : null
+                return { ...product, Quantity: [quantity] }
+              })
+              // Filter out any null results
+              .filter((product) => product !== null)
+            // Return the updated response object with the new products list
+            return {
+              ...response,
+              data: {
+                ...response.data,
+                xmldata: {
+                  ...response.data.xmldata,
+                  Products: updatedProducts,
+                },
+              },
+            }
+          })
+          //console.log(updatedProductResponses, 'updatedProductResponses')
+          //console.log(productResponses, 'updatedProductResponses')
           // get product length with Google_Age_Group values
-          const vendorKits = extractVendorKits(productResponses)
-          //console.log(vendorKits, '***vendorKits***')
+          //const vendorKits = extractVendorKits(productResponses) // old version
+          const vendorKits = extractVendorKits(updatedProductResponses)
+          console.log(vendorKits, '***vendorKits***')
           //console.log(vendorKits.length, '***vendorKits.length***') // does not call
           setVendorKitsLenght(vendorKits.length)
-
+          //console.log(vendorKits, '!!!vendorKits!!!')
           if (vendorKits.length > 1) {
             setShowVendorKitPopup(true)
             setVendorKitItem(vendorKits)
           }
 
           const validVendors = await processProductResponses(
-            productResponses,
+            //productResponses,
+            updatedProductResponses,
             combinedOrderDetails,
           )
           //console.log(validVendors, '***validVendors***')
@@ -360,6 +423,7 @@ function OrderFreight() {
     //     .flat(2);
     // };
     const extractVendorKits = (productResponses) => {
+      console.log(productResponses,'productResponses extractVendorKits');
       let alertShown = false // Flag to track if the alert has been shown
       //console.log(userCustomProducts,'userCustomProducts');
       const mergetItems = [
@@ -380,27 +444,42 @@ function OrderFreight() {
                   ProductCode: product.productCode,
                   ProductPrice: product.productPrice,
                   ProductName: product.productName,
+                  Quantity: product.Quantity,
                 },
               ],
             },
           },
         })),
       ]
+      //console.log(mergetItems, '****mergetItems')
       return mergetItems.flatMap((item, index) => {
         const { xmldata: { Products } = {} } = item.data
         if (!Array.isArray(Products) || Products.length === 0) {
           console.warn(`Invalid Products at index ${index}`)
           return []
         }
-
         return Products.flatMap((product) => {
+          console.log(product,'product.Quantity');
           if (Array.isArray(product.Google_Age_Group)) {
-            return product.Google_Age_Group.flatMap((group) =>
-              group.split(' // '),
-            )
+            return product.Google_Age_Group.flatMap((group) => {
+              // Split the group string into its parts
+              return group.split(' // ').map((g) => ({
+                ProductCode: product.ProductCode[0], // return first element from the ProductCode array
+                Quantity: product.Quantity ? product.Quantity[0] : null, // return Quantity if available
+                Google_Age_Group: g,
+              }))
+            })
           }
           return []
         })
+        // return Products.flatMap((product) => {
+        //   if (Array.isArray(product.Google_Age_Group)) {
+        //     return product.Google_Age_Group.flatMap((group) =>
+        //       group.split(' // '),
+        //     )
+        //   }
+        //   return []
+        // })
       })
     }
 
@@ -574,12 +653,14 @@ function OrderFreight() {
             ? product.Google_Age_Group[0]
             : vendorPartNo
         }
+        console.log(product)
         return {
           Vendor_PartNo: [vendorPartNo],
           ProductCode: [productCode],
           ProductName: [product.ProductName ? product.ProductName[0] : ''],
           ProductPrice: [product.ProductPrice ? product.ProductPrice[0] : ''],
           Vendor_Price: [product.Vendor_Price ? product.Vendor_Price[0] : ''],
+          Quantity: [product.Quantity ? product.Quantity[0] : ''],
         }
       })
       return vendors.filter((vendor) => vendor !== null)
@@ -694,95 +775,150 @@ function OrderFreight() {
   }
 
   const mergeDuplicatedProducts = (products) => {
-   
     return products.reduce((acc, product) => {
-        // Extract and normalize ProductCode safely
-        const productCode = JSON.stringify(product.ProductCode).trim().toLowerCase();
-        // add discount
-        VENDOR_LIST.forEach((vendor) => {
-          const code = Array.isArray(product.ProductCode) 
-          ? product.ProductCode[0].trim().toLowerCase() 
-          : product.ProductCode.trim().toLowerCase();
-          console.log(code,'code');
-          if (code.toLowerCase().startsWith(vendor.code)) {
-            product.discount = [vendor.discount]
-          }
-        })
-    
-        if (!productCode) {
-            console.warn('Skipping product with missing ProductCode:', product);
-            return acc;
+      // Extract and normalize ProductCode safely
+      const productCode = JSON.stringify(product.ProductCode)
+        .trim()
+        .toLowerCase()
+      // add discount
+      VENDOR_LIST.forEach((vendor) => {
+        const code = Array.isArray(product.ProductCode)
+          ? product.ProductCode[0].trim().toLowerCase()
+          : product.ProductCode.trim().toLowerCase()
+
+        if (code.toLowerCase().startsWith(vendor.code)) {
+          product.discount = [vendor.discount]
         }
+      })
 
-        // Find an existing product with the same ProductCode
-        const existingProduct = acc.find(p => {
-            const existingCode = JSON.stringify(p.ProductCode).trim().toLowerCase();
-            return existingCode === productCode;
-        });
+      if (!productCode) {
+        console.warn('Skipping product with missing ProductCode:', product)
+        return acc
+      }
 
-        if (existingProduct) {
-            // Merge Quantity Safely
-            const existingQuantity = parseInt(existingProduct.Quantity?.[0] || '1', 10);
-            const newQuantity = parseInt(product.Quantity?.[0] || '1', 10);
-            const totalQuantity = existingQuantity + newQuantity;
-            existingProduct.Quantity = [totalQuantity.toString()];
+      // Find an existing product with the same ProductCode
+      const existingProduct = acc.find((p) => {
+        const existingCode = JSON.stringify(p.ProductCode).trim().toLowerCase()
+        return existingCode === productCode
+      })
 
-            // Fix Vendor_Price NaN issue
-            const existingVendorPrice = parseFloat(existingProduct.Vendor_Price?.[0]) || 0;
-            const newVendorPrice = parseFloat(product.Vendor_Price?.[0]) || 0;
+      if (existingProduct) {
+        // Merge Quantity Safely
+        const existingQuantity = parseInt(
+          existingProduct.Quantity?.[0] || '1',
+          10,
+        )
+        const newQuantity = parseInt(product.Quantity?.[0] || '1', 10)
+        const totalQuantity = existingQuantity + newQuantity
+        existingProduct.Quantity = [totalQuantity.toString()]
 
-            if (existingVendorPrice > 0 && newVendorPrice > 0) {
-                const totalVendorCost =
-                    (existingVendorPrice * existingQuantity) + (newVendorPrice * newQuantity);
-                existingProduct.Vendor_Price[0] = (totalVendorCost / totalQuantity).toFixed(2);
-            } else {
-                existingProduct.Vendor_Price[0] = (existingVendorPrice || newVendorPrice).toString();
-            }
+        // Fix Vendor_Price NaN issue
+        const existingVendorPrice =
+          parseFloat(existingProduct.Vendor_Price?.[0]) || 0
+        const newVendorPrice = parseFloat(product.Vendor_Price?.[0]) || 0
+
+        if (existingVendorPrice > 0 && newVendorPrice > 0) {
+          const totalVendorCost =
+            existingVendorPrice * existingQuantity +
+            newVendorPrice * newQuantity
+          existingProduct.Vendor_Price[0] = (
+            totalVendorCost / totalQuantity
+          ).toFixed(2)
         } else {
-            acc.push({ ...product });
+          existingProduct.Vendor_Price[0] = (
+            existingVendorPrice || newVendorPrice
+          ).toString()
         }
+      } else {
+        acc.push({ ...product, Quantity: product.Quantity || ['1'] })
+      }
 
-        return acc;
-    }, []);
-};
-
+      return acc
+    }, [])
+  }
 
   const handleConfirmSplit = async () => {
-    //console.log('Confirmed splitting products!');
+    const vendorKitCodes = productOptionsArr.map((item) => item.Vendor_PartNo)
+    //console.log(vendorKitCodes,'***vendorKitCodes***');
+    console.log(vendorKitItem, '***vendorKitItem***')
+    const googleAgeGroups = vendorKitItem.map((item) => item.Google_Age_Group)
+    console.log(googleAgeGroups, 'googleAgeGroups')
     //console.log(optionProducts, '***optionProducts***');
-    // console.log(productOptionsArr, '***productOptionsArr***');
-    const vendorKitCodes = productOptionsArr.map(item => item.Vendor_PartNo);
-    const combinedOptionsAndKits = [...vendorKitCodes, ...vendorKitItem];
+    //console.log(orderProductDetails, '***orderProductDetails');
+    const combinedOptionsAndKits = [...vendorKitCodes, ...googleAgeGroups]
+    //console.log(combinedOptionsAndKits, '***combinedOptionsAndKits***');
+    //const uniqueVendorCodes = [...new Set(combinedOptionsAndKits)];
+    //const uniqueVendorCodes = [...new Set([...productOptionsArr.map(item => item.Vendor_PartNo), ...vendorKitItem])];
 
     const vendorUrls = combinedOptionsAndKits.map(
       (code) => `${API_BASE_URL}/api/vendors/${code}`,
     )
-
+    //console.log(vendorUrls, 'vendorUrls');
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor')
-
+    //console.log(vendorResponses, '***vendorResponses');
     const updatedProducts = vendorResponses.flatMap((item) => {
       const { xmldata: { Products } = {} } = item.data || {}
       return Products || []
     })
-    //console.log(updatedProducts, '***updatedProducts***');
-
+    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
+    //   console.log(product,'product***');
+    //   const googleAgeGroup = product.Google_Age_Group[0]
+    //   const match = vendorKitItem.find(
+    //     (vk) => vk.Google_Age_Group === googleAgeGroup,
+    //   )
+    //   return {
+    //     ...product,
+    //     Quantity: match ? [match.Quantity] : 1,
+    //   }
+    // })
+    const updatedProductsWithQuantity = updatedProducts
+      .filter(
+        (product) => product.Google_Age_Group && product.Google_Age_Group[0],
+      )
+      .map((product) => {
+        //console.log(product, 'product updatedProductsWithQuantity')
+        const googleAgeGroup = product.Google_Age_Group[0]
+        const match = vendorKitItem.find((vk) => {
+          if(vk.Quantity === null ) {
+            return vk.Quantity = '1' // this section should be redevelop
+          }
+          //console.log(vk.Google_Age_Group === googleAgeGroup,'vk');
+          //console.log(googleAgeGroup,'googleAgeGroup');
+          return (
+            vk.Google_Age_Group.toLowerCase().trim() ===
+            googleAgeGroup.toLowerCase().trim()
+          )
+        })
+        return {
+          ...product,
+          Quantity: match ? [match.Quantity] : 1,
+        }
+      })
+    // console.log(
+    //   updatedProductsWithQuantity,
+    //   '***updatedProductsWithQuantity***',
+    // )
+    //console.log(updatedProducts, '***updatedProducts***')
     // merge products with same product code
-    const mergedProducts = mergeDuplicatedProducts(updatedProducts)
-    console.log(mergedProducts, '***mergedProducts***');
+    //const mergedProducts = mergeDuplicatedProducts(updatedProducts) // old version
+    const mergedProducts = mergeDuplicatedProducts(updatedProductsWithQuantity)
+    //console.log(mergedProducts, '***mergedProducts***');
     // Define keys to copy from old rerenderOrderList
     const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount']
     const updatedOrderList = mergedProducts.map((product) => {
-      let source = rerenderOrderList[0] || {}; 
-      if (Object.keys(source).length === 0) {
-        source = rerenderOrderList.find(item => 
-            JSON.stringify(item.ProductCode).trim().toLowerCase() === JSON.stringify(product.ProductCode).trim().toLowerCase()
-          ) || {};
+      //console.log(product,'product');
+      let source =
+        rerenderOrderList.find(
+          (item) => item.ProductName[0] === product.ProductName[0],
+        ) ||
+        rerenderOrderList[0] ||
+        {}
+      //console.log(source,'source');
+      // set Quantity value
+      if (source && product.Quantity && product.Quantity.length) {
+        source.Quantity = [product.Quantity[0]]
       }
-      // const source = rerenderOrderList.find(item => 
-      //   JSON.stringify(item.ProductCode).trim().toLowerCase() === JSON.stringify(product.ProductCode).trim().toLowerCase()
-      // ) || {};
-     
-      console.log(source, 'source');
+
       // Copy specified keys
       const copiedData = keysToCopy.reduce((acc, key) => {
         if (source[key]) {
@@ -790,13 +926,13 @@ function OrderFreight() {
         }
         return acc
       }, {})
-  
+      //console.log(copiedData, 'copiedData')
       return {
         ...product,
         ...copiedData,
       }
     })
-    console.log(updatedOrderList,'updatedOrderList');
+    console.log(updatedOrderList, 'updatedOrderList')
     const normalizedUpdatedProducts = transformUpdatedProductsToUserCustomFormat(
       userCustomProducts,
     )
@@ -805,8 +941,9 @@ function OrderFreight() {
     const modOrderList = [
       ...normalizedUpdatedProducts,
       ...updatedOrderList.flat(Infinity),
+      //...optionProducts, // add existing options
     ]
-    //console.log(modOrderList, 'modOrderList');
+    console.log(modOrderList, 'modOrderList')
     setRerenderOrderList(modOrderList)
 
     // Log for debugging

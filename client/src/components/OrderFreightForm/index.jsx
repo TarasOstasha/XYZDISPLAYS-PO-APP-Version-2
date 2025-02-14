@@ -6,9 +6,9 @@ import {
   descriptionWidth,
   attension,
   fullWidth,
-  vendoCodeWidth
+  vendoCodeWidth,
 } from '../../stylesConstants'
-import React from 'react';
+import React from 'react'
 import styles from './OrderFreightForm.module.scss'
 import { useState, useEffect } from 'react'
 import AddProductPopUp from '../AddProductPopUp'
@@ -43,7 +43,7 @@ function OrderFreightForm({
   setOrderComments,
   handleFormValuesChange,
   orderClientAddress,
-  orderDetailsOptions
+  orderDetailsOptions,
 }) {
   // Inside your component
 
@@ -77,27 +77,28 @@ function OrderFreightForm({
     vendorEmails: [],
   }
 
-  
   //console.log(orderDetailsOptions);
   const handleSubmit = async (values, formikBag) => {
-
-    const checkIfCustom = rerenderOrderList.some(item => {
-      return typeof item.discount === 'undefined';
-    });
-    if(checkIfCustom) {
+    //console.log(VENDOR_LIST);
+    
+    const checkIfCustom = rerenderOrderList.some((item) => {
+      return typeof item.discount === 'undefined'
+    })
+    if (checkIfCustom) {
       alert('Please Remove Custom Items!!!')
       return
     }
-    
 
-    values.shipTo = document.getElementById('shipTo').innerText;
-    values.vendorAddress = document.getElementById('vendorAddress').innerText;
-    values.ship = document.getElementById('ship').value;
-    values.shipInfoDescription = document.getElementById('shipInfoBottom').innerText;
-    values.vendorEmails = renderEmails();
-    values.inHand = setCustomFieldInHand;
- 
-    if(rerenderVendorName('or')) {
+    values.shipTo = document.getElementById('shipTo').innerText
+    values.vendorAddress = document.getElementById('vendorAddress').innerText
+    values.ship = document.getElementById('ship').value
+    values.shipInfoDescription = document.getElementById(
+      'shipInfoBottom',
+    ).innerText
+    values.vendorEmails = renderEmails()
+    values.inHand = setCustomFieldInHand
+
+    if (rerenderVendorName('or')) {
       values.orderNotes = '-20% off per Josh'
     }
 
@@ -114,20 +115,22 @@ function OrderFreightForm({
         }
       })
       values.productTableData.push(updatedValues)
-      
+
       //console.log('block if');
     } else {
       values.productTableData.push(...rerenderOrderList)
-      console.log(values, '<< values');
+      // console.log(values, '<< values');
     }
 
     const orderData = await saveOrder(values)
-    //console.log(values);
+    //console.log(values,'values***');
     //console.log(values.productTableData);
     //formikBag.resetForm()
-    values.productTableData.splice(0,values.productTableData.length)
-  }
+    values.productTableData.splice(0, values.productTableData.length)
+    console.log(values.productCode, '<< values')
 
+
+  }
 
   //const [filteredOrderList, setFilteredOrderList] = useState([])
   const [selectedVendor, setSelectedVendorCode] = useState(false)
@@ -135,23 +138,24 @@ function OrderFreightForm({
   const [checkboxFilteredIndex, setCheckboxFilteredIndex] = useState([])
   const [hideButton, setHideButton] = useState(false)
   const [isNeededDiscountNotes, setIsNeededDiscountNotes] = useState(false)
-  const [shipInfo, setShipInfo] = useState();
+  const [shipInfo, setShipInfo] = useState()
 
   const toggleVendorVisibility = () => {
     setCheckByVendor(!checkByVendor)
   }
 
-  const formattedPrice = (price) => price !== undefined ? parseFloat(price).toFixed(2) : '';
+  const formattedPrice = (price) =>
+    price !== undefined ? parseFloat(price).toFixed(2) : ''
   const priceWithDiscountPerUnit = (vendorPrice, discount) => {
-    const discountedPrice = vendorPrice * (1 - discount / 100);
-    return discountedPrice.toFixed(2);
+    const discountedPrice = vendorPrice * (1 - discount / 100)
+    return discountedPrice.toFixed(2)
   }
   const isNumber = (number) => isNaN(Number(number))
   const calculateRoundedPercentage = (discount) => {
-    if(discount > 0) {
-      return ((1 - (1 - discount / 100)) * 100).toFixed(0) + '%';
-    } 
-    return 0 + '%';
+    if (discount > 0) {
+      return ((1 - (1 - discount / 100)) * 100).toFixed(0) + '%'
+    }
+    return 0 + '%'
   }
   const discountAmount = (discount) => {
     return discount === undefined ? (
@@ -161,21 +165,22 @@ function OrderFreightForm({
       calculateRoundedPercentage(discount)
     )
   }
-  const calculatePrice = (price, quantity) => `$${(price * quantity).toFixed(2)}`
+  const calculatePrice = (price, quantity) =>
+    `$${(price * quantity).toFixed(2)}`
   // const calculateDiscountedPrice = (price, discount, quantity) => `$${(price * discount * quantity).toFixed(2)}`
   const calculateDiscountedPrice = (price, discount, quantity) => {
-    if(discount > 0) {
-      const discountDecimal = discount / 100;
-      const discountedPrice = price * (1 - discountDecimal) * quantity;
-      return `$${discountedPrice.toFixed(2)}`;
+    if (discount > 0) {
+      const discountDecimal = discount / 100
+      const discountedPrice = price * (1 - discountDecimal) * quantity
+      return `$${discountedPrice.toFixed(2)}`
     } else {
-      const discountedPrice = price * quantity;
-      return `$${discountedPrice.toFixed(2)}`;
+      const discountedPrice = price * quantity
+      return `$${discountedPrice.toFixed(2)}`
     }
     // const discountDecimal = discount / 100;
     // const discountedPrice = price * (1 - discountDecimal) * quantity;
     // return `$${discountedPrice.toFixed(2)}`;
-  };
+  }
   //const checkIfVendorIsEqual = () => rerenderOrderList.every(item => item.ProductCode[0].startsWith(item.ProductCode[0].slice(0,2)))
   const checkIfProductCodeStartsWithSameCharacters = (orders, characters) => {
     //console.log(orders.every(order => order.ProductCode[0].startsWith(characters)));
@@ -205,75 +210,82 @@ function OrderFreightForm({
 
   useEffect(() => {
     //console.log(rerenderOrderList, 'rerenderOrderList');
-    const initialShipInfo = renderShipInfoInput();
-    setShipInfo(initialShipInfo); // Set the initial value
-  }, [rerenderOrderList]); 
+    const initialShipInfo = renderShipInfoInput()
+    setShipInfo(initialShipInfo) // Set the initial value
+  }, [rerenderOrderList])
   // render shipping info input
   // const renderShipInfoInput = () => {
   //   const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
   //   return rerenderOrderList && rerenderOrderList.length > 0 &&
   //     VENDOR_LIST.find(vendor =>
   //       pcode?.startsWith(vendor.code),
-  //     ) ? 
+  //     ) ?
   //     VENDOR_LIST.find(vendor =>
   //       pcode?.startsWith(vendor.code),
-  //     ).shipInfo : 
+  //     ).shipInfo :
   //     'Not Found';
   // };
-const renderShipInfoInput = () => {
-  const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase();
-  const vendor = VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code));
-  return vendor ? vendor.shipInfo : '';
-};
+  const renderShipInfoInput = () => {
+    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase()
+    const vendor = VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
+    return vendor ? vendor.shipInfo : ''
+  }
 
   // render shipping info input bottom section
   const renderShipInfoBottom = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
-    return rerenderOrderList && rerenderOrderList.length > 0 &&
-      VENDOR_LIST.find(vendor =>
-        pcode?.startsWith(vendor.code),
-      ) ? 
-      VENDOR_LIST.find(vendor =>
-        pcode?.startsWith(vendor.code),
-      ).shipInfoDescription.split('\n').map((line, index) => (
-        <div key={index}>{line}</div>
-      )) : 
-      'Not Found';
-  };
+    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase()
+    return rerenderOrderList &&
+      rerenderOrderList.length > 0 &&
+      VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
+      ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
+          .shipInfoDescription.split('\n')
+          .map((line, index) => <div key={index}>{line}</div>)
+      : 'Not Found'
+  }
   // render vendor shipping address section
   const renderVendorAddress = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
-    return rerenderOrderList && rerenderOrderList.length > 0 &&
-      VENDOR_LIST.find(vendor =>
+    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase()
+    return rerenderOrderList &&
+      rerenderOrderList.length > 0 &&
+      VENDOR_LIST.find((vendor) =>
         //rerenderOrderList[0]?.ProductCode[0]?.startsWith(vendor.code),
-        pcode?.startsWith(vendor.code)
-      ) ? 
-      VENDOR_LIST.find(vendor =>
         pcode?.startsWith(vendor.code),
-      ).address.split('\n').map((line, index) => (
-        <div key={index}>{line}</div>
-      )) : 
-      'Not Found';
-  };
+      )
+      ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
+          .address.split('\n')
+          .map((line, index) => <div key={index}>{line}</div>)
+      : 'Not Found'
+  }
   // rerender vendor name
   const rerenderVendorName = (vendorN) => {
-    return rerenderOrderList.some(item => {
+    return rerenderOrderList.some((item) => {
       return item.ProductCode[0].startsWith(vendorN)
     })
   }
   // render customer address
   const renderCustomerAddress = () => {
-    const {ShipCompanyName = [], ShipAddress1 = [], ShipAddress2 = [],ShipFirstName = [],ShipLastName = [],ShipCity = [],ShipState = [],ShipPostalCode = [],ShipCountry = [],ShipPhoneNumber = []} = orderClientAddress || {};
-    const shipCompanyName = ShipCompanyName[0] || '';
-    const shipFirstName = ShipFirstName[0] || '';
-    const shipLastName = ShipLastName[0] || '';
-    const shipAddress1 = ShipAddress1[0] || '';
-    const shipAddress2 = ShipAddress2[0] || '';
-    const shipCity = ShipCity[0] || '';
-    const shipState = ShipState[0] || '';
-    const shipPostalCode = ShipPostalCode[0] || '';
-    const shipCountry = ShipCountry[0] || '';
-    const shipPhoneNumber = ShipPhoneNumber[0] || '';
+    const {
+      ShipCompanyName = [],
+      ShipAddress1 = [],
+      ShipAddress2 = [],
+      ShipFirstName = [],
+      ShipLastName = [],
+      ShipCity = [],
+      ShipState = [],
+      ShipPostalCode = [],
+      ShipCountry = [],
+      ShipPhoneNumber = [],
+    } = orderClientAddress || {}
+    const shipCompanyName = ShipCompanyName[0] || ''
+    const shipFirstName = ShipFirstName[0] || ''
+    const shipLastName = ShipLastName[0] || ''
+    const shipAddress1 = ShipAddress1[0] || ''
+    const shipAddress2 = ShipAddress2[0] || ''
+    const shipCity = ShipCity[0] || ''
+    const shipState = ShipState[0] || ''
+    const shipPostalCode = ShipPostalCode[0] || ''
+    const shipCountry = ShipCountry[0] || ''
+    const shipPhoneNumber = ShipPhoneNumber[0] || ''
 
     return `
       ${shipCompanyName}<br>
@@ -282,37 +294,35 @@ const renderShipInfoInput = () => {
       ${shipCity}, ${shipState}, ${shipPostalCode}<br>
       ${shipCountry}<br>
       ${shipPhoneNumber}
-    `;
+    `
   }
 
   // render sender emails
   const renderEmails = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
+    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase()
     //console.log(pcode);
-    return rerenderOrderList && rerenderOrderList.length > 0 &&
-      VENDOR_LIST.find(vendor =>
-        pcode?.startsWith(vendor.code),
-      ) ? 
-      VENDOR_LIST.find(vendor =>
-        pcode?.startsWith(vendor.code),
-      ).email : 
-      'Not Found';
-  };
+    return rerenderOrderList &&
+      rerenderOrderList.length > 0 &&
+      VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
+      ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code)).email
+      : 'Not Found'
+  }
 
   const isPriceOutOfRange = (webPrice, priceWithDiscount) => {
-    const ratio = webPrice / priceWithDiscount - 1;
+    const ratio = webPrice / priceWithDiscount - 1
     //console.log(ratio);
-    return ratio > 0.9 || ratio < 0.3;
-  };
-  
-  const grandTotalPrice = (order, switcher,discount) => {
+    return ratio > 0.9 || ratio < 0.3
+  }
+
+  const grandTotalPrice = (order, switcher, discount) => {
     const grandTotal = order.reduce((acc, item) => {
-      const price = switcher ? item.ProductPrice?.[0] : item.Vendor_Price?.[0]* (100-item.discount)/100;
-      return acc + (item.Quantity?.[0] * price); //ProductPrice?.[0]
-    }, 0);
-    return '$' + grandTotal.toFixed(2); // return the total rounded to two decimal places
-    
-  };
+      const price = switcher
+        ? item.ProductPrice?.[0]
+        : (item.Vendor_Price?.[0] * (100 - item.discount)) / 100
+      return acc + item.Quantity?.[0] * price //ProductPrice?.[0]
+    }, 0)
+    return '$' + grandTotal.toFixed(2) // return the total rounded to two decimal places
+  }
 
   return (
     <div>
@@ -322,11 +332,11 @@ const renderShipInfoInput = () => {
         validationSchema={ORDER_VALIDATION_SCHEMA}
       >
         {(formikProps) => {
-        // Handler to update ship info within Formik's scope
-        const handleShipInfoChange = (e) => {
-          setShipInfo(e.target.value); // Update the state with the new value
-          formikProps.setFieldValue('ship', e.target.value); // Update Formik's field value too
-        };
+          // Handler to update ship info within Formik's scope
+          const handleShipInfoChange = (e) => {
+            setShipInfo(e.target.value) // Update the state with the new value
+            formikProps.setFieldValue('ship', e.target.value) // Update Formik's field value too
+          }
           return (
             <Form>
               <div className={styles.orderHead}>
@@ -371,7 +381,7 @@ const renderShipInfoInput = () => {
                           component="div"
                         />
                       </div>
-                  
+
                       {rerenderOrderList.length !== 0 && (
                         <>
                           <div className="input-group mb-3">
@@ -415,7 +425,7 @@ const renderShipInfoInput = () => {
                             />
                           </div>
                           <div className={styles.regDiv} id="shipInfoBottom">
-                            { renderShipInfoBottom() }
+                            {renderShipInfoBottom()}
                           </div>
                           <div className="input-group mb-3">
                             <span className="input-group-text inHand">
@@ -424,13 +434,13 @@ const renderShipInfoInput = () => {
                             <input
                               style={yellow}
                               name="inHand"
-                              type="string" 
+                              type="string"
                               //value={formikProps.values.inHand}
                               value={setCustomFieldInHand}
                               //onChange={formikProps.handleChange}
                               onChange={(e) => {
-                                formikProps.handleChange(e);
-                                setCustomFieldInHand1(e.target.value);
+                                formikProps.handleChange(e)
+                                setCustomFieldInHand1(e.target.value)
                               }}
                               className="form-control"
                               aria-label="inHand"
@@ -441,15 +451,20 @@ const renderShipInfoInput = () => {
                       )}
                     </td>
                   </tr>
-                  <tr>{console.log(rerenderVendorName())}
-                    <td colSpan='2'>
+                  <tr>
+                    {console.log(rerenderVendorName())}
+                    <td colSpan="2">
                       <Field
                         style={{ background: 'yellow' }}
                         name="orderNotes"
                         type="text"
                         className={styles.orderNotes}
                         //value={formikProps.values.orderNotes}
-                        value={rerenderVendorName('or') ? '-20% off per Josh' : formikProps.values.orderNotes}
+                        value={
+                          rerenderVendorName('or')
+                            ? '-20% off per Josh'
+                            : formikProps.values.orderNotes
+                        }
                         onChange={formikProps.handleChange}
                         placeholder="Order Notes FOR VENDOR"
                       />
@@ -457,8 +472,12 @@ const renderShipInfoInput = () => {
                   </tr>
                   {setOrderComments ? (
                     <tr>
-                        <td>Order Notes FROM CUSTOMER:</td>
-                        <td><strong className={styles.orderNotesBold}>{setOrderComments}</strong></td>
+                      <td>Order Notes FROM CUSTOMER:</td>
+                      <td>
+                        <strong className={styles.orderNotesBold}>
+                          {setOrderComments}
+                        </strong>
+                      </td>
                     </tr>
                   ) : null}
                   <tr>
@@ -467,10 +486,14 @@ const renderShipInfoInput = () => {
                   </tr>
                   <tr>
                     <td className={styles.myTd} id="vendorAddress">
-                      { renderVendorAddress() }
+                      {renderVendorAddress()}
                     </td>
                     <td className={styles.myTd} id="shipTo">
-                      <div dangerouslySetInnerHTML={{ __html: renderCustomerAddress() }} />
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: renderCustomerAddress(),
+                        }}
+                      />
                       {/* {shipCompanyName} <br />
                       {shipName} {shipLastName} <br />
                       {shippingAddress1} <br />
@@ -581,7 +604,7 @@ const renderShipInfoInput = () => {
                     <th scope="col">Qty</th>
                     <th scope="col">Web Price</th>
                     <th scope="col">Vendor Cost</th>
-                    <th scope="col">Discount %</th> 
+                    <th scope="col">Discount %</th>
                     <th scope="col">Discounted Vendor Cost</th>
                     <th scope="col">Total Cost</th>
                     <th scope="col">
@@ -720,7 +743,7 @@ const renderShipInfoInput = () => {
                               )}
                             </td>
                             <td>
-                              {/* DISCOUNT */} 
+                              {/* DISCOUNT */}
                               {isEditingTop === true ? (
                                 <Field
                                   name={`productDiscount[${index}]`}
@@ -735,7 +758,7 @@ const renderShipInfoInput = () => {
                                   id={`productDiscount[${index}]`}
                                 />
                               ) : (
-                                discountAmount(o.discount) 
+                                discountAmount(o.discount)
                               )}
                             </td>
                             <td>
@@ -797,7 +820,7 @@ const renderShipInfoInput = () => {
                       filteredOrderList.length === 0 &&
                       rerenderOrderList.map((o, index) => (
                         <React.Fragment key={index}>
-                          <tr >
+                          <tr>
                             {checkByVendor && (
                               <td>
                                 <label>
@@ -830,7 +853,8 @@ const renderShipInfoInput = () => {
                                       )
                                       setCheckboxFilteredIndex(trueIndices)
                                       const choosenItems = rerenderOrderList.filter(
-                                        (_, index) => trueIndices.includes(index),
+                                        (_, index) =>
+                                          trueIndices.includes(index),
                                       )
                                       if (choosenItems.length !== 0) {
                                         const selectedVendor = VENDOR_LIST.find(
@@ -839,11 +863,26 @@ const renderShipInfoInput = () => {
                                               vendor.code,
                                             ),
                                         )
-                                        formikProps.setFieldValue('vendorAddress',selectedVendor.address)
-                                        formikProps.setFieldValue('shipInfoDescription',selectedVendor.shipInfoDescription)
-                                        formikProps.setFieldValue('ship',selectedVendor.shipInfo)
-                                        formikProps.setFieldValue('productTableData',choosenItems)
-                                        formikProps.setFieldValue('vendorEmails',selectedVendor.email)
+                                        formikProps.setFieldValue(
+                                          'vendorAddress',
+                                          selectedVendor.address,
+                                        )
+                                        formikProps.setFieldValue(
+                                          'shipInfoDescription',
+                                          selectedVendor.shipInfoDescription,
+                                        )
+                                        formikProps.setFieldValue(
+                                          'ship',
+                                          selectedVendor.shipInfo,
+                                        )
+                                        formikProps.setFieldValue(
+                                          'productTableData',
+                                          choosenItems,
+                                        )
+                                        formikProps.setFieldValue(
+                                          'vendorEmails',
+                                          selectedVendor.email,
+                                        )
                                       } else {
                                         formikProps.setFieldValue(
                                           'vendorAddress',
@@ -907,7 +946,8 @@ const renderShipInfoInput = () => {
                                   name={`vendorCode[${index}]`}
                                   value={
                                     formikProps.values.vendorCode[index] || ''
-                                  }fdgdfg
+                                  }
+                                  fdgdfg
                                   onChange={formikProps.handleChange}
                                   onClick={(e) =>
                                     handleChangeInput(e, index, formikProps)
@@ -959,8 +999,8 @@ const renderShipInfoInput = () => {
                               )}
                             </td>
                             <td>
-                              {/* WEBSITE PRICE */}
-                              ${ formattedPrice(o.ProductPrice?.[0]) }
+                              {/* WEBSITE PRICE */}$
+                              {formattedPrice(o.ProductPrice?.[0])}
                               {/* {console.log(JSON.stringify(o), '<< o.ProductPrice?.[0]')} */}
                               {/* {calculatePrice(
                                 o.ProductPrice?.[0],
@@ -987,30 +1027,33 @@ const renderShipInfoInput = () => {
                                 />
                               ) : (
                                 <span>
-                                  {isNumber(o.Vendor_Price?.[0])
-                                    ? 
-                                    (() => {
-                                        <b style={attension}>
-                                          Website order item
-                                        </b>
-                                      })()
-                                    : formattedPrice(o.Vendor_Price?.[0])  
+                                  {
+                                    isNumber(o.Vendor_Price?.[0])
+                                      ? (() => {
+                                          ;<b style={attension}>
+                                            Website order item
+                                          </b>
+                                        })()
+                                      : formattedPrice(o.Vendor_Price?.[0])
                                     // : calculatePrice(
                                     //     o.Vendor_Price?.[0],
                                     //     o.Quantity?.[0],
                                     //   )
-                                    }{' '}
+                                  }{' '}
                                 </span>
                               )}
                             </td>
                             <td>
                               {/* DISCOUNT */}
-                              {o.ProductCode[0].toLowerCase().startsWith('or') ? setIsNeededDiscountNotes(true) : setIsNeededDiscountNotes(false)}
+                              {o.ProductCode[0].toLowerCase().startsWith('or')
+                                ? setIsNeededDiscountNotes(true)
+                                : setIsNeededDiscountNotes(false)}
                               {isEditingTop === true ? (
                                 <Field
                                   name={`productDiscount[${index}]`}
                                   value={
-                                    formikProps.values.productDiscount[index] || ''
+                                    formikProps.values.productDiscount[index] ||
+                                    ''
                                   }
                                   onChange={formikProps.handleChange}
                                   onClick={(e) =>
@@ -1030,7 +1073,10 @@ const renderShipInfoInput = () => {
                               isNumber(o.discount) ? (
                                 <b style={attension}>Website order item</b>
                               ) : (
-                                priceWithDiscountPerUnit(o.Vendor_Price?.[0], o.discount)
+                                priceWithDiscountPerUnit(
+                                  o.Vendor_Price?.[0],
+                                  o.discount,
+                                )
                                 // calculateDiscountedPrice(
                                 //   o.Vendor_Price?.[0],
                                 //   o.discount,
@@ -1047,7 +1093,7 @@ const renderShipInfoInput = () => {
                                     o.discount,
                                     o.Quantity?.[0],
                                   )
-                                : ''} 
+                                : ''}
                             </td>
                             <td className={styles.groupedTd}>
                               <button
@@ -1060,32 +1106,50 @@ const renderShipInfoInput = () => {
                                 Remove
                               </button>
                             </td>
-                            {isPriceOutOfRange(formattedPrice(o.ProductPrice?.[0]), priceWithDiscountPerUnit(o.Vendor_Price?.[0], o.discount)) && (
+                            {isPriceOutOfRange(
+                              formattedPrice(o.ProductPrice?.[0]),
+                              priceWithDiscountPerUnit(
+                                o.Vendor_Price?.[0],
+                                o.discount,
+                              ),
+                            ) && (
                               <td>
                                 <span className={styles.rangeText}>
-                                  {formattedPrice(o.ProductPrice?.[0]) / priceWithDiscountPerUnit(o.Vendor_Price?.[0], o.discount) < 0.9 && formattedPrice(o.ProductPrice?.[0]) / priceWithDiscountPerUnit(o.Vendor_Price?.[0], o.discount) > 0.3 ? "Price in Range" : "Price is Out of Range"}
+                                  {formattedPrice(o.ProductPrice?.[0]) /
+                                    priceWithDiscountPerUnit(
+                                      o.Vendor_Price?.[0],
+                                      o.discount,
+                                    ) <
+                                    0.9 &&
+                                  formattedPrice(o.ProductPrice?.[0]) /
+                                    priceWithDiscountPerUnit(
+                                      o.Vendor_Price?.[0],
+                                      o.discount,
+                                    ) >
+                                    0.3
+                                    ? 'Price in Range'
+                                    : 'Price is Out of Range'}
                                 </span>
                                 <MarkupAmount />
                               </td>
                             )}
                           </tr>
-
                         </React.Fragment>
                       ))}
                     <tr>
-                        <td colSpan="4"></td>
-                        <td>Total Web</td>
-                        <td colSpan="3"></td>
-                        <td>Total Vendor</td>
-                        <td colSpan="2"></td>
-                      </tr>
-                      <tr>
-                        <td colSpan="4"></td>
-                        <td>{grandTotalPrice(rerenderOrderList, true)}</td>
-                        <td colSpan="3"></td>
-                        <td>{grandTotalPrice(rerenderOrderList, false)}</td>
-                        <td colSpan="2"></td>
-                      </tr>
+                      <td colSpan="4"></td>
+                      <td>Total Web</td>
+                      <td colSpan="3"></td>
+                      <td>Total Vendor</td>
+                      <td colSpan="2"></td>
+                    </tr>
+                    <tr>
+                      <td colSpan="4"></td>
+                      <td>{grandTotalPrice(rerenderOrderList, true)}</td>
+                      <td colSpan="3"></td>
+                      <td>{grandTotalPrice(rerenderOrderList, false)}</td>
+                      <td colSpan="2"></td>
+                    </tr>
                   </>
                 </tbody>
               </table>
@@ -1101,7 +1165,15 @@ const renderShipInfoInput = () => {
                         <button type="submit" className="btn btn-primary">
                           Generate PO
                         </button>
-                        <span>{isNeededDiscountNotes === true ? (<b style={{ color: 'red' }}>ORBUS ITEM, PLEASE DO NOT FORGET SET DISCOUNT!</b>) : ('')}</span>
+                        <span>
+                          {isNeededDiscountNotes === true ? (
+                            <b style={{ color: 'red' }}>
+                              ORBUS ITEM, PLEASE DO NOT FORGET SET DISCOUNT!
+                            </b>
+                          ) : (
+                            ''
+                          )}
+                        </span>
                       </>
                     )}
                     {/* appear just if products were selected from checkbox method */}

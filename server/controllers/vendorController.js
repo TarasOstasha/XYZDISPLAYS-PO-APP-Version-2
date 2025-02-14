@@ -31,7 +31,7 @@ module.exports.getvendorById = async (req, res, next) => {
             console.error('Error parsing XML:', err)
           } else {
             const productJson = JSON.stringify(result, null, 2)
-            console.log(productJson, 'productJson vendor');
+            //console.log(productJson, 'productJson vendor');
             res.status(200).send(productJson)
           }
         })

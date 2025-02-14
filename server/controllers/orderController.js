@@ -343,7 +343,7 @@ module.exports.saveOrder = async (req, res, next) => {
     } = req.body // general data
 
     // console.log(req.body, '<< req.body');
-    // console.log(vendorEmails, '<< vendorEmails');
+    console.log(vendorEmails, '<< vendorEmails');
   
     const orderDataTable = orderData(productTableData);
     const emailTemplateTable = emailTemplate(vendorAddress, po, date, ship, shipInfoDescription, inHand, shipTo, orderNotes);
