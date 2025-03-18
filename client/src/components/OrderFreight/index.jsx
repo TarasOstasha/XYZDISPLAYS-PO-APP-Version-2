@@ -55,6 +55,8 @@ function OrderFreight() {
   const [optionProducts, setoptionProducts] = useState()
   const [userCustomProducts, setUserCustomProducts] = useState([])
   const [productOptionsArr, setProductOptionsArr] = useState([])
+  const [itemQuantityMap, setItemQuantityMap] = useState()
+  const [updatedOptionsArr, setUpdatedOptionsArr] = useState()
 
   const handleToRemove = (index, array) => {
     console.log(index, array)
@@ -175,7 +177,9 @@ function OrderFreight() {
   const handleVendorShipInfoDescription = (vendor) => {
     setShipInfoDescription(vendor)
   }
-
+  useEffect(() => {
+    console.log(updatedOptionsArr, '✅ updatedOptionsArr AFTER state update')
+  }, [updatedOptionsArr])
   useEffect(() => {}, [removeOnclick])
   useEffect(() => {
     if (orderId.length < 5) {
@@ -217,7 +221,7 @@ function OrderFreight() {
                 item.OrderDetails_Options?.map(
                   (option) => option.OptionID?.[0],
                 ) || []
-              //console.log(optionIDs, '***optionIDs***'); //-----------------------------------------------
+              console.log(optionIDs, '***optionIDs***') //-----------------------------------------------
               const extraProducts = optionIDs
                 .map((id) => {
                   const matchingOption = OPTION_DATA.find(
@@ -241,9 +245,16 @@ function OrderFreight() {
                     // ]
                     //
                     return (() => {
+                      console.log(matchingOption, '//matchingOption\\')
                       const option = OPTION_DATA.find(
                         (o) => o.id === matchingOption.id,
                       ) // Find a single match
+                      console.log(option, '!!!option!!')
+                      console.log(
+                        [matchingOption?.quantity?.toString()],
+                        option.ProductCode,
+                        'matchingOption?.quantity?.toString()]',
+                      )
                       if (!option) return {} // Fallback if no matching option is found
                       return {
                         ProductCode: [option.ProductCode || 'UnknownProduct'],
@@ -257,7 +268,12 @@ function OrderFreight() {
                             option.Vendor_Price?.toString() ||
                             '0.00',
                         ],
-                        Quantity: [option.Quantity?.toString() || '1'],
+                        //Quantity: [option.Quantity?.toString() || '1'],
+                        // Quantity: [
+                        //   matchingOption.quantity ||
+                        //     option.quantity,
+                        // ],
+                        Quantity: [matchingOption?.quantity?.toString()], //|| option?.quantity?.toString() || "1"],
                         Vendor_PartNo: [option.Vendor_PartNo || 'Unknown'],
                         Vendor_Price: [
                           matchingOption.vendorpricediff?.toString() ||
@@ -271,18 +287,19 @@ function OrderFreight() {
                   return null
                 })
                 .filter(Boolean) // Remove null values
+              console.log(extraProducts, 'extraProducts')
               return extraProducts
             }) || []
-
+          console.log(productOption, '&&&productOption&&&')
           //
-          //console.log(productOption, '***productOption***');
+          //console.log(productOption, '***productOption***')
           if (Array.isArray(productOption) && productOption.length > 0) {
             setProductOptionsArr(productOption)
           }
           const filteredProductOption = Array.isArray(productOption)
             ? productOption.filter((item) => Object.keys(item).length > 0)
             : []
-
+          console.log(filteredProductOption, '***filteredProductOption***')
           const combinedOrderDetails =
             filteredProductOption.length > 0
               ? [...Orders[0].OrderDetails, ...filteredProductOption]
@@ -318,13 +335,14 @@ function OrderFreight() {
           setUserCustomProducts(nonExistingCustomProducts)
 
           console.log(productResponses, '****productResponses')
-          //console.log(combinedOrderDetails, '***combinedOrderDetails')
+          console.log(combinedOrderDetails, '***combinedOrderDetails')
           const quantityMap = combinedOrderDetails.reduce((acc, order) => {
             // Since ProductCode and Quantity are arrays, we take the first element.
             acc[order.ProductCode[0]] = order.Quantity[0]
             return acc
           }, {})
-          console.log(quantityMap, 'quantityMap')
+          setItemQuantityMap(quantityMap)
+          console.log(quantityMap, itemQuantityMap, 'quantityMap')
           // Step 2: Map through productResponses to add the Quantity for each product.
           const updatedProductResponses = productResponses.map((response) => {
             const productsArray = Array.isArray(
@@ -362,6 +380,7 @@ function OrderFreight() {
               })
               // Filter out any null results
               .filter((product) => product !== null)
+            console.log(updatedProducts, '***updatedProducts***')
             // Return the updated response object with the new products list
             return {
               ...response,
@@ -374,7 +393,8 @@ function OrderFreight() {
               },
             }
           })
-          //console.log(updatedProductResponses, 'updatedProductResponses')
+
+          console.log(updatedProductResponses, 'updatedProductResponses')
           //console.log(productResponses, 'updatedProductResponses')
           // get product length with Google_Age_Group values
           //const vendorKits = extractVendorKits(productResponses) // old version
@@ -423,10 +443,10 @@ function OrderFreight() {
     //     .flat(2);
     // };
     const extractVendorKits = (productResponses) => {
-      console.log(productResponses,'productResponses extractVendorKits');
+      console.log(productResponses, 'productResponses extractVendorKits')
       let alertShown = false // Flag to track if the alert has been shown
       //console.log(userCustomProducts,'userCustomProducts');
-      const mergetItems = [
+      const mergedItems = [
         ...productResponses.map((response) => ({
           ...response,
           data: {
@@ -451,15 +471,15 @@ function OrderFreight() {
           },
         })),
       ]
-      //console.log(mergetItems, '****mergetItems')
-      return mergetItems.flatMap((item, index) => {
+      //console.log(mergedItems, '****mergedItems')
+      return mergedItems.flatMap((item, index) => {
         const { xmldata: { Products } = {} } = item.data
         if (!Array.isArray(Products) || Products.length === 0) {
           console.warn(`Invalid Products at index ${index}`)
           return []
         }
         return Products.flatMap((product) => {
-          console.log(product,'product.Quantity');
+          console.log(product, 'product.Quantity')
           if (Array.isArray(product.Google_Age_Group)) {
             return product.Google_Age_Group.flatMap((group) => {
               // Split the group string into its parts
@@ -838,25 +858,67 @@ function OrderFreight() {
   }
 
   const handleConfirmSplit = async () => {
+    const updatedOptions = productOptionsArr.map((item) => {
+      const productCode = Array.isArray(item.ProductCode)
+        ? item.ProductCode[0]
+        : item.ProductCode
+      const productCodeKey = Object.keys(itemQuantityMap).find(
+        (key) => key.toLowerCase() === productCode.toLowerCase(),
+      )
+      if (productCodeKey) {
+        console.log(
+          `Updating Quantity for ${productCode} to`,
+          itemQuantityMap[productCodeKey],
+        )
+        return {
+          ...item,
+          Quantity: Array.isArray(item.Quantity)
+            ? [itemQuantityMap[productCodeKey]]
+            : itemQuantityMap[productCodeKey],
+        }
+      } else {
+        console.log(`ProductCode ${productCode} not found in itemQuantityMap`)
+        return item
+      }
+    })
+    setUpdatedOptionsArr(updatedOptions)
+    console.log(updatedOptions, updatedOptionsArr, '***updatedOptions')
+
+    //setProductOptionsArr(updatedOptions);
+    console.log(productOptionsArr, '**productOptionsArr*')
     const vendorKitCodes = productOptionsArr.map((item) => item.Vendor_PartNo)
-    //console.log(vendorKitCodes,'***vendorKitCodes***');
+    console.log(vendorKitCodes, '***vendorKitCodes***')
+    // update quantity splitted kits
+    vendorKitItem.map((item) => {
+      const productCodeKey = Object.keys(itemQuantityMap).find(
+        (key) => key.toLowerCase() === item.ProductCode.toLowerCase(),
+      )
+      if (productCodeKey) {
+        item.Quantity = itemQuantityMap[productCodeKey] // Assign quantity
+      } else {
+        console.log(
+          `ProductCode ${item.ProductCode} not found in itemQuantityMap`,
+        )
+      }
+    })
     console.log(vendorKitItem, '***vendorKitItem***')
     const googleAgeGroups = vendorKitItem.map((item) => item.Google_Age_Group)
     console.log(googleAgeGroups, 'googleAgeGroups')
     //console.log(optionProducts, '***optionProducts***');
     //console.log(orderProductDetails, '***orderProductDetails');
     const combinedOptionsAndKits = [...vendorKitCodes, ...googleAgeGroups]
-    //console.log(combinedOptionsAndKits, '***combinedOptionsAndKits***');
+    console.log(combinedOptionsAndKits, '***combinedOptionsAndKits***')
     //const uniqueVendorCodes = [...new Set(combinedOptionsAndKits)];
     //const uniqueVendorCodes = [...new Set([...productOptionsArr.map(item => item.Vendor_PartNo), ...vendorKitItem])];
 
     const vendorUrls = combinedOptionsAndKits.map(
       (code) => `${API_BASE_URL}/api/vendors/${code}`,
     )
-    //console.log(vendorUrls, 'vendorUrls');
+    console.log(vendorUrls, 'vendorUrls')
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor')
     //console.log(vendorResponses, '***vendorResponses');
     const updatedProducts = vendorResponses.flatMap((item) => {
+      console.log(item.data, '***item data***')
       const { xmldata: { Products } = {} } = item.data || {}
       return Products || []
     })
@@ -871,29 +933,221 @@ function OrderFreight() {
     //     Quantity: match ? [match.Quantity] : 1,
     //   }
     // })
-    const updatedProductsWithQuantity = updatedProducts
-      .filter(
-        (product) => product.Google_Age_Group && product.Google_Age_Group[0],
+    console.log(updatedProducts, '!updatedProducts!')
+    // const updatedProductsWithQuantity = updatedProducts
+    //   .filter(
+    //     (product) => product.Google_Age_Group && product.Google_Age_Group[0],
+    //   )
+    //   .map((product) => {
+    //     const googleAgeGroup = product.Google_Age_Group[0]
+    //     const match = vendorKitItem.find((vk) => {
+    //       if(vk.Quantity === null ) {
+    //         return vk.Quantity = '1' // this section should be redevelop
+    //       }
+    //       return (
+    //         vk.Google_Age_Group.toLowerCase().trim() ===
+    //         googleAgeGroup.toLowerCase().trim()
+    //       )
+    //     })
+
+    //     return {
+    //       ...product,
+    //       Quantity: match ? [match.Quantity] : 1,
+    //     }
+    //   })
+    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
+    //   const productCode = product.ProductCode[0]
+    //   const googleAgeGroup = product.Google_Age_Group
+    //     ? product.Google_Age_Group[0]
+    //     : null
+    //   let match = productOptionsArr.find(
+    //     (option) => option.ProductCode[0] === productCode,
+    //   )
+    //   if (!match && googleAgeGroup) {
+    //     match = vendorKitItem.find(
+    //       (vk) =>
+    //         vk.Google_Age_Group.toLowerCase().trim() ===
+    //         googleAgeGroup.toLowerCase().trim(),
+    //     )
+    //   }
+    //   return {
+    //     ...product,
+    //     Quantity: match ? match.Quantity : product.Quantity,
+    //   }
+    // })
+
+    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
+
+    //   const productCode = product.ProductCode[0]
+    //   const googleAgeGroup = product.Google_Age_Group ? product.Google_Age_Group[0] : product.Vendor_PartNo[0]
+
+    //   let match = productOptionsArr.find((option) => option.ProductCode[0] === productCode)
+
+    //   if (!match && googleAgeGroup) {
+    //     match = vendorKitItem.find(
+    //       (vk) =>
+    //         vk.Google_Age_Group.toLowerCase().trim() ===
+    //         googleAgeGroup.toLowerCase().trim(),
+    //     )
+    //   }
+    //   // Check if productOptionsArr has an item with Vendor_PartNo ['manually']
+    //   const manualEntry = productOptionsArr.find(
+    //     (option) =>
+    //       option.Vendor_PartNo && option.Vendor_PartNo[0] === 'manually',
+    //   )
+    //   let updatedProductList = [
+    //     {
+    //       ...product,
+    //       Quantity: match ? [match.Quantity] : product.Quantity, // Update Quantity if match is found
+    //     },
+    //   ];
+    //   console.log(updatedProductList, '***updatedProductList***');
+    //   // If a manually entered product exists, add it as a separate entry
+    //   if (manualEntry) {
+    //     updatedProductList.push({
+    //       ProductCode: manualEntry.ProductCode,
+    //       ProductName: manualEntry.ProductName,
+    //       ProductPrice: manualEntry.ProductPrice,
+    //       Vendor_PartNo: manualEntry.Vendor_PartNo,
+    //       Vendor_Price: manualEntry.Vendor_Price,
+    //       Quantity: manualEntry.Quantity,
+    //     })
+    //   }
+    //   return updatedProductList;
+    // }).flat();
+    console.log(productOptionsArr, '//productOptionsArr')
+    //   const updatedProductsWithQuantity = updatedProducts.flatMap((product) => {
+    //     console.log(product, '>> product');
+    //     const productCode = product.ProductCode[0];
+    //     const googleAgeGroup = product.Google_Age_Group ? product.Google_Age_Group[0] : null;
+
+    //     console.log(`Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`);
+    //     console.log(updatedOptionsArr, '!!!>>> updatedOptionsArr'); // receiving correct data for options product !!!!
+    //     // Find matching product in productOptionsArr by ProductCode
+    //     let match = productOptionsArr.find((option) => option.ProductCode[0] === productCode); // !!!!ERRR no all option
+    //     console.log(match, '!!!match>>>');
+    //     if (!match && googleAgeGroup) {
+    //         match = vendorKitItem.find(
+    //             (vk) => vk.Google_Age_Group.toLowerCase().trim() === googleAgeGroup.toLowerCase().trim()
+    //         );
+    //     }
+
+    //     let quantity = product.Quantity || [1];
+
+    //     if (match && match.Quantity != null) {
+    //         quantity = [match.Quantity];
+    //     }
+
+    //     console.log(`Final Quantity for ${productCode}:`, quantity);
+
+    //     // Check if productOptionsArr has an item with Vendor_PartNo ['manually']
+    //     const manualEntry = updatedOptionsArr.find((option) => {
+    //       return option.Vendor_PartNo[0] === 'manually';
+    //     }
+    //         //(option) => option.Vendor_PartNo === 'manually'
+
+    //     );
+    //     console.log(manualEntry.Quantity, '<<manualEntry');
+    //     // Create an array to hold updated products
+    //     let updatedProductList = [
+    //         {
+    //             ...product,
+    //            Quantity: quantity, // Ensure quantity is properly set
+    //         }
+    //     ];
+
+    //     if (manualEntry) { // !!!! CORRECT
+    //         console.log(`Adding manualEntry product:`, manualEntry);
+    //         updatedProductList.push({
+    //             ProductCode: manualEntry.ProductCode,
+    //             ProductName: manualEntry.ProductName,
+    //             ProductPrice: manualEntry.ProductPrice,
+    //             Vendor_PartNo: manualEntry.Vendor_PartNo,
+    //             Vendor_Price: manualEntry.Vendor_Price,
+    //             Quantity: manualEntry.Quantity || [1],
+    //         });
+    //         console.log(updatedProductList, '<< !! updatedProductList');
+    //     }
+
+    //     return updatedProductList;
+    // });
+    // 1) Build your main array WITHOUT manualEntry inside the loop
+    const updatedProductsWithQuantity = updatedProducts.map((product) => {
+      console.log(product, '>> product')
+      const productCode = product.ProductCode[0]
+      const googleAgeGroup = product.Google_Age_Group?.[0] || null
+
+      console.log(
+        `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
       )
-      .map((product) => {
-        //console.log(product, 'product updatedProductsWithQuantity')
-        const googleAgeGroup = product.Google_Age_Group[0]
-        const match = vendorKitItem.find((vk) => {
-          if(vk.Quantity === null ) {
-            return vk.Quantity = '1' // this section should be redevelop
-          }
-          //console.log(vk.Google_Age_Group === googleAgeGroup,'vk');
-          //console.log(googleAgeGroup,'googleAgeGroup');
-          return (
+      console.log(updatedOptionsArr, '>>> updatedOptionsArr')
+
+      // Match by ProductCode in productOptionsArr
+      let match = productOptionsArr.find(
+        (option) => option.ProductCode?.[0] === productCode,
+      )
+
+      // If no match by code, try vendorKitItem by Google_Age_Group
+      if (!match && googleAgeGroup) {
+        match = vendorKitItem.find(
+          (vk) =>
             vk.Google_Age_Group.toLowerCase().trim() ===
-            googleAgeGroup.toLowerCase().trim()
-          )
-        })
-        return {
-          ...product,
-          Quantity: match ? [match.Quantity] : 1,
-        }
+            googleAgeGroup.toLowerCase().trim(),
+        )
+      }
+
+      // Default quantity
+      let quantity = product.Quantity || ['1']
+
+      // If we found a match with a valid Quantity, use it
+      if (match && match.Quantity != null) {
+        quantity = Array.isArray(match.Quantity)
+          ? match.Quantity
+          : [match.Quantity]
+      }
+
+      console.log(`Final Quantity for ${productCode}:`, quantity)
+
+      // Return ONE product for each original product
+      return {
+        ...product,
+        Quantity: quantity,
+      }
+    })
+
+    // 2) Find the manual entry in updatedOptionsArr ONCE
+    // const manualEntry = updatedOptionsArr.find(
+    //   (option) => option.Vendor_PartNo?.[0] === 'manually',
+    //   //option.Vendor_PartNo && option.Vendor_PartNo[0] === 'manually',
+    // )
+    const manualEntry = Array.isArray(updatedOptionsArr)
+  ? updatedOptionsArr.find(
+      (option) => option?.Vendor_PartNo?.[0] === 'manually'
+    )
+  : null;
+
+    // 3) If manualEntry exists, push it exactly once
+    if (manualEntry) {
+      console.log('Adding manualEntry product:', manualEntry)
+      updatedProductsWithQuantity.push({
+        ProductCode: manualEntry.ProductCode,
+        ProductName: manualEntry.ProductName,
+        ProductPrice: manualEntry.ProductPrice,
+        Vendor_PartNo: manualEntry.Vendor_PartNo,
+        Vendor_Price: manualEntry.Vendor_Price,
+        Quantity: manualEntry.Quantity || ['1'],
       })
+    }
+
+    // 4) Now you have ONE array with no duplicates
+    console.log(
+      updatedProductsWithQuantity,
+      '<< Final updatedProductsWithQuantity',
+    )
+
+    console.log(updatedProducts, '|| updatedProducts')
+    console.log(updatedProductsWithQuantity, '|| updatedProductsWithQuantity')
+    console.log(productOptionsArr, '***productOptionsArr***')
     // console.log(
     //   updatedProductsWithQuantity,
     //   '***updatedProductsWithQuantity***',
@@ -902,7 +1156,7 @@ function OrderFreight() {
     // merge products with same product code
     //const mergedProducts = mergeDuplicatedProducts(updatedProducts) // old version
     const mergedProducts = mergeDuplicatedProducts(updatedProductsWithQuantity)
-    //console.log(mergedProducts, '***mergedProducts***');
+    console.log(mergedProducts, '***mergedProducts***')
     // Define keys to copy from old rerenderOrderList
     const keysToCopy = ['OrderDetailID', 'Quantity', 'TotalPrice', 'discount']
     const updatedOrderList = mergedProducts.map((product) => {
@@ -926,7 +1180,7 @@ function OrderFreight() {
         }
         return acc
       }, {})
-      //console.log(copiedData, 'copiedData')
+
       return {
         ...product,
         ...copiedData,
@@ -936,7 +1190,7 @@ function OrderFreight() {
     const normalizedUpdatedProducts = transformUpdatedProductsToUserCustomFormat(
       userCustomProducts,
     )
-    //console.log(normalizedUpdatedProducts, 'normalizedUpdatedProducts');
+    console.log(normalizedUpdatedProducts, 'normalizedUpdatedProducts')
 
     const modOrderList = [
       ...normalizedUpdatedProducts,
