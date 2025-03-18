@@ -46,7 +46,7 @@ const vendorCatalog = [
   },
   {
     vendor: 'Makitso',
-    link: 'https://drive.google.com/file/d/1EHKX18dHWiNeJLwDWvdtMwOF10SaL8LL/view?usp=sharing'
+    link: 'https://drive.google.com/file/d/18qubR6oOVVrGz8Qa0rKCexlt2tz2j8QH/view?usp=sharing'
   },
   {
     vendor: 'LED Scopic',
