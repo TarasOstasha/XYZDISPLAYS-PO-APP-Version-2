@@ -135,6 +135,14 @@ function OrderFreight() {
     // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KITS THESE
     let foundMissingVendorPrice = false
     rerenderOrderList.forEach((item, index) => {
+      if (!item) {
+        console.warn(`Skipping item at index ${index} because it is undefined or null.`);
+        return;
+      }
+      if (!item.hasOwnProperty('Vendor_PartNo')) {
+        item.Vendor_PartNo = ['']; 
+      }
+      item.Vendor_PartNo[0] = formikProps.values.vendorCode[index] || item.Vendor_PartNo[0];
       console.log(item, '***item***')
       if (!item || !item.hasOwnProperty('Vendor_Price')) {
         item.Vendor_Price = ['0']
@@ -156,16 +164,15 @@ function OrderFreight() {
         if (!Array.isArray(item.Quantity)) item.Quantity = []
         if (!Array.isArray(item.discount)) item.discount = []
         if (!Array.isArray(item.Vendor_Price)) item.Vendor_Price = []
-
+        if (!Array.isArray(item.Vendor_PartNo)) item.Vendor_PartNo = []
+        
         item.ProductCode[0] = formikProps.values.productCode[index]
         item.Vendor_PartNo[0] = formikProps.values.vendorCode[index]
         item.ProductName[0] = formikProps.values.productName[index]
         item.Quantity[0] = formikProps.values.productQuantity[index]
-        item.Vendor_Price[0] =
-          formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
+        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
         item.ProductPrice[0] = formikProps.values.productPrice[index]
-        item.discount[0] =
-          formikProps?.values.productDiscount[index] || item.discount[0]
+        item.discount[0] = formikProps?.values.productDiscount[index] || item.discount[0]
       }
     })
   }
@@ -370,12 +377,12 @@ function OrderFreight() {
                   return null
                 }
                 // Ensure that product.ProductCode exists and is an array
-                const productCode = Array.isArray(product.ProductCode)
-                  ? product.ProductCode[0]
-                  : null
-                const quantity = productCode
-                  ? quantityMap[productCode] || null
-                  : null
+                const productCode = Array.isArray(product.ProductCode) ? product.ProductCode[0].toLowerCase() : null
+                //const quantity = productCode ? quantityMap[productCode] || null : null
+                const quantity = productCode ? quantityMap[Object.keys(quantityMap).find(key => key.toLowerCase() === productCode)] || null : null;
+                  console.log(productCode, '!!! productCode !!!');
+                  console.log(quantityMap, '!!! quantityMap !!!');
+                  console.log(quantity, '!!! quantity !!!');
                 return { ...product, Quantity: [quantity] }
               })
               // Filter out any null results
