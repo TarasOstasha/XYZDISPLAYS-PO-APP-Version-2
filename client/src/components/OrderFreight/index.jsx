@@ -802,6 +802,7 @@ function OrderFreight() {
   }
 
   const mergeDuplicatedProducts = (products) => {
+    console.log(products, '***products mergeDuplicatedProducts ***');
     return products.reduce((acc, product) => {
       // Extract and normalize ProductCode safely
       const productCode = JSON.stringify(product.ProductCode)
@@ -1079,49 +1080,92 @@ function OrderFreight() {
     //     return updatedProductList;
     // });
     // 1) Build your main array WITHOUT manualEntry inside the loop
+    
+    // before working code
+    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
+    //   console.log(product, '>> product updatedProductsWithQuantity')
+    //   const productCode = product.ProductCode[0]
+    //   const googleAgeGroup = product.Google_Age_Group?.[0] || null
+
+    //   console.log(
+    //     `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
+    //   )
+
+    //   // Match by ProductCode in productOptionsArr
+    //   let match = productOptionsArr.find(
+    //     (option) => option.ProductCode?.[0] === productCode,
+    //   )
+      
+    //   // If no match by code, try vendorKitItem by Google_Age_Group
+    //   if (!match && googleAgeGroup) {
+    //     match = vendorKitItem.find((vk) => vk.Google_Age_Group.toLowerCase().trim() === googleAgeGroup.toLowerCase().trim())
+    //   }
+
+    //   console.log(match, '!!!match!!!');
+    //   // Default quantity
+    //   let quantity = product.Quantity || ['1']
+
+    //   // If we found a match with a valid Quantity, use it
+    //   if (match && match.Quantity != null) {
+    //     quantity = Array.isArray(match.Quantity) ? match.Quantity : [match.Quantity]
+    //   }
+
+    //   console.log(`Final Quantity for ${productCode}:`, quantity)
+
+    //   // Return ONE product for each original product
+    //   return {
+    //     ...product,
+    //     Quantity: quantity,
+    //   }
+    // })
     const updatedProductsWithQuantity = updatedProducts.map((product) => {
-      console.log(product, '>> product')
-      const productCode = product.ProductCode[0]
-      const googleAgeGroup = product.Google_Age_Group?.[0] || null
 
+      const productCode = product.ProductCode[0];
+      const googleAgeGroup = product.Google_Age_Group?.[0] || null;
+    
       console.log(
-        `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
-      )
-      console.log(updatedOptionsArr, '>>> updatedOptionsArr')
-
-      // Match by ProductCode in productOptionsArr
+        `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`
+      );
+    
+      // 1) Match by ProductCode in productOptionsArr
       let match = productOptionsArr.find(
-        (option) => option.ProductCode?.[0] === productCode,
-      )
-
-      // If no match by code, try vendorKitItem by Google_Age_Group
+        (option) => option.ProductCode?.[0] === productCode
+      );
+    
+      // 2) If no match by code, try vendorKitItem by Google_Age_Group
       if (!match && googleAgeGroup) {
-        match = vendorKitItem.find(
-          (vk) =>
-            vk.Google_Age_Group.toLowerCase().trim() ===
-            googleAgeGroup.toLowerCase().trim(),
-        )
+        const idx = vendorKitItem.findIndex((vk) =>
+          vk.Google_Age_Group.toLowerCase().trim() ===
+          googleAgeGroup.toLowerCase().trim()
+        );
+    
+        // If found, remove that ONE item from vendorKitItem
+        if (idx !== -1) {
+          match = vendorKitItem[idx];
+          // Remove it so it cannot be used again
+          vendorKitItem.splice(idx, 1);
+        }
       }
-
-      // Default quantity
-      let quantity = product.Quantity || ['1']
-
-      // If we found a match with a valid Quantity, use it
+    
+      console.log(match, '!!!match!!!');
+    
+      // 3) Default quantity
+      let quantity = product.Quantity || ['1'];
+    
+      // 4) If we found a match with a valid Quantity, use it
       if (match && match.Quantity != null) {
-        quantity = Array.isArray(match.Quantity)
-          ? match.Quantity
-          : [match.Quantity]
+        quantity = Array.isArray(match.Quantity) ? match.Quantity : [match.Quantity];
       }
-
-      console.log(`Final Quantity for ${productCode}:`, quantity)
-
-      // Return ONE product for each original product
+    
+      console.log(`Final Quantity for ${productCode}:`, quantity);
+    
+      // 5) Return ONE product for each original product
       return {
         ...product,
         Quantity: quantity,
-      }
-    })
-
+      };
+    });
+    
     // 2) Find the manual entry in updatedOptionsArr ONCE
     // const manualEntry = updatedOptionsArr.find(
     //   (option) => option.Vendor_PartNo?.[0] === 'manually',
