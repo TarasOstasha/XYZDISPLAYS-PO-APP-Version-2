@@ -346,7 +346,7 @@ export const OPTION_DATA = [
     { id: 7248,optioncatid: 578, ProductName: "3 x Backlit Counters w/ Battery",quantity: 3, ProductCode: "option", Vendor_PartNo: "Counter battery 100x100", pricediff: 3891, vendorpricediff: 777, discount: 40 },
     { id: 7249,optioncatid: 578, ProductName: "4 x Backlit Counters",quantity: 4, ProductCode: "nv932", Vendor_PartNo: "nv39x39-ds", pricediff: 2116, vendorpricediff: 539, discount: 40 },
     { id: 7250,optioncatid: 578, ProductName: "4 x Backlit Counters w/ Battery",quantity: 4, ProductCode: "option", Vendor_PartNo: "Counter battery 100x100", pricediff: 5188, vendorpricediff: 777, discount: 40 },
-    { id: 7127,optioncatid: 567, ProductName: "Counter Battery",quantity: 1, ProductCode: "nv942", Vendor_PartNo: "nv39x39-ds-battery", pricediff: 768, vendorpricediff: 952.5, discount: 40 },
+    { id: 7127,optioncatid: 567, ProductName: "Counter Battery",quantity: 1, ProductCode: "nv942", Vendor_PartNo: "nv39x39-ds-battery", pricediff: 768, vendorpricediff: 731, discount: 40 },
     { id: 7172,optioncatid: 579, ProductName: "1 x Straight Connector - A123189006",quantity: 1, ProductCode: "nv-option", Vendor_PartNo: "A123189006", pricediff: 33, vendorpricediff: 3, discount: 40 },
     { id: 7173,optioncatid: 579, ProductName: "2 x Straight Connectors - A123189006",quantity: 2, ProductCode: "nv-option", Vendor_PartNo: "A123189006", pricediff: 66, vendorpricediff: 3, discount: 40 },
     { id: 7174,optioncatid: 579, ProductName: "1 x L Connector Inside - A123189005",quantity: 1, ProductCode: "nv-option", Vendor_PartNo: "A123189005", pricediff: 33, vendorpricediff: 3, discount: 40 },
