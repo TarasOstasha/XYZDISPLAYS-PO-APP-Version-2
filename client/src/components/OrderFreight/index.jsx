@@ -491,8 +491,8 @@ function OrderFreight() {
             return product.Google_Age_Group.flatMap((group) => {
               // Split the group string into its parts
               return group.split(' // ').map((g) => ({
-                ProductCode: product.ProductCode[0], // return first element from the ProductCode array
-                Quantity: product.Quantity ? product.Quantity[0] : null, // return Quantity if available
+                ProductCode: product.ProductCode[0], 
+                Quantity: product.Quantity ? product.Quantity[0] : null, 
                 Google_Age_Group: g,
               }))
             })
