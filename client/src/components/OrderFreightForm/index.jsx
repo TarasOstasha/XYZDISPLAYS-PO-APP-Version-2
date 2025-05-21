@@ -597,7 +597,7 @@ function OrderFreightForm({
                   </div>
                 )} */}
                 <div>
-                  {rerenderOrderList.length > 1 && (
+                  {(rerenderOrderList.length > 0 || filteredOrderList.length > 0) && (
                     <button
                       onClick={() => setShowVendorKitPopup(true)}
                       type="button"
@@ -605,7 +605,7 @@ function OrderFreightForm({
                     >
                       Split Products
                     </button>
-                  )}
+                  )} 
                 </div>
                 <table className="table">
                   <thead>
