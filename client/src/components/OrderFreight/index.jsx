@@ -411,7 +411,7 @@ function OrderFreight() {
           setVendorKitsLenght(vendorKits.length)
           //console.log(vendorKits, '!!!vendorKits!!!')
           if (vendorKits.length > 1) {
-            setShowVendorKitPopup(true)
+            // setShowVendorKitPopup(true)
             setVendorKitItem(vendorKits)
           }
 
@@ -1284,6 +1284,7 @@ function OrderFreight() {
         setOrderComments={orderComments}
         handleFormValuesChange={handleFormValuesChange}
         orderClientAddress={orderClientAddress}
+        setShowVendorKitPopup={setShowVendorKitPopup}
       />
 
       {/* Vendor Kits Popup */}

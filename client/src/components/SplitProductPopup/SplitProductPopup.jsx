@@ -4,11 +4,11 @@ import { Modal, Button } from 'react-bootstrap';
 const ProductSplitPopup = ({ vendorKitsLength, onConfirm }) => {
   const [show, setShow] = useState(false);
 
-  const handleShow = () => {
-    if (vendorKitsLength > 0) {
-      setShow(true);
-    }
-  };
+  // const handleShow = () => {
+  //   if (vendorKitsLength > 0) {
+  //     setShow(true);
+  //   }
+  // };
 
 
   const handleConfirm = () => {
@@ -23,7 +23,7 @@ const ProductSplitPopup = ({ vendorKitsLength, onConfirm }) => {
 
 
   useEffect(() => {
-    handleShow();
+    // handleShow();
   }, [vendorKitsLength]);
 
   return (
