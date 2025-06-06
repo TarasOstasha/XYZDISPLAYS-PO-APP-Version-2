@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { useEffect, useState } from 'react'
 
 import { VENDOR_LIST } from '../../utils/vendorsData'
+import { ALERTS } from '../../utils/alerts'
 // import { yellow, descriptionWidth, attension } from '../../stylesConstants'
 import OrderFreightForm from '../OrderFreightForm'
 import AddProductPopUp from '../AddProductPopUp'
@@ -373,11 +374,16 @@ function OrderFreight() {
             const updatedProducts = productsArray
               .map((product) => {
                 if (!product) {
-                  // Skip this iteration by returning null (or you could return an empty object)
                   return null
                 }
                 // Ensure that product.ProductCode exists and is an array
                 const productCode = Array.isArray(product.ProductCode) ? product.ProductCode[0].toLowerCase() : null
+                const matchingAlert = ALERTS.find(alert => alert.id.toLowerCase() === productCode);
+
+                if (matchingAlert) {
+                  alert(`ID: ${matchingAlert.id}\nNote: ${matchingAlert.note} !!!`);
+                }
+                // Look up the quantity using the product code
                 //const quantity = productCode ? quantityMap[productCode] || null : null
                 const quantity = productCode ? quantityMap[Object.keys(quantityMap).find(key => key.toLowerCase() === productCode)] || null : null;
                   console.log(productCode, '!!! productCode !!!');
