@@ -70,7 +70,7 @@ const vendorCatalog = [
   },
   {
     vendor: 'BrandStand',
-    link: 'https://drive.google.com/file/d/1-t0DaMuIlypD_FO6RbLrlf503Fsuk9Ax/view?usp=sharing'
+    link: 'https://drive.google.com/file/d/1LewuOGixoBk0ySnGy_L6tBTFolwLzGEr/view?usp=sharing'
   },
   {
     vendor: 'Bowman Displays',
