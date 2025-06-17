@@ -342,14 +342,15 @@ module.exports.saveOrder = async (req, res, next) => {
         orderNotes,
     } = req.body // general data
 
-    // console.log(req.body, '<< req.body');
+    //console.log(req.body, '<< req.body');
     console.log(vendorEmails, '<< vendorEmails');
   
     const orderDataTable = orderData(productTableData);
     const emailTemplateTable = emailTemplate(vendorAddress, po, date, ship, shipInfoDescription, inHand, shipTo, orderNotes);
     
     // Define email content
-    const to = vendorEmails.join(';');
+    //const to = vendorEmails.join(';') ;
+    const to = Array.isArray(vendorEmails) ? vendorEmails.join(';') : 'sales@xyzdisplays.com';
     const subject = `xyzDisplays // Purchase Order ${po}`;
     const htmlContent = `
       <html>
