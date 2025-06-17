@@ -4,3 +4,4 @@ module.exports.productController = require('./productController');
 module.exports.vendorController = require('./vendorController');
 module.exports.optionController = require('./optionController');
 module.exports.updateBuildController = require('./updateBuildControler');
+module.exports.updateFolderProgressController = require('./updateFolderProgressController');
