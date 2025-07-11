@@ -139,7 +139,7 @@ export const OPTION_DATA = [
     "ProductCode": "be7302",
     "Vendor_PartNo": "L4000C",
     "pricediff": 179,
-    "vendorpricediff": 125,
+    "vendorpricediff": 135.63,
     "discount": 15
   },
   {
@@ -172,7 +172,7 @@ export const OPTION_DATA = [
     "ProductCode": "be7302",
     "Vendor_PartNo": "L4000C",
     "pricediff": 358,
-    "vendorpricediff": 125,
+    "vendorpricediff": 135.63,
     "discount": 15
   },
   {
@@ -348,7 +348,7 @@ export const OPTION_DATA = [
     "ProductCode": "be7302",
     "Vendor_PartNo": "L4000C",
     "pricediff": 537,
-    "vendorpricediff": 125,
+    "vendorpricediff": 135.63,
     "discount": 15
   },
   {
@@ -359,7 +359,7 @@ export const OPTION_DATA = [
     "ProductCode": "be7302",
     "Vendor_PartNo": "L4000C",
     "pricediff": 716,
-    "vendorpricediff": 125,
+    "vendorpricediff": 135.63,
     "discount": 15
   },
   {
@@ -2866,8 +2866,8 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "be7302",
     "Vendor_PartNo": "L4000C",
-    "pricediff": 165,
-    "vendorpricediff": 125,
+    "pricediff": 179,
+    "vendorpricediff": 135.63,
     "discount": 20
   },
   {

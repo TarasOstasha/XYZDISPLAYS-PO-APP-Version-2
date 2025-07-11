@@ -287,11 +287,11 @@ function OrderFreightForm({
     const shipPostalCode = ShipPostalCode[0] || ''
     const shipCountry = ShipCountry[0] || ''
     const shipPhoneNumber = ShipPhoneNumber[0] || ''
-
+    const addressLine = [shipAddress1, shipAddress2].filter(Boolean).join('<br>');
     return `
       ${shipCompanyName}<br>
       ${shipFirstName} ${shipLastName}<br>
-      ${shipAddress1} ${shipAddress2}<br>
+      ${addressLine}<br>
       ${shipCity}, ${shipState}, ${shipPostalCode}<br>
       ${shipCountry}<br>
       ${shipPhoneNumber}
