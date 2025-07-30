@@ -57,6 +57,7 @@ function OrderFreightForm({
     vendor: '',
     // gender: GENDERS[0],
     shipTo: '',
+    reprint: '',
     orderNotes: '',
     vendorName: 'Choose Vendor',
     VendorCode: '',
@@ -454,6 +455,34 @@ function OrderFreightForm({
                       </td>
                     </tr>
                     <tr>
+                    <td colSpan="2">
+                      <label style={{ marginRight: '10px' }}>Reprint for prior order?</label>
+                      <label style={{ marginRight: '10px' }}>
+                        <input
+                          type="radio"
+                          name="reprint"
+                          value="yes"
+                          checked={formikProps.values.reprint === 'yes'}
+                          onChange={formikProps.handleChange}
+                        />
+                        Yes
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="reprint"
+                          value="no"
+                          checked={formikProps.values.reprint === 'no'}
+                          onChange={formikProps.handleChange}
+                        />
+                        No
+                      </label>
+                      {formikProps.touched.reprint && formikProps.errors.reprint && (
+                          <div style={{ color: 'red' }}>{formikProps.errors.reprint}</div>
+                        )}
+                    </td>
+                  </tr>
+                    <tr>
                       {console.log(rerenderVendorName())}
                       <td colSpan="2">
                         <Field
@@ -470,6 +499,9 @@ function OrderFreightForm({
                           onChange={formikProps.handleChange}
                           placeholder="Order Notes FOR VENDOR"
                         />
+                        {formikProps.touched.orderNotes && formikProps.errors.orderNotes && (
+                          <div style={{ color: 'red' }}>{formikProps.errors.orderNotes}</div>
+                        )}
                       </td>
                     </tr>
                     {setOrderComments ? (
