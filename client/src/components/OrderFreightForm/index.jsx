@@ -465,7 +465,10 @@ function OrderFreightForm({
                           checked={formikProps.values.reprint === 'yes'}
                           onChange={(e) => {
                             formikProps.setFieldValue('reprint', 'yes');
-                            if (!formikProps.values.orderNotes?.startsWith('Reprint for prior order:')) {
+                            if (
+                              !formikProps.values.orderNotes ||
+                              !formikProps.values.orderNotes.startsWith('Reprint for prior order:')
+                            ) {
                               formikProps.setFieldValue('orderNotes', 'Reprint for prior order: ');
                             }
                           }}
@@ -478,7 +481,10 @@ function OrderFreightForm({
                           name="reprint"
                           value="no"
                           checked={formikProps.values.reprint === 'no'}
-                          onChange={formikProps.handleChange}
+                          onChange={(e) => {
+                            formikProps.setFieldValue('reprint', 'no');
+                            formikProps.setFieldValue('orderNotes', '');
+                          }}
                         />
                         No
                       </label>
@@ -504,8 +510,10 @@ function OrderFreightForm({
                           onChange={formikProps.handleChange}
                           placeholder="Order Notes FOR VENDOR"
                         />
-                        {formikProps.touched.orderNotes && formikProps.errors.orderNotes && (
-                          <div style={{ color: 'red' }}>{formikProps.errors.orderNotes}</div>
+                        {formikProps.values.reprint === 'yes' &&
+                          formikProps.touched.orderNotes &&
+                          formikProps.errors.orderNotes && (
+                            <div style={{ color: 'red' }}>{formikProps.errors.orderNotes}</div>
                         )}
                       </td>
                     </tr>
