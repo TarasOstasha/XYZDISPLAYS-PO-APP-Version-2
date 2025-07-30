@@ -463,7 +463,12 @@ function OrderFreightForm({
                           name="reprint"
                           value="yes"
                           checked={formikProps.values.reprint === 'yes'}
-                          onChange={formikProps.handleChange}
+                          onChange={(e) => {
+                            formikProps.setFieldValue('reprint', 'yes');
+                            if (!formikProps.values.orderNotes?.startsWith('Reprint for prior order:')) {
+                              formikProps.setFieldValue('orderNotes', 'Reprint for prior order: ');
+                            }
+                          }}
                         />
                         Yes
                       </label>

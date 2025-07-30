@@ -15,7 +15,13 @@ export const ORDER_VALIDATION_SCHEMA = yup.object({
   orderNotes: yup.string().when('reprint', {
     is: 'yes',
     then: (schema) =>
-      schema.required('Order Notes are required when reprinting'),
+      schema
+        .required('Order Notes are required when reprinting')
+        .test(
+            'has-extra-content',
+            'You must add more details after "Reprint for prior order:"',
+            (val) => val && val.trim() !== 'Reprint for prior order:' && val.trim().length > 23
+          ),
     otherwise: (schema) => schema,
   }),
 })
