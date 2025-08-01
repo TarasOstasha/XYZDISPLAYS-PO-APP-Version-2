@@ -25,7 +25,7 @@ const downloadState = require('../services/downloadState');
 // };
 
 
-
+// update Front End the App
 module.exports.updateBuildFolder = async (req, res, next) => {
     try {
         const ftpConfig = {
@@ -54,4 +54,5 @@ module.exports.updateBuildFolder = async (req, res, next) => {
         res.status(500).json({ message: "Error copying folder", error: error.message });
     }
 };
+
 
