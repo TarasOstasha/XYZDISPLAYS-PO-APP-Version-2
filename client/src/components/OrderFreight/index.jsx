@@ -84,6 +84,8 @@ function OrderFreight() {
 
   const handleToEditTop = (formikProps) => {
     setIsEditingTop(true)
+    
+    //console.log(isEditingTop, 'isEditingTop handleToEditTop');
     const mapProperty = (property) =>
       rerenderOrderList.map((p) => p[property]?.[0] || '')
     const valuesToUpdate = {
@@ -130,55 +132,99 @@ function OrderFreight() {
     }
   }
 
-  const handleToSaveTop = (formikProps) => {
-    console.log(formikProps.values, '***formikProps***')
-    setIsEditingTop(false)
-    // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KITS THESE
-    let foundMissingVendorPrice = false
-    rerenderOrderList.forEach((item, index) => {
-      if (!item) {
-        console.warn(`Skipping item at index ${index} because it is undefined or null.`);
-        return;
-      }
-      if (!item.hasOwnProperty('Vendor_PartNo')) {
-        item.Vendor_PartNo = ['']; 
-      }
-      item.Vendor_PartNo[0] = formikProps.values.vendorCode[index] || item.Vendor_PartNo[0];
-      console.log(item, '***item***')
-      if (!item || !item.hasOwnProperty('Vendor_Price')) {
-        item.Vendor_Price = ['0']
-        item.discount = [0]
-        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index]
-        item.discount[0] = formikProps?.values.productDiscount[index]
-        console.log(formikProps?.values, 'formikProps?.values')
-
-        // if (!foundMissingVendorPrice) {
-        //   alert(
-        //     'Vendor_Price is missing for an item!\n Please remove Website order Items from PO!',
-        //   )
-        //   foundMissingVendorPrice = true
-        //}
-        return
-      } else {
-        if (!Array.isArray(item.ProductCode)) item.ProductCode = []
-        if (!Array.isArray(item.ProductName)) item.ProductName = []
-        if (!Array.isArray(item.Quantity)) item.Quantity = []
-        if (!Array.isArray(item.discount)) item.discount = []
-        if (!Array.isArray(item.Vendor_Price)) item.Vendor_Price = []
-        if (!Array.isArray(item.Vendor_PartNo)) item.Vendor_PartNo = []
+  // old working version
+  // const handleToSaveTop = (formikProps) => {
+  //   console.log(formikProps.values, '***formikProps handleToSaveTop***')
+  //   setIsEditingTop(false)
+  //   //console.log(isEditingTop, 'isEditingTop handleToSaveTop' );
+  //   // HERE WE SHOULD WHICH ITEMS HAVE hasOwnProperty('Vendor_Price') AND USE KITS THESE
+  //   let foundMissingVendorPrice = false
+  //   rerenderOrderList.forEach((item, index) => {
+  //     console.log(item, '***item handleToSaveTop***');
+  //     if (!item) {
+  //       console.warn(`Skipping item at index ${index} because it is undefined or null.`);
+  //       return;
+  //     }
+  //     item.ProductCode[0] = formikProps.values.productCode[index] || item.ProductCode[0]; // add product vendor
+  //     if (!item.hasOwnProperty('Vendor_PartNo')) {
+  //       item.Vendor_PartNo = ['']; 
+  //     }
+  //     item.Vendor_PartNo[0] = formikProps.values.vendorCode[index] || item.Vendor_PartNo[0];
+  //     console.log(item, '***item***')
+  //     if (!item || !item.hasOwnProperty('Vendor_Price')) {
+  //       item.Vendor_Price = ['0']
+  //       item.discount = [0]
+  //       item.Vendor_Price[0] = formikProps?.values.vendorPrice[index]
+  //       item.discount[0] = formikProps?.values.productDiscount[index]
+  //       console.log(formikProps?.values, 'formikProps?.values')
         
-        item.ProductCode[0] = formikProps.values.productCode[index]
-        item.Vendor_PartNo[0] = formikProps.values.vendorCode[index]
-        item.ProductName[0] = formikProps.values.productName[index]
-        item.Quantity[0] = formikProps.values.productQuantity[index]
-        item.Vendor_Price[0] = formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
-        item.ProductPrice[0] = formikProps.values.productPrice[index]
-        item.discount[0] = formikProps?.values.productDiscount[index] || item.discount[0]
+  //       // if (!foundMissingVendorPrice) {
+  //       //   alert(
+  //       //     'Vendor_Price is missing for an item!\n Please remove Website order Items from PO!',
+  //       //   )
+  //       //   foundMissingVendorPrice = true
+  //       //}
+  //       return
+  //     } else {
+  //       if (!Array.isArray(item.ProductCode)) item.ProductCode = []
+  //       if (!Array.isArray(item.ProductName)) item.ProductName = []
+  //       if (!Array.isArray(item.Quantity)) item.Quantity = []
+  //       if (!Array.isArray(item.discount)) item.discount = []
+  //       if (!Array.isArray(item.Vendor_Price)) item.Vendor_Price = []
+  //       if (!Array.isArray(item.Vendor_PartNo)) item.Vendor_PartNo = []
+        
+  //       item.ProductCode[0] = formikProps.values.productCode[index]
+  //       item.Vendor_PartNo[0] = formikProps.values.vendorCode[index]
+  //       item.ProductName[0] = formikProps.values.productName[index]
+  //       item.Quantity[0] = formikProps.values.productQuantity[index]
+  //       item.Vendor_Price[0] = formikProps?.values.vendorPrice[index] || item.Vendor_Price[0]
+  //       item.ProductPrice[0] = formikProps.values.productPrice[index]
+  //       item.discount[0] = formikProps?.values.productDiscount[index] || item.discount[0]
+  //     }
+  //   })
+  // }
+ // updated on 2025-08-07
+  const handleToSaveTop = (formikProps) => {
+    const {
+      productCode,
+      vendorCode,
+      vendorPrice,
+      productDiscount,
+      productName,
+      productQuantity,
+    } = formikProps.values;
+  
+    const updated = rerenderOrderList.map((orig, i) => {
+      // clone the object
+      const item = { ...orig };
+      // normalize all array-fields
+      ['ProductCode','ProductName','Quantity','discount','Vendor_Price','Vendor_PartNo']
+        .forEach(key => {
+          if (!Array.isArray(item[key])) item[key] = item[key] != null ? [item[key]] : [''];
+        });
+  
+      // write back the formik value (or leave the existing)
+      item.ProductCode[0] = productCode[i] ?? item.ProductCode[0];
+      item.Vendor_PartNo[0] = vendorCode[i] ?? item.Vendor_PartNo[0];
+      item.Vendor_Price[0] = vendorPrice[i] ?? item.Vendor_Price[0] ?? '0';
+      item.discount[0] = productDiscount[i] ?? item.discount[0] ?? 0;
+      item.ProductName[0] = productName[i] ?? item.ProductName[0];
+      item.Quantity[0] = productQuantity[i] ?? item.Quantity[0];
+  
+      // optional: warn if vendor price was truly missing
+      if (item.Vendor_Price[0] === '0' && !orig.hasOwnProperty('Vendor_Price')) {
+        console.warn(`Item ${i} missing vendor price`);
       }
-    })
-  }
-
+  
+      return item;
+    });
+  
+    setRerenderOrderList(updated);
+    setIsEditingTop(false);
+  };
+  
   const handleVendorAddressChange = (address) => {
+    console.log(address, 'handleVendorAddressChange');
     setVendorAddress(address)
   }
 
@@ -186,7 +232,7 @@ function OrderFreight() {
     setShipInfoDescription(vendor)
   }
   useEffect(() => {
-    console.log(updatedOptionsArr, '✅ updatedOptionsArr AFTER state update')
+    console.log(updatedOptionsArr, 'updatedOptionsArr AFTER state update')
   }, [updatedOptionsArr])
   useEffect(() => {}, [removeOnclick])
   useEffect(() => {

@@ -246,7 +246,8 @@ function OrderFreightForm({
   }
   // render vendor shipping address section
   const renderVendorAddress = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase()
+    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
+    console.log(pcode, '<< pcode in renderVendorAddress');
     return rerenderOrderList &&
       rerenderOrderList.length > 0 &&
       VENDOR_LIST.find((vendor) =>
@@ -1214,6 +1215,7 @@ function OrderFreightForm({
                 <AddProductPopUp
                   rerenderOrderList={rerenderOrderList}
                   onFormValuesChange={handleFormValuesChange}
+                  isEditingTop={isEditingTop}
                 />
                 {rerenderOrderList.length !== 0 &&
                   filteredOrderList.length === 0 && (
