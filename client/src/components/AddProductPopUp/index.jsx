@@ -1,8 +1,9 @@
 import classNames from 'classnames'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+
 
 import styles from './AddProductPopUp.module.scss'
 import { ADD_CUSTOM_PRODUCT } from '../../utils/orderValidationSchema'
@@ -10,7 +11,7 @@ import axios from 'axios'
 import { getProductById } from '../../api'
 import { VENDOR_LIST } from '../../utils/vendorsData'
 
-function AddProductPopUp({ rerenderOrderList, onFormValuesChange }) {
+function AddProductPopUp({ rerenderOrderList, onFormValuesChange, isEditingTop }) {
   const API_BASE_URL =
     window.location.hostname === 'localhost'
       ? 'http://localhost:5000'
@@ -19,8 +20,21 @@ function AddProductPopUp({ rerenderOrderList, onFormValuesChange }) {
   let formikPropss = React.useRef();
   const [show, setShow] = useState(false)
   const [productCode, setProductCode] = useState('')
+  const [showWarning, setShowWarning] = useState(false);
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  //const handleShow = () => setShow(true)
+  const handleShow = useCallback(() => {
+    if (isEditingTop) {
+      //alert('Please exit edit product mode and try again.');
+      setShowWarning(true);
+      setShow(false);
+    } else {
+      setShow(true);
+    }
+  }, [isEditingTop]);
+  // 
+
+  const handleWarningClose = () => setShowWarning(false);
 
   const initialValues = {
     productCode: '',
@@ -55,6 +69,8 @@ function AddProductPopUp({ rerenderOrderList, onFormValuesChange }) {
     setProductCode(lowerCaseProduct);
     setTrigger(trigger + 1); // Force useEffect to re-run
   }
+
+
   
   useEffect(() => {
     if (!productCode) return;
@@ -294,6 +310,25 @@ function AddProductPopUp({ rerenderOrderList, onFormValuesChange }) {
               </div>
             </div>
           </Modal.Body>
+        </Modal>
+        {/* warning modal */}
+        <Modal
+          show={showWarning}
+          onHide={handleWarningClose}
+          centered
+          backdrop="static"
+        >
+          <Modal.Header closeButton className="bg-warning text-dark">
+            <Modal.Title className="d-flex align-items-center">Warning</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Please exit Edit Product Mode and try again.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="warning" onClick={handleWarningClose}>
+              OK
+            </Button>
+          </Modal.Footer>
         </Modal>
       </>
     </div>
