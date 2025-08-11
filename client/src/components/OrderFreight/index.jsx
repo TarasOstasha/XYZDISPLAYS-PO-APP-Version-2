@@ -248,7 +248,7 @@ function OrderFreight() {
         const {
           xmldata: { Orders },
         } = orderResponse.data
-        //console.log(Orders[0], '***Orders[0]***')
+        console.log(Orders[0], '***Orders[0]***')
         //console.log(rerenderOrderList, '***rerenderOrderList***');
         if (Orders && Orders[0] && Orders?.[0]?.OrderDetails?.length > 0) {
           setOrderClientAddress(Orders[0])
@@ -365,13 +365,13 @@ function OrderFreight() {
           setoptionProducts(optionOrderProducts)
           // Fetch product URLs and process vendors
           const productUrls = productCodes.map(
-            (code) => `${API_BASE_URL}/api/products/${code}`,
+            (code) => `${API_BASE_URL}/api/products/${code.replace(/[\/,|@]/g, '-')}`,
           )
           const productResponses = await fetchProductData(
             productUrls,
             'product',
           )
-          //console.log(productResponses, '***productResponses***');
+          console.log(productResponses, '***productResponses***');
           // Extract existing product codes as a flat array, ensuring unique entries
           const existingProductCodes = new Set(
             productResponses.flatMap((response) =>
