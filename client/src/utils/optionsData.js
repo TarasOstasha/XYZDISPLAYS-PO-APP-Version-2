@@ -341,14 +341,36 @@ export const OPTION_DATA = [
     "discount": 15
   },
   {
+    "id": 7575,
+    "optioncatid": 42,
+    "ProductName": "1 x Set of 2 LED Lights",
+    "quantity": 1,
+    "ProductCode": "mk40959",
+    "Vendor_PartNo": "L4000C",
+    "pricediff": 165,
+    "vendorpricediff": 86,
+    "discount": 15
+  },
+  {
+    "id": 7576,
+    "optioncatid": 42,
+    "ProductName": "2 x Set of 2 LED Lights",
+    "quantity": 2,
+    "ProductCode": "mk40959",
+    "Vendor_PartNo": "L4000C",
+    "pricediff": 330,
+    "vendorpricediff": 86,
+    "discount": 15
+  },
+  {
     "id": 4345,
     "optioncatid": 42,
     "ProductName": "3 x Set of 2 LED Lights",
     "quantity": 3,
-    "ProductCode": "be7302",
+    "ProductCode": "mk40959",
     "Vendor_PartNo": "L4000C",
-    "pricediff": 537,
-    "vendorpricediff": 135.63,
+    "pricediff": 495,
+    "vendorpricediff": 86,
     "discount": 15
   },
   {
@@ -356,10 +378,10 @@ export const OPTION_DATA = [
     "optioncatid": 42,
     "ProductName": "4 x Set of 2 LED Lights",
     "quantity": 4,
-    "ProductCode": "be7302",
+    "ProductCode": "mk40959",
     "Vendor_PartNo": "L4000C",
-    "pricediff": 716,
-    "vendorpricediff": 135.63,
+    "pricediff": 660,
+    "vendorpricediff": 86,
     "discount": 15
   },
   {

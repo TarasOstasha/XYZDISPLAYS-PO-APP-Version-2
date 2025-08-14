@@ -365,7 +365,7 @@ function OrderFreight() {
           setoptionProducts(optionOrderProducts)
           // Fetch product URLs and process vendors
           const productUrls = productCodes.map(
-            (code) => `${API_BASE_URL}/api/products/${code.replace(/[\/,|@]/g, '-')}`,
+            (code) => `${API_BASE_URL}/api/products/${code.replace(/[\/,|@]/g, '-')}`, // for custom orders
           )
           const productResponses = await fetchProductData(
             productUrls,

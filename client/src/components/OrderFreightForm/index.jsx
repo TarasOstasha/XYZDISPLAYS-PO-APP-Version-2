@@ -457,7 +457,7 @@ function OrderFreightForm({
                     </tr>
                     <tr>
                     <td colSpan="2">
-                      <label style={{ marginRight: '10px' }}>Reprint for prior order?</label>
+                      <label style={{ marginRight: '10px' }}>Previous customer order(s) with same hardware?</label>
                       <label style={{ marginRight: '10px' }}>
                         <input
                           type="radio"
@@ -468,9 +468,9 @@ function OrderFreightForm({
                             formikProps.setFieldValue('reprint', 'yes');
                             if (
                               !formikProps.values.orderNotes ||
-                              !formikProps.values.orderNotes.startsWith('Reprint for prior order:')
+                              !formikProps.values.orderNotes.startsWith('Previous customer order(s) with same hardware?')
                             ) {
-                              formikProps.setFieldValue('orderNotes', 'Reprint for prior order: ');
+                              formikProps.setFieldValue('orderNotes', 'Previous customer order(s) with same hardware');
                             }
                           }}
                         />
