@@ -184,44 +184,59 @@ function OrderFreight() {
   //   })
   // }
  // updated on 2025-08-07
-  const handleToSaveTop = (formikProps) => {
-    const {
-      productCode,
-      vendorCode,
-      vendorPrice,
-      productDiscount,
-      productName,
-      productQuantity,
-    } = formikProps.values;
-  
-    const updated = rerenderOrderList.map((orig, i) => {
-      // clone the object
-      const item = { ...orig };
-      // normalize all array-fields
-      ['ProductCode','ProductName','Quantity','discount','Vendor_Price','Vendor_PartNo']
-        .forEach(key => {
-          if (!Array.isArray(item[key])) item[key] = item[key] != null ? [item[key]] : [''];
-        });
-  
-      // write back the formik value (or leave the existing)
-      item.ProductCode[0] = productCode[i] ?? item.ProductCode[0];
-      item.Vendor_PartNo[0] = vendorCode[i] ?? item.Vendor_PartNo[0];
-      item.Vendor_Price[0] = vendorPrice[i] ?? item.Vendor_Price[0] ?? '0';
-      item.discount[0] = productDiscount[i] ?? item.discount[0] ?? 0;
-      item.ProductName[0] = productName[i] ?? item.ProductName[0];
-      item.Quantity[0] = productQuantity[i] ?? item.Quantity[0];
-  
-      // optional: warn if vendor price was truly missing
-      if (item.Vendor_Price[0] === '0' && !orig.hasOwnProperty('Vendor_Price')) {
-        console.warn(`Item ${i} missing vendor price`);
-      }
-  
-      return item;
-    });
-  
-    setRerenderOrderList(updated);
-    setIsEditingTop(false);
-  };
+ const handleToSaveTop = (formikProps) => {
+  const {
+    productCode = [],
+    vendorCode = [],
+    vendorPrice = [],
+    productDiscount = [],
+    productName = [],
+    productQuantity = [],
+    productPrice = [], // keep if you use it for totals
+  } = formikProps.values || {};
+
+  const toArray = (v) =>
+    Array.isArray(v) ? [...v] : (v != null ? [v] : ['']);
+
+  const updated = rerenderOrderList.map((orig, i) => {
+    if (!orig) return orig;
+
+    // clone object + its array fields
+    const item = {
+      ...orig,
+      ProductCode: toArray(orig.ProductCode),
+      ProductName: toArray(orig.ProductName),
+      Quantity: toArray(orig.Quantity),
+      discount: toArray(orig.discount),
+      Vendor_Price: toArray(orig.Vendor_Price),
+      Vendor_PartNo: toArray(orig.Vendor_PartNo),
+      ProductPrice: toArray(orig.ProductPrice),
+    };
+
+    // get quantity from form
+    const qRaw = productQuantity[i];
+    const qty =
+      qRaw === '' || qRaw == null ? item.Quantity[0] : Number(qRaw);
+
+    item.ProductCode[0]   = productCode[i]     ?? item.ProductCode[0];
+    item.Vendor_PartNo[0] = vendorCode[i]      ?? item.Vendor_PartNo[0];
+    item.Vendor_Price[0]  = vendorPrice[i]     ?? item.Vendor_Price[0] ?? '0';
+    item.discount[0]      = productDiscount[i] ?? item.discount[0] ?? 0;
+    item.ProductName[0]   = productName[i]     ?? item.ProductName[0];
+    item.Quantity[0]      = Number.isFinite(qty) ? qty : item.Quantity[0];
+
+    if (productPrice.length) {
+      item.ProductPrice[0] = productPrice[i] ?? item.ProductPrice[0];
+    }
+
+    return item;
+  });
+
+  setRerenderOrderList(updated);
+  setIsEditingTop(false);
+  console.log("handleToSaveTop: saved");
+};
+
   
   const handleVendorAddressChange = (address) => {
     console.log(address, 'handleVendorAddressChange');
