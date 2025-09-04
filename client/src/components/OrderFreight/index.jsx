@@ -84,7 +84,7 @@ function OrderFreight() {
 
   const handleToEditTop = (formikProps) => {
     setIsEditingTop(true)
-    
+
     //console.log(isEditingTop, 'isEditingTop handleToEditTop');
     const mapProperty = (property) =>
       rerenderOrderList.map((p) => p[property]?.[0] || '')
@@ -147,7 +147,7 @@ function OrderFreight() {
   //     }
   //     item.ProductCode[0] = formikProps.values.productCode[index] || item.ProductCode[0]; // add product vendor
   //     if (!item.hasOwnProperty('Vendor_PartNo')) {
-  //       item.Vendor_PartNo = ['']; 
+  //       item.Vendor_PartNo = [''];
   //     }
   //     item.Vendor_PartNo[0] = formikProps.values.vendorCode[index] || item.Vendor_PartNo[0];
   //     console.log(item, '***item***')
@@ -157,7 +157,7 @@ function OrderFreight() {
   //       item.Vendor_Price[0] = formikProps?.values.vendorPrice[index]
   //       item.discount[0] = formikProps?.values.productDiscount[index]
   //       console.log(formikProps?.values, 'formikProps?.values')
-        
+
   //       // if (!foundMissingVendorPrice) {
   //       //   alert(
   //       //     'Vendor_Price is missing for an item!\n Please remove Website order Items from PO!',
@@ -172,7 +172,7 @@ function OrderFreight() {
   //       if (!Array.isArray(item.discount)) item.discount = []
   //       if (!Array.isArray(item.Vendor_Price)) item.Vendor_Price = []
   //       if (!Array.isArray(item.Vendor_PartNo)) item.Vendor_PartNo = []
-        
+
   //       item.ProductCode[0] = formikProps.values.productCode[index]
   //       item.Vendor_PartNo[0] = formikProps.values.vendorCode[index]
   //       item.ProductName[0] = formikProps.values.productName[index]
@@ -183,63 +183,60 @@ function OrderFreight() {
   //     }
   //   })
   // }
- // updated on 2025-08-07
- const handleToSaveTop = (formikProps) => {
-  const {
-    productCode = [],
-    vendorCode = [],
-    vendorPrice = [],
-    productDiscount = [],
-    productName = [],
-    productQuantity = [],
-    productPrice = [], // keep if you use it for totals
-  } = formikProps.values || {};
+  // updated on 2025-08-07
+  const handleToSaveTop = (formikProps) => {
+    const {
+      productCode = [],
+      vendorCode = [],
+      vendorPrice = [],
+      productDiscount = [],
+      productName = [],
+      productQuantity = [],
+      productPrice = [], // keep if you use it for totals
+    } = formikProps.values || {}
 
-  const toArray = (v) =>
-    Array.isArray(v) ? [...v] : (v != null ? [v] : ['']);
+    const toArray = (v) => (Array.isArray(v) ? [...v] : v != null ? [v] : [''])
 
-  const updated = rerenderOrderList.map((orig, i) => {
-    if (!orig) return orig;
+    const updated = rerenderOrderList.map((orig, i) => {
+      if (!orig) return orig
 
-    // clone object + its array fields
-    const item = {
-      ...orig,
-      ProductCode: toArray(orig.ProductCode),
-      ProductName: toArray(orig.ProductName),
-      Quantity: toArray(orig.Quantity),
-      discount: toArray(orig.discount),
-      Vendor_Price: toArray(orig.Vendor_Price),
-      Vendor_PartNo: toArray(orig.Vendor_PartNo),
-      ProductPrice: toArray(orig.ProductPrice),
-    };
+      // clone object + its array fields
+      const item = {
+        ...orig,
+        ProductCode: toArray(orig.ProductCode),
+        ProductName: toArray(orig.ProductName),
+        Quantity: toArray(orig.Quantity),
+        discount: toArray(orig.discount),
+        Vendor_Price: toArray(orig.Vendor_Price),
+        Vendor_PartNo: toArray(orig.Vendor_PartNo),
+        ProductPrice: toArray(orig.ProductPrice),
+      }
 
-    // get quantity from form
-    const qRaw = productQuantity[i];
-    const qty =
-      qRaw === '' || qRaw == null ? item.Quantity[0] : Number(qRaw);
+      // get quantity from form
+      const qRaw = productQuantity[i]
+      const qty = qRaw === '' || qRaw == null ? item.Quantity[0] : Number(qRaw)
 
-    item.ProductCode[0]   = productCode[i]     ?? item.ProductCode[0];
-    item.Vendor_PartNo[0] = vendorCode[i]      ?? item.Vendor_PartNo[0];
-    item.Vendor_Price[0]  = vendorPrice[i]     ?? item.Vendor_Price[0] ?? '0';
-    item.discount[0]      = productDiscount[i] ?? item.discount[0] ?? 0;
-    item.ProductName[0]   = productName[i]     ?? item.ProductName[0];
-    item.Quantity[0]      = Number.isFinite(qty) ? qty : item.Quantity[0];
+      item.ProductCode[0] = productCode[i] ?? item.ProductCode[0]
+      item.Vendor_PartNo[0] = vendorCode[i] ?? item.Vendor_PartNo[0]
+      item.Vendor_Price[0] = vendorPrice[i] ?? item.Vendor_Price[0] ?? '0'
+      item.discount[0] = productDiscount[i] ?? item.discount[0] ?? 0
+      item.ProductName[0] = productName[i] ?? item.ProductName[0]
+      item.Quantity[0] = Number.isFinite(qty) ? qty : item.Quantity[0]
 
-    if (productPrice.length) {
-      item.ProductPrice[0] = productPrice[i] ?? item.ProductPrice[0];
-    }
+      if (productPrice.length) {
+        item.ProductPrice[0] = productPrice[i] ?? item.ProductPrice[0]
+      }
 
-    return item;
-  });
+      return item
+    })
 
-  setRerenderOrderList(updated);
-  setIsEditingTop(false);
-  console.log("handleToSaveTop: saved");
-};
+    setRerenderOrderList(updated)
+    setIsEditingTop(false)
+    console.log('handleToSaveTop: saved')
+  }
 
-  
   const handleVendorAddressChange = (address) => {
-    console.log(address, 'handleVendorAddressChange');
+    console.log(address, 'handleVendorAddressChange')
     setVendorAddress(address)
   }
 
@@ -284,81 +281,131 @@ function OrderFreight() {
               return baseProduct
             }) || []
           //console.log(productDetails,'productDetails');
-          const productOption =
-            Orders[0].OrderDetails?.flatMap((item) => {
-              const optionIDs =
-                item.OrderDetails_Options?.map(
-                  (option) => option.OptionID?.[0],
-                ) || []
-              console.log(optionIDs, '***optionIDs***') //-----------------------------------------------
-              const extraProducts = optionIDs
-                .map((id) => {
-                  const matchingOption = OPTION_DATA.find(
-                    (option) => option.id === parseInt(id, 10),
-                  )
-                  console.log(matchingOption, '***matchingOption***') //-----------------------------------------------
-                  //if (matchingOption && matchingOption.pricediff > 0) { // this method also check option price, if price > 0
-                  if (matchingOption) {
-                    //console.log(matchingOption, '***matchingOption')
-                    // below data should be replaced from real file !!!!!
-                    // const optionsData = [
-                    //   {
-                    //     id: 6666,
-                    //     ProductName: 'Low Tack Tape 2in x 75ft KS650',
-                    //     ProductCode: 'test',
-                    //     Quantity: '1',
-                    //     Vendor_PartNo: 'BRST+BRC-H+L6000D',
-                    //     Vendor_Price: '100',
-                    //     discount: 15,
-                    //   },
-                    // ]
-                    //
-                    return (() => {
-                      console.log(matchingOption, '//matchingOption\\')
-                      const option = OPTION_DATA.find(
-                        (o) => o.id === matchingOption.id,
-                      ) // Find a single match
-                      console.log(option, '!!!option!!')
-                      console.log(
-                        [matchingOption?.quantity?.toString()],
-                        option.ProductCode,
-                        'matchingOption?.quantity?.toString()]',
-                      )
-                      if (!option) return {} // Fallback if no matching option is found
-                      return {
-                        ProductCode: [option.ProductCode || 'UnknownProduct'],
-                        ProductName: [
-                          matchingOption.optiondesc ||
-                            option.ProductName ||
-                            'UnknownOption',
-                        ],
-                        ProductPrice: [
-                          matchingOption.pricediff?.toString() ||
-                            option.Vendor_Price?.toString() ||
-                            '0.00',
-                        ],
-                        //Quantity: [option.Quantity?.toString() || '1'],
-                        // Quantity: [
-                        //   matchingOption.quantity ||
-                        //     option.quantity,
-                        // ],
-                        Quantity: [matchingOption?.quantity?.toString()], //|| option?.quantity?.toString() || "1"],
-                        Vendor_PartNo: [option.Vendor_PartNo || 'Unknown'],
-                        Vendor_Price: [
-                          matchingOption.vendorpricediff?.toString() ||
-                            option.Vendor_Price?.toString() ||
-                            '0.00',
-                        ],
-                        discount: [option.discount || 15],
-                      }
-                    })()
-                  }
-                  return null
-                })
-                .filter(Boolean) // Remove null values
-              console.log(extraProducts, 'extraProducts')
-              return extraProducts
-            }) || []
+          // old method
+          // const productOption =
+          //   Orders[0].OrderDetails?.flatMap((item) => {
+          //     const optionIDs =
+          //       item.OrderDetails_Options?.map(
+          //         (option) => option.OptionID?.[0],
+          //       ) || []
+          //     console.log(optionIDs, '***optionIDs***') //-----------------------------------------------
+          //     const extraProducts = optionIDs
+          //       .map((id) => {
+          //         const matchingOption = OPTION_DATA.find(
+          //           (option) => option.id === parseInt(id, 10),
+          //         )
+          //         console.log(matchingOption, '***matchingOption***') //-----------------------------------------------
+          //         //if (matchingOption && matchingOption.pricediff > 0) { // this method also check option price, if price > 0
+          //         if (matchingOption) {
+          //           //console.log(matchingOption, '***matchingOption')
+          //           // below data should be replaced from real file !!!!!
+          //           // const optionsData = [
+          //           //   {
+          //           //     id: 6666,
+          //           //     ProductName: 'Low Tack Tape 2in x 75ft KS650',
+          //           //     ProductCode: 'test',
+          //           //     Quantity: '1',
+          //           //     Vendor_PartNo: 'BRST+BRC-H+L6000D',
+          //           //     Vendor_Price: '100',
+          //           //     discount: 15,
+          //           //   },
+          //           // ]
+          //           //
+          //           return (() => {
+          //             console.log(matchingOption, '//matchingOption\\')
+          //             const option = OPTION_DATA.find(
+          //               (o) => o.id === matchingOption.id,
+          //             ) // Find a single match
+          //             console.log(option, '!!!option!!')
+          //             console.log(
+          //               [matchingOption?.quantity?.toString()],
+          //               option.ProductCode,
+          //               'matchingOption?.quantity?.toString()]',
+          //             )
+          //             if (!option) return {} // Fallback if no matching option is found
+          //             return {
+          //               ProductCode: [option.ProductCode || 'UnknownProduct'],
+          //               ProductName: [
+          //                 matchingOption.optiondesc ||
+          //                   option.ProductName ||
+          //                   'UnknownOption',
+          //               ],
+          //               ProductPrice: [
+          //                 matchingOption.pricediff?.toString() ||
+          //                   option.Vendor_Price?.toString() ||
+          //                   '0.00',
+          //               ],
+          //               //Quantity: [option.Quantity?.toString() || '1'],
+          //               // Quantity: [
+          //               //   matchingOption.quantity ||
+          //               //     option.quantity,
+          //               // ],
+          //               Quantity: [matchingOption?.quantity?.toString()], //|| option?.quantity?.toString() || "1"],
+          //               Vendor_PartNo: [option.Vendor_PartNo || 'Unknown'],
+          //               Vendor_Price: [
+          //                 matchingOption.vendorpricediff?.toString() ||
+          //                   option.Vendor_Price?.toString() ||
+          //                   '0.00',
+          //               ],
+          //               discount: [option.discount || 15],
+          //             }
+          //           })()
+          //         }
+          //         return null
+          //       })
+          //       .filter(Boolean) // Remove null values
+          //     console.log(extraProducts, 'extraProducts')
+          //     return extraProducts
+          //   }) || []
+
+          // small helper to safely coerce array|string|number -> number
+            const num = (v, def = 0) => {
+              const raw = Array.isArray(v) ? v[0] : v;
+              const n = parseInt(String(raw ?? ''), 10);
+              return Number.isFinite(n) ? n : def;
+            };
+
+            const productOption =
+              Orders?.[0]?.OrderDetails?.flatMap((item) => {
+                // parent line qty (3 in your screenshot)
+                const parentQty = num(item?.Quantity, 1) || 1;
+                const optionIDs = item?.OrderDetails_Options?.map((o) => o?.OptionID?.[0]) ?? [];
+
+                const extraProducts = optionIDs
+                  .map((id) => {
+                    const opt = OPTION_DATA.find(
+                      (o) => o.id === parseInt(String(id), 10)
+                    );
+                    if (!opt) return null;
+
+                    // base qty defined in OPTION_DATA (e.g., 2 for "Ship in 2 x CA700 Cases")
+                    const baseQtyPerProduct = num(opt.quantity, 1) || 1;
+
+                    // if you ever need an absolute qty (not multiplied by parent),
+                    // set opt.absoluteQty = true in OPTION_DATA
+                    const finalQty = opt.absoluteQty
+                      ? baseQtyPerProduct
+                      : parentQty * baseQtyPerProduct;
+
+                    return {
+                      ProductCode: [opt.ProductCode || 'UnknownProduct'],
+                      ProductName: [opt.optiondesc || opt.ProductName || 'UnknownOption'],
+                      ProductPrice: [
+                        (opt.pricediff ?? opt.Vendor_Price ?? 0).toString(),
+                      ],
+                      Quantity: [finalQty.toString()], // <-- correct quantity here
+                      Vendor_PartNo: [opt.Vendor_PartNo || 'Unknown'],
+                      Vendor_Price: [
+                        (opt.vendorpricediff ?? opt.Vendor_Price ?? 0).toString(),
+                      ],
+                      discount: [opt.discount ?? 15],
+                    };
+                  })
+                  .filter(Boolean);
+
+                return extraProducts;
+              }) ?? [];
+
           console.log(productOption, '&&&productOption&&&')
           //
           //console.log(productOption, '***productOption***')
@@ -380,13 +427,14 @@ function OrderFreight() {
           setoptionProducts(optionOrderProducts)
           // Fetch product URLs and process vendors
           const productUrls = productCodes.map(
-            (code) => `${API_BASE_URL}/api/products/${code.replace(/[\/,|@]/g, '-')}`, // for custom orders
+            (code) =>
+              `${API_BASE_URL}/api/products/${code.replace(/[\/,|@]/g, '-')}`, // for custom orders
           )
           const productResponses = await fetchProductData(
             productUrls,
             'product',
           )
-          console.log(productResponses, '***productResponses***');
+          console.log(productResponses, '***productResponses***')
           // Extract existing product codes as a flat array, ensuring unique entries
           const existingProductCodes = new Set(
             productResponses.flatMap((response) =>
@@ -438,18 +486,30 @@ function OrderFreight() {
                   return null
                 }
                 // Ensure that product.ProductCode exists and is an array
-                const productCode = Array.isArray(product.ProductCode) ? product.ProductCode[0].toLowerCase() : null
-                const matchingAlert = ALERTS.find(alert => alert.id.toLowerCase() === productCode);
+                const productCode = Array.isArray(product.ProductCode)
+                  ? product.ProductCode[0].toLowerCase()
+                  : null
+                const matchingAlert = ALERTS.find(
+                  (alert) => alert.id.toLowerCase() === productCode,
+                )
 
                 if (matchingAlert) {
-                  alert(`ID: ${matchingAlert.id}\nNote: ${matchingAlert.note} !!!`);
+                  alert(
+                    `ID: ${matchingAlert.id}\nNote: ${matchingAlert.note} !!!`,
+                  )
                 }
                 // Look up the quantity using the product code
                 //const quantity = productCode ? quantityMap[productCode] || null : null
-                const quantity = productCode ? quantityMap[Object.keys(quantityMap).find(key => key.toLowerCase() === productCode)] || null : null;
-                  console.log(productCode, '!!! productCode !!!');
-                  console.log(quantityMap, '!!! quantityMap !!!');
-                  console.log(quantity, '!!! quantity !!!');
+                const quantity = productCode
+                  ? quantityMap[
+                      Object.keys(quantityMap).find(
+                        (key) => key.toLowerCase() === productCode,
+                      )
+                    ] || null
+                  : null
+                console.log(productCode, '!!! productCode !!!')
+                console.log(quantityMap, '!!! quantityMap !!!')
+                console.log(quantity, '!!! quantity !!!')
                 return { ...product, Quantity: [quantity] }
               })
               // Filter out any null results
@@ -558,8 +618,8 @@ function OrderFreight() {
             return product.Google_Age_Group.flatMap((group) => {
               // Split the group string into its parts
               return group.split(' // ').map((g) => ({
-                ProductCode: product.ProductCode[0], 
-                Quantity: product.Quantity ? product.Quantity[0] : null, 
+                ProductCode: product.ProductCode[0],
+                Quantity: product.Quantity ? product.Quantity[0] : null,
                 Google_Age_Group: g,
               }))
             })
@@ -869,7 +929,7 @@ function OrderFreight() {
   }
 
   const mergeDuplicatedProducts = (products) => {
-    console.log(products, '***products mergeDuplicatedProducts ***');
+    console.log(products, '***products mergeDuplicatedProducts ***')
     return products.reduce((acc, product) => {
       // Extract and normalize ProductCode safely
       const productCode = JSON.stringify(product.ProductCode)
@@ -1147,7 +1207,7 @@ function OrderFreight() {
     //     return updatedProductList;
     // });
     // 1) Build your main array WITHOUT manualEntry inside the loop
-    
+
     // before working code
     // const updatedProductsWithQuantity = updatedProducts.map((product) => {
     //   console.log(product, '>> product updatedProductsWithQuantity')
@@ -1162,7 +1222,7 @@ function OrderFreight() {
     //   let match = productOptionsArr.find(
     //     (option) => option.ProductCode?.[0] === productCode,
     //   )
-      
+
     //   // If no match by code, try vendorKitItem by Google_Age_Group
     //   if (!match && googleAgeGroup) {
     //     match = vendorKitItem.find((vk) => vk.Google_Age_Group.toLowerCase().trim() === googleAgeGroup.toLowerCase().trim())
@@ -1186,63 +1246,65 @@ function OrderFreight() {
     //   }
     // })
     const updatedProductsWithQuantity = updatedProducts.map((product) => {
+      const productCode = product.ProductCode[0]
+      const googleAgeGroup = product.Google_Age_Group?.[0] || null
 
-      const productCode = product.ProductCode[0];
-      const googleAgeGroup = product.Google_Age_Group?.[0] || null;
-    
       console.log(
-        `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`
-      );
-    
+        `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
+      )
+
       // 1) Match by ProductCode in productOptionsArr
       let match = productOptionsArr.find(
-        (option) => option.ProductCode?.[0] === productCode
-      );
-    
+        (option) => option.ProductCode?.[0] === productCode,
+      )
+
       // 2) If no match by code, try vendorKitItem by Google_Age_Group
       if (!match && googleAgeGroup) {
-        const idx = vendorKitItem.findIndex((vk) =>
-          vk.Google_Age_Group.toLowerCase().trim() ===
-          googleAgeGroup.toLowerCase().trim()
-        );
-    
+        const idx = vendorKitItem.findIndex(
+          (vk) =>
+            vk.Google_Age_Group.toLowerCase().trim() ===
+            googleAgeGroup.toLowerCase().trim(),
+        )
+
         // If found, remove that ONE item from vendorKitItem
         if (idx !== -1) {
-          match = vendorKitItem[idx];
+          match = vendorKitItem[idx]
           // Remove it so it cannot be used again
-          vendorKitItem.splice(idx, 1);
+          vendorKitItem.splice(idx, 1)
         }
       }
-    
-      console.log(match, '!!!match!!!');
-    
+
+      console.log(match, '!!!match!!!')
+
       // 3) Default quantity
-      let quantity = product.Quantity || ['1'];
-    
+      let quantity = product.Quantity || ['1']
+
       // 4) If we found a match with a valid Quantity, use it
       if (match && match.Quantity != null) {
-        quantity = Array.isArray(match.Quantity) ? match.Quantity : [match.Quantity];
+        quantity = Array.isArray(match.Quantity)
+          ? match.Quantity
+          : [match.Quantity]
       }
-    
-      console.log(`Final Quantity for ${productCode}:`, quantity);
-    
+
+      console.log(`Final Quantity for ${productCode}:`, quantity)
+
       // 5) Return ONE product for each original product
       return {
         ...product,
         Quantity: quantity,
-      };
-    });
-    
+      }
+    })
+
     // 2) Find the manual entry in updatedOptionsArr ONCE
     // const manualEntry = updatedOptionsArr.find(
     //   (option) => option.Vendor_PartNo?.[0] === 'manually',
     //   //option.Vendor_PartNo && option.Vendor_PartNo[0] === 'manually',
     // )
     const manualEntry = Array.isArray(updatedOptionsArr)
-  ? updatedOptionsArr.find(
-      (option) => option?.Vendor_PartNo?.[0] === 'manually'
-    )
-  : null;
+      ? updatedOptionsArr.find(
+          (option) => option?.Vendor_PartNo?.[0] === 'manually',
+        )
+      : null
 
     // 3) If manualEntry exists, push it exactly once
     if (manualEntry) {
