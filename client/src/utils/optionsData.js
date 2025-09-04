@@ -2804,15 +2804,37 @@ export const OPTION_DATA = [
     "vendorpricediff": 229,
     "discount": 20
   },
+  // {
+  //   "id": 7051,
+  //   "optioncatid": 307,
+  //   "ProductName": "Ship in CA700 Case",
+  //   "quantity": 1,
+  //   "ProductCode": "MK90625",
+  //   "Vendor_PartNo": "CA700-H",
+  //   "pricediff": 318,
+  //   "vendorpricediff": 244,
+  //   "discount": 20
+  // },
   {
-    "id": 7051,
+    "id": 7052,
     "optioncatid": 307,
-    "ProductName": "Ship in CA700 Case",
+    "ProductName": "Remove CA700 Case ",
     "quantity": 1,
     "ProductCode": "MK90625",
-    "Vendor_PartNo": "CA700-H",
-    "pricediff": 318,
-    "vendorpricediff": 244,
+    "Vendor_PartNo": "REMOVE CA700-H",
+    "pricediff": -318,
+    "vendorpricediff": -244,
+    "discount": 20
+  },
+  {
+    "id": 7599,
+    "optioncatid": 307,
+    "ProductName": "Remove 2 x CA700 Cases ",
+    "quantity": 2,
+    "ProductCode": "MK90625",
+    "Vendor_PartNo": "REMOVE 2 x CA700-H",
+    "pricediff": -636,
+    "vendorpricediff": -488,
     "discount": 20
   },
   {
@@ -2832,7 +2854,7 @@ export const OPTION_DATA = [
     "ProductName": "2 x Monitor Mount",
     "quantity": 2,
     "ProductCode": "MK91600",
-    "Vendor_PartNo": "WLM-P-138",
+    "Vendor_PartNo": "WLM-P-138 // WLM-P-CB57",
     "pricediff": 264,
     "vendorpricediff": 77.6,
     "discount": 20
@@ -3189,17 +3211,17 @@ export const OPTION_DATA = [
     "vendorpricediff": 229,
     "discount": 20
   },
-  {
-    "id": 7053,
-    "optioncatid": 307,
-    "ProductName": "Ship in 2 x CA700 Cases",
-    "quantity": 2,
-    "ProductCode": "MK90625",
-    "Vendor_PartNo": "CA700-H",
-    "pricediff": 636,
-    "vendorpricediff": 244,
-    "discount": 20
-  },
+  // {
+  //   "id": 7053,
+  //   "optioncatid": 307,
+  //   "ProductName": "Ship in 2 x CA700 Cases",
+  //   "quantity": 2,
+  //   "ProductCode": "MK90625",
+  //   "Vendor_PartNo": "CA700-H",
+  //   "pricediff": 636,
+  //   "vendorpricediff": 244,
+  //   "discount": 20
+  // },
   {
     "id": 5626,
     "optioncatid": 333,
