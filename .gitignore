@@ -2,6 +2,12 @@ node_modules/
 
 server/.vscode/
 
+client/.vscode/
+
+.vscode/settings.json
+
+.vscode/
+
 server/node_modules/
 
 server/tests/

@@ -1,0 +1,122 @@
+.notificationContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.notification {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 12px;
+  padding: 16px;
+  border-left: 4px solid #007bff;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
+
+  &:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &.success {
+    border-left-color: #28a745;
+    background: #f8fff9;
+    
+    .notificationMessage {
+      color: #155724;
+    }
+  }
+
+  &.error {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+    
+    .notificationMessage {
+      color: #721c24;
+    }
+  }
+
+  &.warning {
+    border-left-color: #ffc107;
+    background: #fffdf5;
+    
+    .notificationMessage {
+      color: #856404;
+    }
+  }
+
+  &.info {
+    border-left-color: #17a2b8;
+    background: #f5fdff;
+    
+    .notificationMessage {
+      color: #0c5460;
+    }
+  }
+}
+
+.notificationContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notificationMessage {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #495057;
+  }
+
+  &:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .notificationContainer {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+}
