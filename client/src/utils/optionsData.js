@@ -610,7 +610,7 @@ export const OPTION_DATA = [
     "ProductName": "1 x Monitor Mount (32in/20lbs max)",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "WLM-Tmount-TV",
+    "Vendor_PartNo": "WLM-Tmount-TV", // WLM#124
     "pricediff": 98,
     "vendorpricediff": 60.5,
     "discount": 15
@@ -621,7 +621,7 @@ export const OPTION_DATA = [
     "ProductName": "2 x Monitor Mount (32in/20lbs max)",
     "quantity": 2,
     "ProductCode": "option",
-    "Vendor_PartNo": "WLM-Tmount-TV",
+    "Vendor_PartNo": "WLM-Tmount-TV", // WLM#124
     "pricediff": 195,
     "vendorpricediff": 60.5,
     "discount": 15
@@ -4704,7 +4704,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
     "pricediff": 550,
-    "vendorpricediff": 0,
+    "vendorpricediff": 485.4,
     "discount": 20
   },
   {
@@ -4715,7 +4715,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
     "pricediff": 735,
-    "vendorpricediff": 0,
+    "vendorpricediff": 647.2,
     "discount": 20
   },
   {
@@ -4726,7 +4726,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
     "pricediff": 189,
-    "vendorpricediff": 0,
+    "vendorpricediff": 161.80,
     "discount": 20
   },
   {
@@ -4737,7 +4737,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
     "pricediff": 379,
-    "vendorpricediff": 0,
+    "vendorpricediff": 323.6,
     "discount": 20
   },
   {
