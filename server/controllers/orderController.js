@@ -366,7 +366,16 @@ module.exports.saveOrder = async (req, res, next) => {
     fs.writeFileSync(tmpHtmlFilePath, htmlContent, 'utf8');
 
     // Path to the PowerShell script
-    const scriptPath = path.join(__dirname, 'createEmail.ps1');
+    // Try development path first, if it doesn't exist, use production path
+    const devScriptPath = path.join(__dirname, 'createEmail.ps1');
+    const prodScriptPath = process.resourcesPath 
+      ? path.join(process.resourcesPath, 'app.asar.unpacked', 'controllers', 'createEmail.ps1')
+      : devScriptPath;
+    
+    const scriptPath = fs.existsSync(devScriptPath) ? devScriptPath : prodScriptPath;
+    
+    console.log('PowerShell script path:', scriptPath);
+    console.log('Script exists:', fs.existsSync(scriptPath));
 
     // Command to execute the PowerShell script
     const command = `powershell -File "${scriptPath}" -htmlFilePath "${tmpHtmlFilePath}" -to "${to}" -subject "${subject}"`;

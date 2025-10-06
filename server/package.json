@@ -54,9 +54,12 @@
       "index.js",
       "app.js",
       "package.json",
+      ".env",
       "node_modules/**/*",
       "routes/**/*",
       "controllers/**/*",
+      "controllers/createEmail.ps1",
+      "controllers/email/**/*",
       "middleware/**/*",
       "models/**/*",
       "services/**/*",
@@ -81,6 +84,10 @@
         "to": "client/build",
         "filter": ["**/*"]
       }
+    ],
+    "asarUnpack": [
+      ".env",
+      "controllers/**/*"
     ],
     "asar": true,
     "nsis": {
