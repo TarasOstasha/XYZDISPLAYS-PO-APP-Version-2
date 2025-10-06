@@ -4,6 +4,15 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 
+// ---- Load environment variables FIRST ----
+// In production (packaged), load from app resources
+// In development, load from current directory
+require('dotenv').config({
+  path: app.isPackaged 
+    ? path.join(process.resourcesPath, 'app.asar.unpacked', '.env')
+    : path.join(__dirname, '.env')
+});
+
 // ---- Start your existing Express server (server/index.js) ----
 // Check if server is already running before starting
 const PORT = process.env.PORT || '5000';
