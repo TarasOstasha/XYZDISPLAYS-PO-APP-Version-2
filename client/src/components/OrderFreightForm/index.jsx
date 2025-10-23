@@ -338,8 +338,10 @@ function OrderFreightForm({
           {(formikProps) => {
             // Handler to update ship info within Formik's scope
             const handleShipInfoChange = (e) => {
+              console.log(e.target.value, '<< e.target.value in handleShipInfoChange');  
               setShipInfo(e.target.value) // Update the state with the new value
               formikProps.setFieldValue('ship', e.target.value) // Update Formik's field value too
+              formikProps.setFieldTouched('ship', true, false); // <-- make it "touched"
             }
             return (
               <Form>
@@ -415,7 +417,7 @@ function OrderFreightForm({
                                 aria-describedby="basic-addon1"
                                 id='ship'
                               /> */}
-                              <input
+                              {/* <input
                                 style={{ background: 'yellow' }}
                                 name="ship"
                                 type="text"
@@ -426,7 +428,29 @@ function OrderFreightForm({
                                 aria-label="ship"
                                 aria-describedby="basic-addon1"
                                 id="ship"
-                              />
+                              /> */}
+                              <select
+                                name="ship"
+                                value={shipInfo}
+                                onChange={handleShipInfoChange}
+                                className="form-control"
+                                id="ship"
+                                aria-label="ship"
+                                aria-describedby="basic-addon1"
+                                style={{ background: 'yellow', cursor: 'pointer' }}
+                              >
+                                <option value="">Select shipping method</option>
+                                <option value="GROUND on B356D3">Default: GROUND on B356D3</option>
+                                <option value="3-Day on B356D3">3-Day on B356D3</option>
+                                <option value="2-Day on B356D3">2-Day on B356D3</option>
+                                <option value="Next Day Air on B356D3">Next Day Air on B356D3</option>
+                                <option value="Freight by XYZ">Freight by XYZ</option>
+                              </select>
+                              {formikProps.touched.ship && formikProps.errors.ship && (
+                                <div className="invalid-feedback d-block">
+                                  {formikProps.errors.ship}
+                                </div>
+                              )}
                             </div>
                             <div className={styles.regDiv} id="shipInfoBottom">
                               {renderShipInfoBottom()}
