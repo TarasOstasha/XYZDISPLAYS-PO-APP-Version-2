@@ -92,7 +92,8 @@ function OrderFreightForm({
     }
 
     values.shipTo = document.getElementById('shipTo').innerText
-    values.vendorAddress = document.getElementById('vendorAddress').innerText
+    // Use custom vendor address if it exists, otherwise get from DOM
+    values.vendorAddress = customVendorAddress || document.getElementById('vendorAddress').innerText
     values.ship = document.getElementById('ship').value
     values.shipInfoDescription = document.getElementById(
       'shipInfoBottom',
@@ -152,6 +153,7 @@ function OrderFreightForm({
   const [hoveredOption, setHoveredOption] = useState(null)
   const [editingOption, setEditingOption] = useState(null)
   const [editValue, setEditValue] = useState('')
+  const [customVendorAddress, setCustomVendorAddress] = useState('')
   const dropdownRef = useRef(null)
 
   const toggleVendorVisibility = () => {
@@ -225,9 +227,24 @@ function OrderFreightForm({
   useEffect(() => {
     //console.log(rerenderOrderList, 'rerenderOrderList');
     const initialShipInfo = renderShipInfoInput()
-    // Set default value to "GROUND on B356D3" if initialShipInfo is empty
-    const defaultOption = shippingOptions.find(opt => opt.isDefault)
-    setShipInfo(initialShipInfo || (defaultOption ? defaultOption.value : '')) // Set the initial value
+    // Only update shipInfo if we found a valid vendor shipInfo
+    if (initialShipInfo) {
+      setShipInfo(initialShipInfo)
+    } else if (!shipInfo) {
+      // Only set default if shipInfo is not already set (initial load)
+      const defaultOption = shippingOptions.find(opt => opt.isDefault)
+      setShipInfo(defaultOption ? defaultOption.value : '')
+    }
+    // If initialShipInfo is empty but shipInfo already has a value, keep the current value
+    
+    // Check if vendor address exists
+    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase()
+    const vendor = VENDOR_LIST.find((v) => pcode?.startsWith(v.code))
+    // Only clear customVendorAddress if a vendor is found (to allow switching to vendor address)
+    // Keep custom address if no vendor found and custom address exists
+    if (vendor) {
+      setCustomVendorAddress('')
+    }
   }, [rerenderOrderList])
 
   useEffect(() => {
@@ -297,23 +314,29 @@ function OrderFreightForm({
       ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
           .shipInfoDescription.split('\n')
           .map((line, index) => <div key={index}>{line}</div>)
-      : 'Not Found'
+      : "Declare value with UPS\n(DO NOT show on customer label)"
   }
   // render vendor shipping address section
   const renderVendorAddress = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
-    console.log(pcode, '<< pcode in renderVendorAddress');
-    return rerenderOrderList &&
-      rerenderOrderList.length > 0 &&
-      VENDOR_LIST.find((vendor) =>
-        //rerenderOrderList[0]?.ProductCode[0]?.startsWith(vendor.code),
-        pcode?.startsWith(vendor.code),
+    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase();
+    const vendor = VENDOR_LIST.find((v) => pcode?.startsWith(v.code))
+    
+    if (vendor) {
+      // Return vendor address from VENDOR_LIST
+      return vendor.address.split('\n').map((line, index) => <div key={index}>{line}</div>)
+    } else {
+      // Return editable textarea when vendor not found
+      return (
+        <textarea
+          style={{ width: '100%', minHeight: '150px', background: 'yellow', padding: '5px' }}
+          value={customVendorAddress}
+          onChange={(e) => setCustomVendorAddress(e.target.value)}
+          placeholder="Vendor address not found. Please enter vendor address..."
+        />
       )
-      ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
-          .address.split('\n')
-          .map((line, index) => <div key={index}>{line}</div>)
-      : 'Not Found'
+    }
   }
+  
   // rerender vendor name
   const rerenderVendorName = (vendorN) => {
     return rerenderOrderList.some((item) => {
