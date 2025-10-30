@@ -12,7 +12,7 @@ export const ORDER_VALIDATION_SCHEMA = yup.object({
     .max(10, 'Max 10 symbols at this moment')
     .required('PO Number Is Required'),
   reprint: yup.string().required('Please choose Yes or No'),
-  ship: yup.string().required('Please choose Shipping Method'),
+  // ship: yup.string().required('Please choose Shipping Method'),
   orderNotes: yup.string().when('reprint', {
     is: 'yes',
     then: (schema) =>
