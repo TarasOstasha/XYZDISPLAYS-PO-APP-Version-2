@@ -154,6 +154,7 @@ function OrderFreightForm({
   const [editingOption, setEditingOption] = useState(null)
   const [editValue, setEditValue] = useState('')
   const [customVendorAddress, setCustomVendorAddress] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const dropdownRef = useRef(null)
 
   const toggleVendorVisibility = () => {
@@ -244,6 +245,11 @@ function OrderFreightForm({
     // Keep custom address if no vendor found and custom address exists
     if (vendor) {
       setCustomVendorAddress('')
+    }
+    
+    // When data loads, stop showing loader
+    if (rerenderOrderList.length > 0) {
+      setIsLoading(false)
     }
   }, [rerenderOrderList])
 
@@ -456,6 +462,10 @@ function OrderFreightForm({
                             onChange={(e) => {
                               formikProps.handleChange(e)
                               setOrderId(e.target.value)
+                              // Start loading when PO is entered
+                              if (e.target.value) {
+                                setIsLoading(true)
+                              }
                               rerenderVendorName('or')
                             }}
                           />
@@ -466,7 +476,21 @@ function OrderFreightForm({
                           />
                         </div>
 
-                        {rerenderOrderList.length !== 0 && (
+                        {/* Loading spinner */}
+                        {formikProps.values.po && isLoading && (
+                          <div style={{ textAlign: 'center', padding: '20px' }}>
+                            <div style={{ display: 'inline-block', width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                            <p style={{ marginTop: '10px', color: '#666' }}>Loading order data...</p>
+                            <style>{`
+                              @keyframes spin {
+                                0% { transform: rotate(0deg); }
+                                100% { transform: rotate(360deg); }
+                              }
+                            `}</style>
+                          </div>
+                        )}
+
+                        {formikProps.values.po && !isLoading && rerenderOrderList.length !== 0 && (
                           <>
                             <div className="input-group mb-3">
                               <span className="input-group-text">Date:</span>
@@ -561,6 +585,8 @@ function OrderFreightForm({
                         )}
                       </td>
                     </tr>
+                    {formikProps.values.po && (
+                    <>
                     <tr>
                     <td colSpan="2">
                       <label style={{ marginRight: '10px' }}>Previous customer order(s) with same hardware?</label>
@@ -657,6 +683,8 @@ function OrderFreightForm({
                         {shipPhoneNumber} */}
                       </td>
                     </tr>
+                    </>
+                    )}
                   </tbody>
                 </table>
                 {/* I HIDE THIS BLOCK OF CODE TO REDEVELOP LATER IF NEEDED */}
@@ -748,6 +776,8 @@ function OrderFreightForm({
                     )}
                   </div>
                 )} */}
+                {formikProps.values.po && (
+                <>
                 <div>
                   {(rerenderOrderList.length > 0 || filteredOrderList.length > 0) && (
                     <button
@@ -1318,12 +1348,16 @@ function OrderFreightForm({
                     </>
                   </tbody>
                 </table>
-                <AddProductPopUp
-                  rerenderOrderList={rerenderOrderList}
-                  onFormValuesChange={handleFormValuesChange}
-                  isEditingTop={isEditingTop}
-                />
-                {rerenderOrderList.length !== 0 &&
+                </>
+                )}
+                {formikProps.values.po && (
+                  <AddProductPopUp
+                    rerenderOrderList={rerenderOrderList}
+                    onFormValuesChange={handleFormValuesChange}
+                    isEditingTop={isEditingTop}
+                  />
+                )}
+                {formikProps.values.po && rerenderOrderList.length !== 0 &&
                   filteredOrderList.length === 0 && (
                     <div className={styles.divGroup}>
                       {checkboxFilteredIndex.length === 0 && (
