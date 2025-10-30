@@ -260,3 +260,26 @@ $base-success: aquamarine;
     }
   }
 }
+
+
+.bottomBtns {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.discountNote {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a1c1c;
+  background-color: #ffeaea;
+  border: 1px solid #f3a6a6;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
