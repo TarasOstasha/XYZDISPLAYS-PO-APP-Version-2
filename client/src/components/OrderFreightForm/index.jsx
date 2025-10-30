@@ -10,7 +10,7 @@ import {
 } from '../../stylesConstants'
 import React from 'react'
 import styles from './OrderFreightForm.module.scss'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import AddProductPopUp from '../AddProductPopUp'
 import { saveOrder } from '../../api'
 import MarkupAmount from '../MarkupAmount'
@@ -141,6 +141,18 @@ function OrderFreightForm({
   const [hideButton, setHideButton] = useState(false)
   const [isNeededDiscountNotes, setIsNeededDiscountNotes] = useState(false)
   const [shipInfo, setShipInfo] = useState()
+  const [shippingOptions, setShippingOptions] = useState([
+    { id: 1, value: 'GROUND on B356D3', label: 'Default: GROUND on B356D3', isDefault: true },
+    { id: 2, value: '3-Day on B356D3', label: '3-Day on B356D3', isDefault: false },
+    { id: 3, value: '2-Day on B356D3', label: '2-Day on B356D3', isDefault: false },
+    { id: 4, value: 'Next Day Air on B356D3', label: 'Next Day Air on B356D3', isDefault: false },
+    { id: 5, value: 'Freight by XYZ', label: 'Freight by XYZ', isDefault: false }
+  ])
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [hoveredOption, setHoveredOption] = useState(null)
+  const [editingOption, setEditingOption] = useState(null)
+  const [editValue, setEditValue] = useState('')
+  const dropdownRef = useRef(null)
 
   const toggleVendorVisibility = () => {
     setCheckByVendor(!checkByVendor)
@@ -213,8 +225,51 @@ function OrderFreightForm({
   useEffect(() => {
     //console.log(rerenderOrderList, 'rerenderOrderList');
     const initialShipInfo = renderShipInfoInput()
-    setShipInfo(initialShipInfo) // Set the initial value
+    // Set default value to "GROUND on B356D3" if initialShipInfo is empty
+    const defaultOption = shippingOptions.find(opt => opt.isDefault)
+    setShipInfo(initialShipInfo || (defaultOption ? defaultOption.value : '')) // Set the initial value
   }, [rerenderOrderList])
+
+  useEffect(() => {
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const handleEditOption = (option) => {
+    setEditingOption(option)
+    setEditValue(option.value)
+  }
+
+  const handleSaveEdit = () => {
+    if (editValue.trim()) {
+      setShippingOptions(prevOptions =>
+        prevOptions.map(opt =>
+          opt.id === editingOption.id
+            ? { ...opt, value: editValue, label: opt.isDefault ? `Default: ${editValue}` : editValue }
+            : opt
+        )
+      )
+      // Update shipInfo if the edited option is currently selected
+      if (shipInfo === editingOption.value) {
+        setShipInfo(editValue)
+      }
+    }
+    setEditingOption(null)
+    setEditValue('')
+  }
+
+  const handleCancelEdit = () => {
+    setEditingOption(null)
+    setEditValue('')
+  }
   // render shipping info input
   // const renderShipInfoInput = () => {
   //   const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
@@ -404,48 +459,52 @@ function OrderFreightForm({
                             </div>
                             <div className="input-group mb-3">
                               <span className="input-group-text">Ship Info:</span>
-                              {/* <input
-                                style={{ background: 'yellow' }}
-                                name="ship"
-                                type="text"
-                                value={renderShipInfoInput()}
-                                // value={formikProps.values.ship || renderShipInfoInput()}
-                                onChange={formikProps.handleChange}
-                                className="form-control"
-                                placeholder="Choose freight info, example Freight"
-                                aria-label="ship"
-                                aria-describedby="basic-addon1"
-                                id='ship'
-                              /> */}
-                              {/* <input
-                                style={{ background: 'yellow' }}
-                                name="ship"
-                                type="text"
-                                value={shipInfo} // Controlled by state
-                                onChange={handleShipInfoChange} // Update state and Formik
-                                className="form-control"
-                                placeholder="Choose freight info, example Freight"
-                                aria-label="ship"
-                                aria-describedby="basic-addon1"
-                                id="ship"
-                              /> */}
-                              <select
-                                name="ship"
-                                value={shipInfo}
-                                onChange={handleShipInfoChange}
-                                className="form-control"
-                                id="ship"
-                                aria-label="ship"
-                                aria-describedby="basic-addon1"
-                                style={{ background: 'yellow', cursor: 'pointer' }}
-                              >
-                                <option value="">Select shipping method</option>
-                                <option value="GROUND on B356D3">Default: GROUND on B356D3</option>
-                                <option value="3-Day on B356D3">3-Day on B356D3</option>
-                                <option value="2-Day on B356D3">2-Day on B356D3</option>
-                                <option value="Next Day Air on B356D3">Next Day Air on B356D3</option>
-                                <option value="Freight by XYZ">Freight by XYZ</option>
-                              </select>
+                              <div className={styles.customSelectWrapper} ref={dropdownRef}>
+                                <input
+                                  type="hidden"
+                                  id="ship"
+                                  name="ship"
+                                  value={shipInfo || ''}
+                                />
+                                <div
+                                  className={styles.customSelectTrigger}
+                                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                  style={{ background: 'yellow', cursor: 'pointer' }}
+                                >
+                                  {shipInfo || 'Select shipping method'}
+                                  <span className={styles.dropdownArrow}>▼</span>
+                                </div>
+                                {isDropdownOpen && (
+                                  <div className={styles.customSelectDropdown}>
+                                    {shippingOptions.map((option) => (
+                                      <div
+                                        key={option.id}
+                                        className={styles.customSelectOption}
+                                        onMouseEnter={() => setHoveredOption(option.id)}
+                                        onMouseLeave={() => setHoveredOption(null)}
+                                        onClick={() => {
+                                          handleShipInfoChange({ target: { value: option.value } })
+                                          setIsDropdownOpen(false)
+                                        }}
+                                      >
+                                        <span className={styles.optionLabel}>{option.label}</span>
+                                        {hoveredOption === option.id && (
+                                          <button
+                                            className={styles.editButton}
+                                            onClick={(e) => {
+                                              e.stopPropagation()
+                                              handleEditOption(option)
+                                              setIsDropdownOpen(false)
+                                            }}
+                                          >
+                                            EDIT
+                                          </button>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                               {formikProps.touched.ship && formikProps.errors.ship && (
                                 <div className="invalid-feedback d-block">
                                   {formikProps.errors.ship}
@@ -1288,6 +1347,43 @@ function OrderFreightForm({
           }}
         </Formik>
       </div>
+
+      {/* Edit Option Modal */}
+      {editingOption && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Edit Shipping Option</h3>
+            <div className={styles.modalBody}>
+              <label>
+                <span>Option Value:</span>
+                <input
+                  type="text"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  className={styles.modalInput}
+                  placeholder="Enter shipping option value"
+                />
+              </label>
+            </div>
+            <div className={styles.modalFooter}>
+              <button
+                onClick={handleSaveEdit}
+                className="btn btn-primary"
+                type="button"
+              >
+                Save
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                className="btn btn-secondary"
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
     
   )
