@@ -1,19 +1,19 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import { ORDER_VALIDATION_SCHEMA } from '../../utils/orderValidationSchema'
-import { VENDOR_LIST } from '../../utils/vendorsData'
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { ORDER_VALIDATION_SCHEMA } from '../../utils/orderValidationSchema';
+import { VENDOR_LIST } from '../../utils/vendorsData';
 import {
   yellow,
   descriptionWidth,
   attension,
   fullWidth,
   vendoCodeWidth,
-} from '../../stylesConstants'
-import React from 'react'
-import styles from './OrderFreightForm.module.scss'
-import { useState, useEffect, useRef } from 'react'
-import AddProductPopUp from '../AddProductPopUp'
-import { saveOrder } from '../../api'
-import MarkupAmount from '../MarkupAmount'
+} from '../../stylesConstants';
+import React from 'react';
+import styles from './OrderFreightForm.module.scss';
+import { useState, useEffect, useRef } from 'react';
+import AddProductPopUp from '../AddProductPopUp';
+import { saveOrder } from '../../api';
+import MarkupAmount from '../MarkupAmount';
 
 function OrderFreightForm({
   setOrderId,
@@ -77,30 +77,29 @@ function OrderFreightForm({
     selectedItems: Array(rerenderOrderList.length).fill(false),
     productTableData: [],
     vendorEmails: [],
-  }
+  };
 
   //console.log(orderDetailsOptions);
   const handleSubmit = async (values, formikBag) => {
     //console.log(VENDOR_LIST);
 
     const checkIfCustom = rerenderOrderList.some((item) => {
-      return typeof item.discount === 'undefined'
-    })
+      return typeof item.discount === 'undefined';
+    });
     if (checkIfCustom) {
-      alert('Please Remove Custom Items!!!')
-      return
+      alert('Please Remove Custom Items!!!');
+      return;
     }
 
-    values.shipTo = document.getElementById('shipTo').innerText
+    values.shipTo = document.getElementById('shipTo').innerText;
     // Use custom vendor address if it exists, otherwise get from DOM
     values.vendorAddress =
-      customVendorAddress || document.getElementById('vendorAddress').innerText
-    values.ship = document.getElementById('ship').value
-    values.shipInfoDescription = document.getElementById(
-      'shipInfoBottom',
-    ).innerText
-    values.vendorEmails = renderEmails()
-    values.inHand = setCustomFieldInHand
+      customVendorAddress || document.getElementById('vendorAddress').innerText;
+    values.ship = document.getElementById('ship').value;
+    values.shipInfoDescription =
+      document.getElementById('shipInfoBottom').innerText;
+    values.vendorEmails = renderEmails();
+    values.inHand = setCustomFieldInHand;
 
     // if (rerenderVendorName('or')) {
     //   values.orderNotes = '-20% off per Josh'
@@ -116,31 +115,31 @@ function OrderFreightForm({
           productQuantity: [...acc.productQuantity, p.Quantity?.[0]],
           vendorPrice: [...acc.vendorPrice, p.Vendor_Price?.[0]],
           vendorDiscount: [...acc.vendorDiscount, p.discount?.[0]],
-        }
-      })
-      values.productTableData.push(updatedValues)
+        };
+      });
+      values.productTableData.push(updatedValues);
 
       //console.log('block if');
     } else {
-      values.productTableData.push(...rerenderOrderList)
+      values.productTableData.push(...rerenderOrderList);
       // console.log(values, '<< values');
     }
 
-    const orderData = await saveOrder(values)
+    const orderData = await saveOrder(values);
     //console.log(values,'values***');
     //console.log(values.productTableData);
     //formikBag.resetForm()
-    values.productTableData.splice(0, values.productTableData.length)
-    console.log(values.productCode, '<< values')
-  }
+    values.productTableData.splice(0, values.productTableData.length);
+    console.log(values.productCode, '<< values');
+  };
 
   //const [filteredOrderList, setFilteredOrderList] = useState([])
-  const [selectedVendor, setSelectedVendorCode] = useState(false)
-  const [checkByVendor, setCheckByVendor] = useState(false)
-  const [checkboxFilteredIndex, setCheckboxFilteredIndex] = useState([])
-  const [hideButton, setHideButton] = useState(false)
-  const [isNeededDiscountNotes, setIsNeededDiscountNotes] = useState(false)
-  const [shipInfo, setShipInfo] = useState()
+  const [selectedVendor, setSelectedVendorCode] = useState(false);
+  const [checkByVendor, setCheckByVendor] = useState(false);
+  const [checkboxFilteredIndex, setCheckboxFilteredIndex] = useState([]);
+  const [hideButton, setHideButton] = useState(false);
+  const [isNeededDiscountNotes, setIsNeededDiscountNotes] = useState(false);
+  const [shipInfo, setShipInfo] = useState();
   const [shippingOptions, setShippingOptions] = useState([
     {
       id: 1,
@@ -172,128 +171,128 @@ function OrderFreightForm({
       label: 'Freight by XYZ',
       isDefault: false,
     },
-  ])
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [hoveredOption, setHoveredOption] = useState(null)
-  const [editingOption, setEditingOption] = useState(null)
-  const [editValue, setEditValue] = useState('')
-  const [customVendorAddress, setCustomVendorAddress] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const dropdownRef = useRef(null)
+  ]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hoveredOption, setHoveredOption] = useState(null);
+  const [editingOption, setEditingOption] = useState(null);
+  const [editValue, setEditValue] = useState('');
+  const [customVendorAddress, setCustomVendorAddress] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const dropdownRef = useRef(null);
 
   const toggleVendorVisibility = () => {
-    setCheckByVendor(!checkByVendor)
-  }
+    setCheckByVendor(!checkByVendor);
+  };
 
   const formattedPrice = (price) =>
-    price !== undefined ? parseFloat(price).toFixed(2) : ''
+    price !== undefined ? parseFloat(price).toFixed(2) : '';
   const priceWithDiscountPerUnit = (vendorPrice, discount) => {
-    const discountedPrice = vendorPrice * (1 - discount / 100)
-    return discountedPrice.toFixed(2)
-  }
-  const isNumber = (number) => isNaN(Number(number))
+    const discountedPrice = vendorPrice * (1 - discount / 100);
+    return discountedPrice.toFixed(2);
+  };
+  const isNumber = (number) => isNaN(Number(number));
   const calculateRoundedPercentage = (discount) => {
     if (discount > 0) {
-      return ((1 - (1 - discount / 100)) * 100).toFixed(0) + '%'
+      return ((1 - (1 - discount / 100)) * 100).toFixed(0) + '%';
     }
-    return 0 + '%'
-  }
+    return 0 + '%';
+  };
   const discountAmount = (discount) => {
     return discount === undefined ? (
       <b style={attension}>Website order item</b>
     ) : (
       // ` ${((1 - discount) * 100).toFixed(0)}% `
       calculateRoundedPercentage(discount)
-    )
-  }
+    );
+  };
   const calculatePrice = (price, quantity) =>
-    `$${(price * quantity).toFixed(2)}`
+    `$${(price * quantity).toFixed(2)}`;
   // const calculateDiscountedPrice = (price, discount, quantity) => `$${(price * discount * quantity).toFixed(2)}`
   const calculateDiscountedPrice = (price, discount, quantity) => {
     if (discount > 0) {
-      const discountDecimal = discount / 100
-      const discountedPrice = price * (1 - discountDecimal) * quantity
-      return `$${discountedPrice.toFixed(2)}`
+      const discountDecimal = discount / 100;
+      const discountedPrice = price * (1 - discountDecimal) * quantity;
+      return `$${discountedPrice.toFixed(2)}`;
     } else {
-      const discountedPrice = price * quantity
-      return `$${discountedPrice.toFixed(2)}`
+      const discountedPrice = price * quantity;
+      return `$${discountedPrice.toFixed(2)}`;
     }
     // const discountDecimal = discount / 100;
     // const discountedPrice = price * (1 - discountDecimal) * quantity;
     // return `$${discountedPrice.toFixed(2)}`;
-  }
+  };
   //const checkIfVendorIsEqual = () => rerenderOrderList.every(item => item.ProductCode[0].startsWith(item.ProductCode[0].slice(0,2)))
   const checkIfProductCodeStartsWithSameCharacters = (orders, characters) => {
     //console.log(orders.every(order => order.ProductCode[0].startsWith(characters)));
-    return orders.every((order) => order.ProductCode[0].startsWith(characters))
-  }
+    return orders.every((order) => order.ProductCode[0].startsWith(characters));
+  };
 
   const checkNextNotStartsWithTwoSameLetters = (array) => {
     for (let i = 0; i < array.length - 1; i++) {
-      const currentWord = array[i].ProductCode?.[0] // ProductCode?.[0]
-      const nextWord = array[i + 1].ProductCode?.[0]
-      const currentFirstTwoLetters = currentWord.slice(0, 2).toLowerCase()
-      const nextFirstTwoLetters = nextWord.slice(0, 2).toLowerCase()
+      const currentWord = array[i].ProductCode?.[0]; // ProductCode?.[0]
+      const nextWord = array[i + 1].ProductCode?.[0];
+      const currentFirstTwoLetters = currentWord.slice(0, 2).toLowerCase();
+      const nextFirstTwoLetters = nextWord.slice(0, 2).toLowerCase();
       if (currentFirstTwoLetters !== nextFirstTwoLetters) {
-        return true // Next value does not start with the same two letters as previous one
+        return true; // Next value does not start with the same two letters as previous one
       }
     }
-    return false // Next value starts with the same two letters as previous one for all elements
-  }
+    return false; // Next value starts with the same two letters as previous one for all elements
+  };
   // Function to check if all rows have "Website order item"
   // const allWebsiteOrderItems = rerenderOrderList.every(
   //   (item) => item.Vendor_Price?.[0] && isNaN(item.Vendor_Price[0])
   // );
 
   const handleChange = (e, i) => {
-    console.log(e, i)
-  }
+    console.log(e, i);
+  };
 
   useEffect(() => {
     //console.log(rerenderOrderList, 'rerenderOrderList');
-    const initialShipInfo = renderShipInfoInput()
+    const initialShipInfo = renderShipInfoInput();
     // Only update shipInfo if we found a valid vendor shipInfo
     if (initialShipInfo) {
-      setShipInfo(initialShipInfo)
+      setShipInfo(initialShipInfo);
     } else if (!shipInfo) {
       // Only set default if shipInfo is not already set (initial load)
-      const defaultOption = shippingOptions.find((opt) => opt.isDefault)
-      setShipInfo(defaultOption ? defaultOption.value : '')
+      const defaultOption = shippingOptions.find((opt) => opt.isDefault);
+      setShipInfo(defaultOption ? defaultOption.value : '');
     }
     // If initialShipInfo is empty but shipInfo already has a value, keep the current value
 
     // Check if vendor address exists
-    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase()
-    const vendor = VENDOR_LIST.find((v) => pcode?.startsWith(v.code))
+    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase();
+    const vendor = VENDOR_LIST.find((v) => pcode?.startsWith(v.code));
     // Only clear customVendorAddress if a vendor is found (to allow switching to vendor address)
     // Keep custom address if no vendor found and custom address exists
     if (vendor) {
-      setCustomVendorAddress('')
+      setCustomVendorAddress('');
     }
 
     // When data loads, stop showing loader
     if (rerenderOrderList.length > 0) {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [rerenderOrderList])
+  }, [rerenderOrderList]);
 
   useEffect(() => {
     // Close dropdown when clicking outside
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false)
+        setIsDropdownOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
+    };
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleEditOption = (option) => {
-    setEditingOption(option)
-    setEditValue(option.value)
-  }
+    setEditingOption(option);
+    setEditValue(option.value);
+  };
 
   const handleSaveEdit = () => {
     if (editValue.trim()) {
@@ -307,20 +306,20 @@ function OrderFreightForm({
               }
             : opt,
         ),
-      )
+      );
       // Update shipInfo if the edited option is currently selected
       if (shipInfo === editingOption.value) {
-        setShipInfo(editValue)
+        setShipInfo(editValue);
       }
     }
-    setEditingOption(null)
-    setEditValue('')
-  }
+    setEditingOption(null);
+    setEditValue('');
+  };
 
   const handleCancelEdit = () => {
-    setEditingOption(null)
-    setEditValue('')
-  }
+    setEditingOption(null);
+    setEditValue('');
+  };
   // render shipping info input
   // const renderShipInfoInput = () => {
   //   const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
@@ -334,32 +333,32 @@ function OrderFreightForm({
   //     'Not Found';
   // };
   const renderShipInfoInput = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase()
-    const vendor = VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
-    return vendor ? vendor.shipInfo : ''
-  }
+    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase();
+    const vendor = VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code));
+    return vendor ? vendor.shipInfo : '';
+  };
 
   // render shipping info input bottom section
   const renderShipInfoBottom = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase()
+    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
     return rerenderOrderList &&
       rerenderOrderList.length > 0 &&
       VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
       ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
           .shipInfoDescription.split('\n')
           .map((line, index) => <div key={index}>{line}</div>)
-      : 'Declare value with UPS\n(DO NOT show on customer label)'
-  }
+      : 'Declare value with UPS\n(DO NOT show on customer label)';
+  };
   // render vendor shipping address section
   const renderVendorAddress = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase()
-    const vendor = VENDOR_LIST.find((v) => pcode?.startsWith(v.code))
+    const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase();
+    const vendor = VENDOR_LIST.find((v) => pcode?.startsWith(v.code));
 
     if (vendor) {
       // Return vendor address from VENDOR_LIST
       return vendor.address
         .split('\n')
-        .map((line, index) => <div key={index}>{line}</div>)
+        .map((line, index) => <div key={index}>{line}</div>);
     } else {
       // Return editable textarea when vendor not found
       return (
@@ -374,16 +373,16 @@ function OrderFreightForm({
           onChange={(e) => setCustomVendorAddress(e.target.value)}
           placeholder="Vendor address not found. Please enter vendor address..."
         />
-      )
+      );
     }
-  }
+  };
 
   // rerender vendor name
   const rerenderVendorName = (vendorN) => {
     return rerenderOrderList.some((item) => {
-      return item.ProductCode[0].startsWith(vendorN)
-    })
-  }
+      return item.ProductCode[0].startsWith(vendorN);
+    });
+  };
   // render customer address
   const renderCustomerAddress = () => {
     const {
@@ -397,20 +396,20 @@ function OrderFreightForm({
       ShipPostalCode = [],
       ShipCountry = [],
       ShipPhoneNumber = [],
-    } = orderClientAddress || {}
-    const shipCompanyName = ShipCompanyName[0] || ''
-    const shipFirstName = ShipFirstName[0] || ''
-    const shipLastName = ShipLastName[0] || ''
-    const shipAddress1 = ShipAddress1[0] || ''
-    const shipAddress2 = ShipAddress2[0] || ''
-    const shipCity = ShipCity[0] || ''
-    const shipState = ShipState[0] || ''
-    const shipPostalCode = ShipPostalCode[0] || ''
-    const shipCountry = ShipCountry[0] || ''
-    const shipPhoneNumber = ShipPhoneNumber[0] || ''
+    } = orderClientAddress || {};
+    const shipCompanyName = ShipCompanyName[0] || '';
+    const shipFirstName = ShipFirstName[0] || '';
+    const shipLastName = ShipLastName[0] || '';
+    const shipAddress1 = ShipAddress1[0] || '';
+    const shipAddress2 = ShipAddress2[0] || '';
+    const shipCity = ShipCity[0] || '';
+    const shipState = ShipState[0] || '';
+    const shipPostalCode = ShipPostalCode[0] || '';
+    const shipCountry = ShipCountry[0] || '';
+    const shipPhoneNumber = ShipPhoneNumber[0] || '';
     const addressLine = [shipAddress1, shipAddress2]
       .filter(Boolean)
-      .join('<br>')
+      .join('<br>');
     return `
       ${shipCompanyName}<br>
       ${shipFirstName} ${shipLastName}<br>
@@ -418,35 +417,43 @@ function OrderFreightForm({
       ${shipCity}, ${shipState}, ${shipPostalCode}<br>
       ${shipCountry}<br>
       ${shipPhoneNumber}
-    `
-  }
+    `;
+  };
 
   // render sender emails
   const renderEmails = () => {
-    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase()
+    const pcode = rerenderOrderList[0]?.ProductCode[0].toLowerCase();
     //console.log(pcode);
     return rerenderOrderList &&
       rerenderOrderList.length > 0 &&
       VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code))
       ? VENDOR_LIST.find((vendor) => pcode?.startsWith(vendor.code)).email
-      : 'Not Found'
-  }
+      : 'Not Found';
+  };
 
   const isPriceOutOfRange = (webPrice, priceWithDiscount) => {
-    const ratio = webPrice / priceWithDiscount - 1
+    const ratio = webPrice / priceWithDiscount - 1;
     //console.log(ratio);
-    return ratio > 0.9 || ratio < 0.3
-  }
+    return ratio > 0.9 || ratio < 0.3;
+  };
 
   const grandTotalPrice = (order, switcher, discount) => {
     const grandTotal = order.reduce((acc, item) => {
       const price = switcher
         ? item.ProductPrice?.[0]
-        : (item.Vendor_Price?.[0] * (100 - item.discount)) / 100
-      return acc + item.Quantity?.[0] * price //ProductPrice?.[0]
-    }, 0)
-    return '$' + grandTotal.toFixed(2) // return the total rounded to two decimal places
-  }
+        : (item.Vendor_Price?.[0] * (100 - item.discount)) / 100;
+      return acc + item.Quantity?.[0] * price; //ProductPrice?.[0]
+    }, 0);
+    return '$' + grandTotal.toFixed(2); // return the total rounded to two decimal places
+  };
+
+  const checkIfSplitProductsBtnShow = () => {
+    return rerenderOrderList.some(
+      (item) =>
+        Array.isArray(item.Vendor_PartNo) &&
+        item.Vendor_PartNo.some((part) => part.includes('//')),
+    );
+  };
 
   return (
     <>
@@ -462,11 +469,11 @@ function OrderFreightForm({
               console.log(
                 e.target.value,
                 '<< e.target.value in handleShipInfoChange',
-              )
-              setShipInfo(e.target.value) // Update the state with the new value
-              formikProps.setFieldValue('ship', e.target.value) // Update Formik's field value too
-              formikProps.setFieldTouched('ship', true, false) // <-- make it "touched"
-            }
+              );
+              setShipInfo(e.target.value); // Update the state with the new value
+              formikProps.setFieldValue('ship', e.target.value); // Update Formik's field value too
+              formikProps.setFieldTouched('ship', true, false); // <-- make it "touched"
+            };
             return (
               <Form>
                 <div className={styles.orderHead}>
@@ -500,13 +507,13 @@ function OrderFreightForm({
                             className="form-control"
                             value={formikProps.values.po}
                             onChange={(e) => {
-                              formikProps.handleChange(e)
-                              setOrderId(e.target.value)
+                              formikProps.handleChange(e);
+                              setOrderId(e.target.value);
                               // Start loading when PO is entered
                               if (e.target.value) {
-                                setIsLoading(true)
+                                setIsLoading(true);
                               }
-                              rerenderVendorName('or')
+                              rerenderVendorName('or');
                             }}
                           />
                           <ErrorMessage
@@ -604,8 +611,8 @@ function OrderFreightForm({
                                           onClick={() => {
                                             handleShipInfoChange({
                                               target: { value: option.value },
-                                            })
-                                            setIsDropdownOpen(false)
+                                            });
+                                            setIsDropdownOpen(false);
                                           }}
                                         >
                                           <span className={styles.optionLabel}>
@@ -615,9 +622,9 @@ function OrderFreightForm({
                                             <button
                                               className={styles.editButton}
                                               onClick={(e) => {
-                                                e.stopPropagation()
-                                                handleEditOption(option)
-                                                setIsDropdownOpen(false)
+                                                e.stopPropagation();
+                                                handleEditOption(option);
+                                                setIsDropdownOpen(false);
                                               }}
                                             >
                                               EDIT
@@ -653,8 +660,8 @@ function OrderFreightForm({
                                   value={setCustomFieldInHand}
                                   //onChange={formikProps.handleChange}
                                   onChange={(e) => {
-                                    formikProps.handleChange(e)
-                                    setCustomFieldInHand1(e.target.value)
+                                    formikProps.handleChange(e);
+                                    setCustomFieldInHand1(e.target.value);
                                   }}
                                   className="form-control"
                                   aria-label="inHand"
@@ -679,7 +686,7 @@ function OrderFreightForm({
                                 value="yes"
                                 checked={formikProps.values.reprint === 'yes'}
                                 onChange={(e) => {
-                                  formikProps.setFieldValue('reprint', 'yes')
+                                  formikProps.setFieldValue('reprint', 'yes');
                                   if (
                                     !formikProps.values.orderNotes ||
                                     !formikProps.values.orderNotes.startsWith(
@@ -689,7 +696,7 @@ function OrderFreightForm({
                                     formikProps.setFieldValue(
                                       'orderNotes',
                                       'Previous customer order(s) with same hardware',
-                                    )
+                                    );
                                   }
                                 }}
                               />
@@ -702,8 +709,8 @@ function OrderFreightForm({
                                 value="no"
                                 checked={formikProps.values.reprint === 'no'}
                                 onChange={(e) => {
-                                  formikProps.setFieldValue('reprint', 'no')
-                                  formikProps.setFieldValue('orderNotes', '')
+                                  formikProps.setFieldValue('reprint', 'no');
+                                  formikProps.setFieldValue('orderNotes', '');
                                 }}
                               />
                               No
@@ -872,15 +879,16 @@ function OrderFreightForm({
                   <>
                     <div>
                       {(rerenderOrderList.length > 0 ||
-                        filteredOrderList.length > 0) && (
-                        <button
-                          onClick={() => setShowVendorKitPopup(true)}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Split Products
-                        </button>
-                      )}
+                        filteredOrderList.length > 0) &&
+                        checkIfSplitProductsBtnShow() && (
+                          <button
+                            onClick={() => setShowVendorKitPopup(true)}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Split Products
+                          </button>
+                        )}
                     </div>
                     <table className="table">
                       <thead>
@@ -1043,7 +1051,7 @@ function OrderFreightForm({
                                             return calculatePrice(
                                               o.Vendor_Price?.[0],
                                               o.Quantity?.[0],
-                                            )
+                                            );
                                           })()
                                         )}
                                       </span>
@@ -1149,69 +1157,71 @@ function OrderFreightForm({
                                             const newSelectedItems = [
                                               ...formikProps.values
                                                 .selectedItems,
-                                            ]
-                                            newSelectedItems[index] = checked
+                                            ];
+                                            newSelectedItems[index] = checked;
                                             formikProps.setFieldValue(
                                               `selectedItems`,
                                               newSelectedItems,
-                                            )
+                                            );
                                             // find indexes with true value
-                                            const trueIndices = newSelectedItems.reduce(
-                                              (indices, value, index) => {
-                                                if (value) {
-                                                  indices.push(index)
-                                                }
-                                                return indices
-                                              },
-                                              [],
-                                            )
+                                            const trueIndices =
+                                              newSelectedItems.reduce(
+                                                (indices, value, index) => {
+                                                  if (value) {
+                                                    indices.push(index);
+                                                  }
+                                                  return indices;
+                                                },
+                                                [],
+                                              );
                                             setCheckboxFilteredIndex(
                                               trueIndices,
-                                            )
-                                            const choosenItems = rerenderOrderList.filter(
-                                              (_, index) =>
-                                                trueIndices.includes(index),
-                                            )
+                                            );
+                                            const choosenItems =
+                                              rerenderOrderList.filter(
+                                                (_, index) =>
+                                                  trueIndices.includes(index),
+                                              );
                                             if (choosenItems.length !== 0) {
-                                              const selectedVendor = VENDOR_LIST.find(
-                                                (vendor) =>
+                                              const selectedVendor =
+                                                VENDOR_LIST.find((vendor) =>
                                                   choosenItems[0]?.ProductCode?.[0].startsWith(
                                                     vendor.code,
                                                   ),
-                                              )
+                                                );
                                               formikProps.setFieldValue(
                                                 'vendorAddress',
                                                 selectedVendor.address,
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'shipInfoDescription',
                                                 selectedVendor.shipInfoDescription,
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'ship',
                                                 selectedVendor.shipInfo,
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'productTableData',
                                                 choosenItems,
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'vendorEmails',
                                                 selectedVendor.email,
-                                              )
+                                              );
                                             } else {
                                               formikProps.setFieldValue(
                                                 'vendorAddress',
                                                 '',
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'shipInfoDescription',
                                                 '',
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'ship',
                                                 '',
-                                              )
+                                              );
                                             }
                                             if (
                                               checkNextNotStartsWithTwoSameLetters(
@@ -1220,18 +1230,19 @@ function OrderFreightForm({
                                             ) {
                                               alert(
                                                 'Vendors are not the same! Please select same vendors to set shipiing address!',
-                                              )
-                                              const updatedSelectedItems = Array(
-                                                rerenderOrderList.length,
-                                              ).fill(false)
+                                              );
+                                              const updatedSelectedItems =
+                                                Array(
+                                                  rerenderOrderList.length,
+                                                ).fill(false);
                                               formikProps.setFieldValue(
                                                 'selectedItems',
                                                 updatedSelectedItems,
-                                              )
+                                              );
                                               formikProps.setFieldValue(
                                                 'vendorAddress',
                                                 '',
-                                              )
+                                              );
                                             }
                                           }}
                                         />
@@ -1254,7 +1265,7 @@ function OrderFreightForm({
                                             e,
                                             index,
                                             formikProps,
-                                          )
+                                          );
                                         }}
                                         type="text"
                                         className={styles.regSizeInput}
@@ -1382,9 +1393,9 @@ function OrderFreightForm({
                                         {
                                           isNumber(o.Vendor_Price?.[0])
                                             ? (() => {
-                                                ;<b style={attension}>
+                                                <b style={attension}>
                                                   Website order item
-                                                </b>
+                                                </b>;
                                               })()
                                             : formattedPrice(
                                                 o.Vendor_Price?.[0],
@@ -1551,7 +1562,6 @@ function OrderFreightForm({
                                 </span>
                               )}
                             </span>
-
                           </>
                         )}
                         {/* appear just if products were selected from checkbox method */}
@@ -1579,7 +1589,7 @@ function OrderFreightForm({
                   )}
                 </div>
               </Form>
-            )
+            );
           }}
         </Formik>
       </div>
@@ -1621,7 +1631,7 @@ function OrderFreightForm({
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default OrderFreightForm
+export default OrderFreightForm;
