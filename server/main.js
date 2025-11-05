@@ -4,17 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 
-// ---- Load environment variables FIRST ----
-// In production (packaged), load from app resources
-// In development, load from current directory
-require('dotenv').config({
-  path: app.isPackaged 
-    ? path.join(process.resourcesPath, 'app.asar.unpacked', '.env')
-    : path.join(__dirname, '.env')
-});
+let mainWindow;
+let serverReady = false;
 
 // ---- Start your existing Express server (server/index.js) ----
-// Check if server is already running before starting
 const PORT = process.env.PORT || '5000';
 
 function checkServerRunning(port) {
@@ -35,30 +28,22 @@ function checkServerRunning(port) {
   });
 }
 
-// Variable to track if server is ready
-let serverReady = false;
-
-// Start server only if not already running
-checkServerRunning(PORT).then((isRunning) => {
-  if (isRunning) {
-    console.log(`Server already running on port ${PORT}`);
-    serverReady = true;
-  } else {
-    process.env.PORT = PORT;
-    require('./index.js'); // this runs your existing HTTP server
-    // Give the server a moment to start
-    setTimeout(() => {
+function startServer() {
+  // Start server only if not already running
+  return checkServerRunning(PORT).then((isRunning) => {
+    if (isRunning) {
+      console.log(`Server already running on port ${PORT}`);
       serverReady = true;
-    }, 2000);
-  }
-});
-
-// Single-instance lock (prevents duplicate apps)
-if (!app.requestSingleInstanceLock()) {
-  app.quit();
+    } else {
+      process.env.PORT = PORT;
+      require('./index.js'); // this runs your existing HTTP server
+      // Give the server a moment to start
+      setTimeout(() => {
+        serverReady = true;
+      }, 2000);
+    }
+  });
 }
-
-let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -102,17 +87,40 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+// Wait for app to be ready before doing ANYTHING with the app object
+app.whenReady().then(async () => {
+  // ---- Load environment variables FIRST ----
+  // In production (packaged), load from app resources
+  // In development, load from current directory
+  require('dotenv').config({
+    path: app.isPackaged 
+      ? path.join(process.resourcesPath, 'app.asar.unpacked', '.env')
+      : path.join(__dirname, '.env')
+  });
+
+  // Single-instance lock (prevents duplicate apps)
+  const gotTheLock = app.requestSingleInstanceLock();
+
+  if (!gotTheLock) {
+    app.quit();
+    return;
+  }
+
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
   // Auto-start on login (Windows)
   app.setLoginItemSettings({ openAtLogin: true });
+  
+  // Start the Express server
+  await startServer();
+  
+  // Create the window
   createWindow();
-});
-
-app.on('second-instance', () => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
 });
 
 app.on('window-all-closed', () => {

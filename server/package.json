@@ -25,9 +25,9 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "electron": "^31.0.0",
+    "electron": "^31.7.7",
     "electron-builder": "^24.13.3",
-    "electron-updater": "^6.1.8"
+    "electron-updater": "^6.6.2"
   },
   "scripts": {
     "server": "nodemon index",
@@ -46,6 +46,7 @@
     },
     "win": {
       "target": "portable",
+      "icon": "assets/favicon_XYZ_multi.ico",
       "artifactName": "xyzDisplays-${version}-Portable.${ext}"
     },
     "files": [
@@ -82,7 +83,9 @@
       {
         "from": "../client/build",
         "to": "client/build",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "asarUnpack": [
@@ -98,7 +101,10 @@
       "createStartMenuShortcut": true
     },
     "publish": [
-      { "provider": "generic", "url": "https://your-updates-server.example.com/" }
+      {
+        "provider": "generic",
+        "url": "https://your-updates-server.example.com/"
+      }
     ]
   },
   "author": "",
