@@ -14,3 +14,10 @@ client/build
 /utils/optionsData-1.xlsx
 
 /utils/optionsData-2.xlsx
+
+
+dist/
+
+**/dist/
+
+dist

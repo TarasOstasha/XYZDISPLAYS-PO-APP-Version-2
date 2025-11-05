@@ -14,3 +14,5 @@ run docker
  -Settings Tab:Check "Allow task to be run on demand", Check "Restart the task if it fails"
 TEST
  run in terminal docker ps
+
+after load DB -Add the right PostgreSQL indexes, filter will be faster!!!

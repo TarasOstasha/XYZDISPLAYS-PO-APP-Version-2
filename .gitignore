@@ -16,8 +16,18 @@ server/.env
 
 client/build
 
+
 client/node_modules
 
 server/dist/
 
 **/dist/
+
+client/dist
+
+client/node_modules
+
+/build
+
+/dist
+
