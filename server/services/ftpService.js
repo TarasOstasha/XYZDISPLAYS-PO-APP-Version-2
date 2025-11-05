@@ -48,7 +48,7 @@ const path = require('path');
 const fs = require('fs');
 const downloadState = require('./downloadState');
 
-async function downloadFolderFromFTP(ftpConfig, remoteFolder, localFolder) {
+async function downloadFolderFromFTP(ftpConfig, remoteFolder, localFolder, excludeFolders = []) {
     const client = new ftp.Client();
     client.ftp.verbose = true;
 
@@ -66,11 +66,17 @@ async function downloadFolderFromFTP(ftpConfig, remoteFolder, localFolder) {
         downloadState.complete = false;
 
         for (const file of folderContents) {
+            // Skip excluded folders
+            if (file.isDirectory && excludeFolders.includes(file.name)) {
+                console.log(`Skipping excluded folder: ${file.name}`);
+                continue;
+            }
+
             const localFilePath = path.join(localFolder, file.name);
             const remoteFilePath = `${remoteFolder}/${file.name}`;
 
             if (file.isDirectory) {
-                await downloadFolderFromFTP(ftpConfig, remoteFilePath, localFilePath);
+                await downloadFolderFromFTP(ftpConfig, remoteFilePath, localFilePath, excludeFolders);
             } else {
                 downloadState.currentFile = file.name;
                 await client.downloadTo(localFilePath, remoteFilePath);
