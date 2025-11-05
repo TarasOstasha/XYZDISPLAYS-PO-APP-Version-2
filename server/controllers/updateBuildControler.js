@@ -35,16 +35,30 @@ module.exports.updateBuildFolder = async (req, res, next) => {
             secure: false
         };
 
-        const remoteFolder = '/prod';
-        const localFolder = path.join(__dirname, '../../client/build');
-
         // Reset download progress
         downloadState.downloaded = 0;
         downloadState.totalFiles = 0;
         downloadState.currentFile = '';
         downloadState.complete = false;
 
-        downloadFolderFromFTP(ftpConfig, remoteFolder, localFolder)
+        // Download both client/build and server folders
+        const downloadTasks = async () => {
+            // Download client build folder (as before)
+            const remoteBuildFolder = '/prod';
+            const localBuildFolder = path.join(__dirname, '../../client/build');
+            console.log('Downloading client build folder...');
+            await downloadFolderFromFTP(ftpConfig, remoteBuildFolder, localBuildFolder);
+
+            // Download server folder (excluding node_modules) - server is on same level as prod
+            const remoteServerFolder = '/server';
+            const localServerFolder = path.join(__dirname, '..');
+            console.log('Downloading server folder (excluding node_modules)...');
+            await downloadFolderFromFTP(ftpConfig, remoteServerFolder, localServerFolder, ['node_modules']);
+            
+            console.log("All downloads finished");
+        };
+
+        downloadTasks()
             .then(() => console.log("Download finished"))
             .catch(err => console.error("Download error:", err));
 
@@ -54,5 +68,3 @@ module.exports.updateBuildFolder = async (req, res, next) => {
         res.status(500).json({ message: "Error copying folder", error: error.message });
     }
 };
-
-
