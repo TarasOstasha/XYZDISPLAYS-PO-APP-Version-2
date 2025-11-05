@@ -333,11 +333,13 @@ function OrderFreight() {
                   // base qty defined in OPTION_DATA (e.g., 2 for "Ship in 2 x CA700 Cases")
                   const baseQtyPerProduct = num(opt.quantity, 1) || 1;
 
-                  // if you ever need an absolute qty (not multiplied by parent),
-                  // set opt.absoluteQty = true in OPTION_DATA
+                  // For composite products, always multiply by parent quantity
+                  // unless explicitly marked as absolute
                   const finalQty = opt.absoluteQty
                     ? baseQtyPerProduct
                     : parentQty * baseQtyPerProduct;
+
+                  console.log(`Processing option ${opt.ProductCode}: parentQty=${parentQty}, baseQty=${baseQtyPerProduct}, finalQty=${finalQty}`);
 
                   return {
                     ProductCode: [opt.ProductCode || 'UnknownProduct'],
@@ -968,7 +970,7 @@ function OrderFreight() {
             : itemQuantityMap[productCodeKey],
         };
       } else {
-        console.log(`ProductCode ${productCode} not found in itemQuantityMap`);
+        console.log(`ProductCode ${productCode} not found in itemQuantityMap - keeping original quantity:`, item.Quantity);
         return item;
       }
     });
@@ -1204,6 +1206,7 @@ function OrderFreight() {
     const updatedProductsWithQuantity = updatedProducts.map((product) => {
       const productCode = product.ProductCode[0];
       const googleAgeGroup = product.Google_Age_Group?.[0] || null;
+      const vendorPartNo = product.Vendor_PartNo?.[0] || '';
 
       console.log(
         `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
@@ -1234,17 +1237,53 @@ function OrderFreight() {
 
       // 3) Default quantity
       let quantity = product.Quantity || ['1'];
-
+      console.log(product.Quantity, 'quantity');
+      
       // 4) If we found a match with a valid Quantity, use it
       if (match && match.Quantity != null) {
         quantity = Array.isArray(match.Quantity)
           ? match.Quantity
           : [match.Quantity];
       }
-
+      
+      // 5) Special case: If Vendor_PartNo contains "OP-LN", get quantity from parent product
+      if (vendorPartNo.includes('OP-LN')) {
+        console.log(`Processing OP-LN item:`, productCode, vendorPartNo);
+        
+        // Extract base vendor part number (everything before "-OP-LN")
+        const baseVendorPartNo = vendorPartNo.split('-OP-LN')[0];
+        console.log(`Base vendor part number:`, baseVendorPartNo);
+        
+        // Find the parent product in vendorKitItem whose Google_Age_Group starts with the base
+        const parentKit = vendorKitItem.find((vk) => 
+          vk.Google_Age_Group && 
+          vk.Google_Age_Group.toLowerCase().trim().startsWith(baseVendorPartNo.toLowerCase().trim())
+        );
+        
+        if (parentKit && parentKit.ProductCode) {
+          console.log(`Found parent kit:`, parentKit);
+          // Look up quantity using the parent's ProductCode
+          const productCodeKey = Object.keys(itemQuantityMap).find(
+            (key) => key.toLowerCase() === parentKit.ProductCode.toLowerCase(),
+          );
+          
+          if (productCodeKey) {
+            const kitQuantity = itemQuantityMap[productCodeKey];
+            quantity = [kitQuantity.toString()];
+            console.log(`OP-LN detected! Parent product: ${parentKit.ProductCode}, Setting quantity to: ${kitQuantity}`);
+          } else {
+            console.log(`Parent ProductCode ${parentKit.ProductCode} not found in itemQuantityMap`);
+            console.log(`Available keys:`, Object.keys(itemQuantityMap));
+          }
+        } else {
+          console.log(`Parent kit with Google_Age_Group starting with "${baseVendorPartNo}" not found in vendorKitItem`);
+        }
+      }
+      
+      console.log(product.Vendor_PartNo, 'product.Vendor_PartNo');
       console.log(`Final Quantity for ${productCode}:`, quantity);
 
-      // 5) Return ONE product for each original product
+      // 6) Return ONE product for each original product
       return {
         ...product,
         Quantity: quantity,
