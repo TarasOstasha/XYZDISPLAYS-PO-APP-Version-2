@@ -31,7 +31,7 @@
   },
   "scripts": {
     "server": "nodemon index",
-    "dev": "nodemon -r dotenv/config .",
+    "dev": "nodemon -- -r dotenv/config index.js",
     "react:build": "cd ../client && npm run build",
     "electron:start": "electron .",
     "electron:pack": "npm run react:build && electron-builder --dir",
