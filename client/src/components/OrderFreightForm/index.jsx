@@ -448,6 +448,7 @@ function OrderFreightForm({
   };
 
   const checkIfSplitProductsBtnShow = () => {
+    console.log(rerenderOrderList, 'rerenderOrderList checkIfSplitProductsBtnShow');
     return rerenderOrderList.some(
       (item) =>
         Array.isArray(item.Vendor_PartNo) &&
@@ -879,8 +880,8 @@ function OrderFreightForm({
                   <>
                     <div>
                       {(rerenderOrderList.length > 0 ||
-                        filteredOrderList.length > 0) &&
-                        checkIfSplitProductsBtnShow() && (
+                        filteredOrderList.length > 0) && (
+                        //heckIfSplitProductsBtnShow() && (
                           <button
                             onClick={() => setShowVendorKitPopup(true)}
                             type="button"
