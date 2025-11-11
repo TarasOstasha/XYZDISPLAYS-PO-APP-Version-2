@@ -502,7 +502,7 @@ function OrderFreightForm({
                       <td className={styles.topBlockTd}>
                         <div className="input-group mb-3">
                           <span className="input-group-text">P.O. #:</span>
-                          <Field
+                          {/* <Field
                             name="po"
                             type="text"
                             className="form-control"
@@ -517,6 +517,33 @@ function OrderFreightForm({
                               rerenderVendorName('or');
                             }}
                           />
+                           */}
+                           <Field
+                              name="po"
+                              type="text"
+                              className="form-control"
+                              value={formikProps.values.po}
+                              onChange={(e) => {
+                                const raw = e.target.value;
+                                // prev numeric (from previous render)
+                                const prevCleaned = (formikProps.values.po || '').replace(/\D/g, '');
+                                // let Formik keep the RAW text so user can type anything
+                                formikProps.handleChange(e);
+                                const cleaned = raw.replace(/\D/g, '');
+                                // If not pure digits (e.g., "45498 A"), don't load or request
+                                if (!/^\d+$/.test(raw)) {
+                                  setIsLoading(false);
+                                  return;
+                                }
+                                // If numeric content didn't change, stop
+                                if (cleaned === prevCleaned) return;
+
+                                setOrderId(cleaned);
+                                setIsLoading(true);
+                                rerenderVendorName('or');
+                              }}
+                              />
+
                           <ErrorMessage
                             name="po"
                             className={styles.errorDiv}
