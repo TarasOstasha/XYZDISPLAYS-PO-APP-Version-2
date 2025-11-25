@@ -16,3 +16,6 @@ TEST
  run in terminal docker ps
 
 after load DB -Add the right PostgreSQL indexes, filter will be faster!!!
+
+
+NODE VERSION 20.11.1

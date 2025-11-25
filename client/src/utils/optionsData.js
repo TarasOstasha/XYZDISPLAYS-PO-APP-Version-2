@@ -953,7 +953,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05505",
     "Vendor_PartNo": "BLM-2000A-B",
     "pricediff": 135,
-    "vendorpricediff": 1055,
+    "vendorpricediff": 91.14,
     "discount": 15
   },
   {
@@ -964,7 +964,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05515",
     "Vendor_PartNo": "BLM-2000A2-B",
     "pricediff": 277,
-    "vendorpricediff": 1610,
+    "vendorpricediff": 184.45,
     "discount": 15
   },
   {
@@ -975,7 +975,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05525",
     "Vendor_PartNo": "BLM-B3-B",
     "pricediff": 103,
-    "vendorpricediff": 574,
+    "vendorpricediff": 59.68,
     "discount": 15
   },
   {
@@ -986,7 +986,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05535",
     "Vendor_PartNo": "BLM-2000D-B",
     "pricediff": 105,
-    "vendorpricediff": 585,
+    "vendorpricediff": 61.85,
     "discount": 15
   },
   {
@@ -997,7 +997,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05545",
     "Vendor_PartNo": "BLM-2000E-B",
     "pricediff": 128,
-    "vendorpricediff": 1010,
+    "vendorpricediff": 84.63,
     "discount": 15
   },
   {
@@ -1008,7 +1008,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05555",
     "Vendor_PartNo": "BLM-2000F-B",
     "pricediff": 244,
-    "vendorpricediff": 1249,
+    "vendorpricediff": 162.75,
     "discount": 15
   },
   {
@@ -1019,7 +1019,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05565",
     "Vendor_PartNo": "BLM-2000J-B",
     "pricediff": 109,
-    "vendorpricediff": 585,
+    "vendorpricediff": 65.10,
     "discount": 15
   },
   {
@@ -1030,7 +1030,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05575",
     "Vendor_PartNo": "BLM-2000K-B",
     "pricediff": 135,
-    "vendorpricediff": 1014,
+    "vendorpricediff": 124.78,
     "discount": 15
   },
   {
@@ -1041,7 +1041,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05585",
     "Vendor_PartNo": "BLM-2000M-B",
     "pricediff": 188,
-    "vendorpricediff": 1095,
+    "vendorpricediff": 124.78,
     "discount": 15
   },
   {
@@ -1052,7 +1052,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05595",
     "Vendor_PartNo": "BLM-2000N-B",
     "pricediff": 171,
-    "vendorpricediff": 1094,
+    "vendorpricediff": 113.93,
     "discount": 15
   },
   {
@@ -1063,7 +1063,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05605",
     "Vendor_PartNo": "BLM-2000P-B",
     "pricediff": 220,
-    "vendorpricediff": 1215,
+    "vendorpricediff": 146.48,
     "discount": 15
   },
   {
@@ -1074,7 +1074,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05615",
     "Vendor_PartNo": "BLM-2000V-B",
     "pricediff": 277,
-    "vendorpricediff": 1255,
+    "vendorpricediff": 184.45,
     "discount": 15
   },
   {
@@ -1085,7 +1085,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05625",
     "Vendor_PartNo": "BLM-2000W-B",
     "pricediff": 537,
-    "vendorpricediff": 2720,
+    "vendorpricediff": 358.05,
     "discount": 15
   },
   {
@@ -1096,7 +1096,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05635",
     "Vendor_PartNo": "BLM-2000W2-B",
     "pricediff": 505,
-    "vendorpricediff": 2680,
+    "vendorpricediff": 336.35,
     "discount": 15
   },
   {
@@ -1107,7 +1107,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05645",
     "Vendor_PartNo": "BLM-2000X-B",
     "pricediff": 237,
-    "vendorpricediff": 1245,
+    "vendorpricediff": 157.33,
     "discount": 15
   },
   {
@@ -6428,10 +6428,10 @@ export const OPTION_DATA = [
     "optioncatid": 78,
     "ProductName": "Voyager Carry Bag",
     "quantity": 1,
-    "ProductCode": "or6704",
-    "Vendor_PartNo": "VY-1-BG",
+    "ProductCode": "OR6705",
+    "Vendor_PartNo": "VY-2-BG",
     "pricediff": 79,
-    "vendorpricediff": 45,
+    "vendorpricediff": 48.08,
     "discount": 20
   },
   {
