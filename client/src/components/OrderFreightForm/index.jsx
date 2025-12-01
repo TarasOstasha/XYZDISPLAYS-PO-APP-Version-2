@@ -538,12 +538,15 @@ function OrderFreightForm({
                                 // If numeric content didn't change, stop
                                 if (cleaned === prevCleaned) return;
 
+                                // Reset radio button and order notes when PO changes
+                                formikProps.setFieldValue('reprint', '');
+                                formikProps.setFieldValue('orderNotes', '');
+                                
                                 setOrderId(cleaned);
                                 setIsLoading(true);
                                 rerenderVendorName('or');
                               }}
                               />
-
                           <ErrorMessage
                             name="po"
                             className={styles.errorDiv}
