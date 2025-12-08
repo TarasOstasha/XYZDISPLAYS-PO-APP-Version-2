@@ -2834,7 +2834,7 @@ export const OPTION_DATA = [
     "ProductCode": "MK90625",
     "Vendor_PartNo": "REMOVE 2 x CA700-H",
     "pricediff": -636,
-    "vendorpricediff": -488,
+    "vendorpricediff": -244,
     "discount": 20
   },
   {
