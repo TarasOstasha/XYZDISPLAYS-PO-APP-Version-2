@@ -178,6 +178,7 @@ function OrderFreightForm({
   const [editValue, setEditValue] = useState('');
   const [customVendorAddress, setCustomVendorAddress] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [shipInfoManuallySet, setShipInfoManuallySet] = useState(false);
   const dropdownRef = useRef(null);
 
   const toggleVendorVisibility = () => {
@@ -251,15 +252,15 @@ function OrderFreightForm({
   useEffect(() => {
     //console.log(rerenderOrderList, 'rerenderOrderList');
     const initialShipInfo = renderShipInfoInput();
-    // Only update shipInfo if we found a valid vendor shipInfo
-    if (initialShipInfo) {
+    // Only update shipInfo if we found a valid vendor shipInfo AND user hasn't manually set it
+    if (initialShipInfo && !shipInfoManuallySet) {
       setShipInfo(initialShipInfo);
-    } else if (!shipInfo) {
+    } else if (!shipInfo && !shipInfoManuallySet) {
       // Only set default if shipInfo is not already set (initial load)
       const defaultOption = shippingOptions.find((opt) => opt.isDefault);
       setShipInfo(defaultOption ? defaultOption.value : '');
     }
-    // If initialShipInfo is empty but shipInfo already has a value, keep the current value
+    // If shipInfo was manually set, keep the current value
 
     // Check if vendor address exists
     const pcode = rerenderOrderList[0]?.ProductCode[0]?.toLowerCase();
@@ -472,6 +473,7 @@ function OrderFreightForm({
                 '<< e.target.value in handleShipInfoChange',
               );
               setShipInfo(e.target.value); // Update the state with the new value
+              setShipInfoManuallySet(true); // Mark as manually set
               formikProps.setFieldValue('ship', e.target.value); // Update Formik's field value too
               formikProps.setFieldTouched('ship', true, false); // <-- make it "touched"
             };
