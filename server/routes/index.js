@@ -6,6 +6,7 @@ const optionRouter = require('./optionRouter');
 const updateBuildFolderRouter = require('./updateBuildFolderRouter');
 const vendorRouter = require('./vendorRouter');
 const updateFolderProgressRouter = require('./updateFolderProgressRouter');
+const versionRouter = require('./versionRouter');
 
 
 const router = Router();
@@ -17,10 +18,7 @@ router.use('/vendors', vendorRouter);
 router.use('/option', optionRouter);
 router.use('/updateFolder', updateBuildFolderRouter);
 router.use('/updateFolder/progress', updateFolderProgressRouter);
+router.use('/version', versionRouter);
 
 
 module.exports = router;
-
-
-
-

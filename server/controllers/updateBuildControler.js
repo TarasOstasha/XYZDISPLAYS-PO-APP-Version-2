@@ -1,6 +1,7 @@
 const path = require('path');
 const { downloadFolderFromFTP } = require('../services/ftpService');
 const downloadState = require('../services/downloadState');
+const { updateVersion } = require('./versionController');
 
 
 // update Front End the App
@@ -37,7 +38,11 @@ module.exports.updateBuildFolder = async (req, res, next) => {
         };
 
         downloadTasks()
-            .then(() => console.log("Download finished"))
+            .then(() => {
+                console.log("Download finished");
+                // Update version after successful download
+                updateVersion();
+            })
             .catch(err => console.error("Download error:", err));
 
         res.status(200).json({ message: "Download started..." });
