@@ -527,13 +527,15 @@ function OrderFreightForm({
                               value={formikProps.values.po}
                               onChange={(e) => {
                                 const raw = e.target.value;
+                                // Trim spaces before processing
+                                const trimmed = raw.trim();
                                 // prev numeric (from previous render)
-                                const prevCleaned = (formikProps.values.po || '').replace(/\D/g, '');
+                                const prevCleaned = (formikProps.values.po || '').trim().replace(/\D/g, '');
                                 // let Formik keep the RAW text so user can type anything
                                 formikProps.handleChange(e);
-                                const cleaned = raw.replace(/\D/g, '');
+                                const cleaned = trimmed.replace(/\D/g, '');
                                 // If not pure digits (e.g., "45498 A"), don't load or request
-                                if (!/^\d+$/.test(raw)) {
+                                if (!/^\d+$/.test(trimmed)) {
                                   setIsLoading(false);
                                   return;
                                 }
