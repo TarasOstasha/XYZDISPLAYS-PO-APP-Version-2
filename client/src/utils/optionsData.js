@@ -71,9 +71,9 @@ export const OPTION_DATA = [
     "ProductName": "IG-2 HANG (without Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00130",
-    "Vendor_PartNo": "IG-2 HANG",
+    "Vendor_PartNo": "154001 021HANG",
     "pricediff": 808,
-    "vendorpricediff": 471.2,
+    "vendorpricediff": 508.87,
     "discount": 15
   },
   {
@@ -82,9 +82,9 @@ export const OPTION_DATA = [
     "ProductName": "IG-2 HANG (with Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00131",
-    "Vendor_PartNo": "IG-2 HANG",
+    "Vendor_PartNo": "154001 221HANG",
     "pricediff": 962,
-    "vendorpricediff": 561.5,
+    "vendorpricediff": 606.38,
     "discount": 15
   },
   {
@@ -93,9 +93,9 @@ export const OPTION_DATA = [
     "ProductName": "IG-4 HANG (without Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00140",
-    "Vendor_PartNo": "IG-4 HANG",
+    "Vendor_PartNo": "150001 021HANG",
     "pricediff": 999,
-    "vendorpricediff": 583.5,
+    "vendorpricediff": 630.136,
     "discount": 15
   },
   {
@@ -104,9 +104,9 @@ export const OPTION_DATA = [
     "ProductName": "IG-4 HANG (with Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00141",
-    "Vendor_PartNo": "IG-4 HANG",
+    "Vendor_PartNo": "150001 321HANG",
     "pricediff": 1236,
-    "vendorpricediff": 721.1,
+    "vendorpricediff": 778.768,
     "discount": 15
   },
   {
@@ -115,9 +115,9 @@ export const OPTION_DATA = [
     "ProductName": "IG-5 HANG (without Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00150",
-    "Vendor_PartNo": "IG-5 HANG",
+    "Vendor_PartNo": "155001 021HANG",
     "pricediff": 1010,
-    "vendorpricediff": 648.9,
+    "vendorpricediff": 701.48,
     "discount": 15
   },
   {
@@ -126,9 +126,9 @@ export const OPTION_DATA = [
     "ProductName": "IG-5 HANG (with Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00151",
-    "Vendor_PartNo": "IG-5 HANG",
+    "Vendor_PartNo": "155001 321HANG",
     "pricediff": 1226,
-    "vendorpricediff": 787.1,
+    "vendorpricediff": 850.096,
     "discount": 15
   },
   {
@@ -445,9 +445,9 @@ export const OPTION_DATA = [
     "ProductName": "H-650 HANG (with Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00160",
-    "Vendor_PartNo": "H-650 HANG",
+    "Vendor_PartNo": "153010 021 6W HANG",
     "pricediff": 2091,
-    "vendorpricediff": 1183.4,
+    "vendorpricediff": 1278.12,
     "discount": 15
   },
   {
@@ -456,9 +456,9 @@ export const OPTION_DATA = [
     "ProductName": "H-650 HANG (without Power Outlet)",
     "quantity": 1,
     "ProductCode": "dc00161",
-    "Vendor_PartNo": "H-650 HANG",
+    "Vendor_PartNo": "153010 321 6W HANG",
     "pricediff": 1842,
-    "vendorpricediff": 1343.1,
+    "vendorpricediff": 1450.528,
     "discount": 15
   },
   {
