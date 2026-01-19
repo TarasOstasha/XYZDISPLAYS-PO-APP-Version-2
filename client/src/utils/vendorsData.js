@@ -409,6 +409,19 @@ export const VENDOR_LIST = [
       "Declare value with UPS\n(DO NOT show on customer label)",
     email: ["david@bannerbugusa.com", "sales@xyzdisplays.com"],
   },
+  {
+    name: "Birttani",
+    address: `
+      500 Hartle St., #C
+      Sayreville, NJ 08872
+    `,
+    discount: 0,
+    code: "bb",
+    shipInfo: "Ground on UPS B356D3",
+    shipInfoDescription:
+      "Declare value with UPS\n(DO NOT show on customer label)",
+    email: ["orders@birttani.com", "nj@birttani.com", "andy@birttani.com", "sales@xyzdisplays.com"],
+  },
 ];
 			
 
