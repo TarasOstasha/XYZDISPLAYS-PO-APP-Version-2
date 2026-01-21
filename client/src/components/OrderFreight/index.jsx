@@ -59,10 +59,24 @@ function OrderFreight() {
   const [itemQuantityMap, setItemQuantityMap] = useState();
   const [updatedOptionsArr, setUpdatedOptionsArr] = useState();
 
-  const handleToRemove = (index, array) => {
+  const handleToRemove = (index, array, formikProps = null) => {
     console.log(index, array);
     if (index >= 0 && index < array.length) {
-      setRremoveOnclick(array.splice(index, 1));
+      // Create a new array without mutating the original
+      const newArray = array.filter((_, i) => i !== index);
+      // Update the state with the new array
+      setRerenderOrderList(newArray);
+      setRremoveOnclick(array[index]);
+      
+      // If in EDIT MODE (formikProps provided), update Formik's field arrays
+      if (formikProps && isEditingTop) {
+        const fieldNames = ['productCode', 'vendorCode', 'productName', 'productQuantity', 'vendorPrice', 'productDiscount'];
+        fieldNames.forEach(fieldName => {
+          const currentArray = formikProps.values[fieldName] || [];
+          const newFieldArray = currentArray.filter((_, i) => i !== index);
+          formikProps.setFieldValue(fieldName, newFieldArray);
+        });
+      }
     }
     console.log(array, index, '<< array');
   };
