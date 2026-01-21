@@ -416,7 +416,7 @@ export const VENDOR_LIST = [
       Sayreville, NJ 08872
     `,
     discount: 0,
-    code: "bb",
+    code: "bd",
     shipInfo: "Ground on UPS B356D3",
     shipInfoDescription:
       "Declare value with UPS\n(DO NOT show on customer label)",

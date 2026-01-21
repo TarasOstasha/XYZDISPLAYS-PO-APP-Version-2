@@ -1141,7 +1141,7 @@ function OrderFreightForm({
                                   <td className={styles.groupedTd}>
                                     <button
                                       onClick={() =>
-                                        handleToRemove(index, filteredOrderList)
+                                        handleToRemove(index, filteredOrderList, formikProps)
                                       }
                                       type="button"
                                       className="btn btn-danger"
@@ -1507,7 +1507,7 @@ function OrderFreightForm({
                                   <td className={styles.groupedTd}>
                                     <button
                                       onClick={() =>
-                                        handleToRemove(index, rerenderOrderList)
+                                        handleToRemove(index, rerenderOrderList, formikProps)
                                       }
                                       type="button"
                                       className="btn btn-danger"
