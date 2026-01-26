@@ -19,12 +19,15 @@ What happens automatically:
 - ✅ Ready for deployment
 
 ### 2️⃣ **Upload Phase** (FTP to Server)
-Upload these files/folders via FTP:
-- 📁 `client/build/` → All built React files
-- 📄 `server/version.json` → The updated version file
-- 📁 `server/` folder → All server files (if not already deployed)
+Upload these files/folders via FTP to your server:
+- 📁 `client/build/` → Upload to `/prod/` on FTP server
+- 📁 `server/` folder → Upload to `/server/` on FTP server (includes `version.json`)
 
-**IMPORTANT**: Make sure `server/version.json` is uploaded so the API can serve the new version number!
+**IMPORTANT**: 
+- The `server/version.json` file **must be uploaded** to `/server/version.json`
+- Users' "Update APP" button will download both folders from FTP
+- The `/prod/` folder contains the client build
+- The `/server/` folder contains server files including `version.json`
 
 ### 3️⃣ **User Notification Phase** (Automatic!)
 For users already using your app:
@@ -55,10 +58,13 @@ Creating an optimized production build...
 ```
 
 **Step 2: Upload via FTP**
-Upload to your server:
-- ✅ `client/build/*` → Your web root (e.g., `/public_html/`)
-- ✅ `server/version.json` → Your server folder (e.g., `/server/version.json`)
-- ✅ `server/*` → All server files (if updated)
+Upload to your FTP server:
+- ✅ `client/build/*` → Upload to `/prod/` folder on FTP
+- ✅ `server/*` → Upload to `/server/` folder on FTP (includes `version.json`)
+
+**Important**: The system downloads from:
+- `/prod/` → Goes to local `client/build/`
+- `/server/` → Goes to local `server/` (this includes `version.json`)
 
 **Step 3: Users Get Notified (Automatic!)**
 - 🎯 User "John" is using your app (has version 1.0.2 in browser)
@@ -101,6 +107,16 @@ useEffect(() => {
 }
 ```
 
+### Update APP Button (User's PC)
+When user clicks "Refresh Now" or "Update APP":
+```javascript
+// Downloads from FTP:
+// 1. /prod/ → client/build/ (React app files)
+// 2. /server/ → server/ (includes version.json)
+// 
+// After download completes, page reloads with new version
+```
+
 ## ✨ What's Automatic (No Manual Steps Needed)
 
 ✅ **Version increment on build**
@@ -111,9 +127,12 @@ useEffect(() => {
 
 ## ❗ What You Must Do
 
-1. ✅ Run `npm run build` before deploying
-2. ✅ Upload `server/version.json` along with build files
-3. ✅ Ensure your server API is running and serving `/api/version`
+1. ✅ Run `npm run build` before deploying (version auto-increments)
+2. ✅ Upload `client/build/*` to `/prod/` folder on FTP
+3. ✅ Upload `server/*` (including `version.json`) to `/server/` folder on FTP
+4. ✅ Ensure your API server is running
+
+**Critical**: Both `/prod/` and `/server/` folders must be uploaded to FTP for the update system to work!
 
 ## 🎬 Real-World Example
 
