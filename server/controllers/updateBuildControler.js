@@ -20,21 +20,35 @@ module.exports.updateBuildFolder = async (req, res, next) => {
         downloadState.currentFile = '';
         downloadState.complete = false;
 
-        // Download both client/build and server folders
+        // Download both client/build and version.json
         const downloadTasks = async () => {
-            // Download client build folder (as before)
-            const remoteBuildFolder = '/prod';
-            const localBuildFolder = path.join(__dirname, '../../client/build');
-            console.log('Downloading client build folder...');
-            await downloadFolderFromFTP(ftpConfig, remoteBuildFolder, localBuildFolder);
-
-            // Download server folder (excluding node_modules) - server is on same level as prod
-            const remoteServerFolder = '/server';
-            const localServerFolder = path.join(__dirname, '..');
-            console.log('Downloading server folder (excluding node_modules)...');
-            await downloadFolderFromFTP(ftpConfig, remoteServerFolder, localServerFolder, ['node_modules']);
+            const Client = require('basic-ftp').Client;
+            const ftpClient = new Client();
             
-            console.log("All downloads finished");
+            try {
+                await ftpClient.access(ftpConfig);
+                
+                // Download client build folder
+                const remoteBuildFolder = '/prod';
+                const localBuildFolder = path.join(__dirname, '../../client/build');
+                console.log('Downloading client build folder from FTP...');
+                await downloadFolderFromFTP(ftpConfig, remoteBuildFolder, localBuildFolder);
+                console.log('✅ Client build folder downloaded');
+
+                // Download ONLY version.json from server folder
+                const remoteVersionFile = '/server/version.json';
+                const localVersionFile = path.join(__dirname, '../version.json');
+                console.log('Downloading version.json from FTP...');
+                await ftpClient.downloadTo(localVersionFile, remoteVersionFile);
+                console.log('✅ version.json downloaded and updated');
+                
+                await ftpClient.close();
+                console.log("All downloads finished successfully!");
+            } catch (error) {
+                console.error("Download error:", error);
+                await ftpClient.close();
+                throw error;
+            }
         };
 
         downloadTasks()
