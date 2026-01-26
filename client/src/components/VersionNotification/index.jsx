@@ -10,6 +10,7 @@ function VersionNotification() {
     const [showNotification, setShowNotification] = useState(false);
     const [newVersion, setNewVersion] = useState('');
     const [isUpdating, setIsUpdating] = useState(false);
+    const [progress, setProgress] = useState(null);
 
     useEffect(() => {
         // Check for version updates every 30 seconds
@@ -48,8 +49,33 @@ function VersionNotification() {
         return () => clearInterval(interval);
     }, [API_BASE_URL]);
 
+    const pollProgress = () => {
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/updateFolder/progress`);
+                const data = await res.json();
+                setProgress(data);
+        
+                if (data.complete) {
+                    clearInterval(interval);
+                    // Update localStorage with the new version
+                    localStorage.setItem('appVersion', newVersion);
+                    console.log('Download complete! Reloading page...');
+                    // Reload the page to get the new version
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('Error polling progress:', error);
+            }
+        }, 1000);
+    };
+
     const handleRefresh = async () => {
         setIsUpdating(true);
+        setProgress(null);
+        
         try {
             // Trigger the same update process as "Update APP" button
             const response = await fetch(`${API_BASE_URL}/api/updateFolder`, {
@@ -60,24 +86,20 @@ function VersionNotification() {
                 const data = await response.json();
                 console.log('Update initiated:', data.message);
                 
-                // Update localStorage with the new version
-                localStorage.setItem('appVersion', newVersion);
-                
-                // Wait a moment for the update to process
-                setTimeout(() => {
-                    // Reload the page to get the new version
-                    window.location.reload();
-                }, 2000);
+                // Start polling progress
+                pollProgress();
             } else {
                 const errorData = await response.json();
                 console.error('Update error:', errorData.message);
                 alert(`Error updating: ${errorData.message}`);
                 setIsUpdating(false);
+                setProgress(null);
             }
         } catch (error) {
             console.error('Error updating app:', error);
             alert('Error updating app. Please try again later.');
             setIsUpdating(false);
+            setProgress(null);
         }
     };
 
@@ -101,8 +123,27 @@ function VersionNotification() {
                     </svg>
                 </div>
                 <div className={styles['version-notification-message']}>
-                    <strong>New Version Available!</strong>
-                    <p>Version {newVersion} is now available. Please refresh to get the latest updates.</p>
+                    <strong>{isUpdating ? 'Updating...' : 'New Version Available!'}</strong>
+                    {!isUpdating && (
+                        <p>Version {newVersion} is now available. Please refresh to get the latest updates.</p>
+                    )}
+                    {isUpdating && !progress && (
+                        <p>Starting download...</p>
+                    )}
+                    {isUpdating && progress && (
+                        <>
+                            <div className={styles['progress-bar-container']}>
+                                <div 
+                                    className={styles['progress-bar']}
+                                    style={{ width: `${progress.totalFiles > 0 ? (progress.downloaded / progress.totalFiles) * 100 : 0}%` }}
+                                />
+                            </div>
+                            <p className={styles['progress-text']}>
+                                Downloaded {progress.downloaded} of {progress.totalFiles} files
+                                {progress.currentFile && ` (${progress.currentFile})`}
+                            </p>
+                        </>
+                    )}
                 </div>
                 <div className={styles['version-notification-actions']}>
                     <button 
