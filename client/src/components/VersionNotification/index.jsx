@@ -16,27 +16,30 @@ function VersionNotification() {
         // Check for version updates every 30 seconds
         const checkVersion = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/version`);
+                // Check FTP version (source of truth)
+                const response = await fetch(`${API_BASE_URL}/api/ftpVersion`);
                 if (response.ok) {
                     const data = await response.json();
-                    const currentVersion = data.version;
+                    const ftpVersion = data.version;
                     
                     // Get the stored version from localStorage
                     const storedVersion = localStorage.getItem('appVersion');
 
                     if (!storedVersion) {
                         // First time running - save the current version without showing notification
-                        localStorage.setItem('appVersion', currentVersion);
-                        console.log('Initial version set:', currentVersion);
-                    } else if (storedVersion !== currentVersion) {
-                        // Version has changed - show notification
-                        console.log('New version detected:', currentVersion, 'Old version:', storedVersion);
-                        setNewVersion(currentVersion);
+                        localStorage.setItem('appVersion', ftpVersion);
+                        console.log('✅ Initial version set from FTP:', ftpVersion);
+                    } else if (storedVersion !== ftpVersion) {
+                        // Version has changed on FTP - show notification
+                        console.log('🔔 New version detected on FTP:', ftpVersion, 'Old version:', storedVersion);
+                        setNewVersion(ftpVersion);
                         setShowNotification(true);
+                    } else {
+                        console.log('✅ Version up to date:', ftpVersion);
                     }
                 }
             } catch (error) {
-                console.error('Error checking version:', error);
+                console.error('❌ Error checking version from FTP:', error);
             }
         };
 
