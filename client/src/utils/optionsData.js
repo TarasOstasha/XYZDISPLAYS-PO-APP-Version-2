@@ -8545,5 +8545,203 @@ export const OPTION_DATA = [
     "pricediff": 770,
     "vendorpricediff": 550,
     "discount": 0
+  },
+  {
+    "id": 7739,
+    "optioncatid": 696,
+    "ProductName": "No Printed Graphics",
+    "quantity": 1,
+    "ProductCode": "",
+    "Vendor_PartNo": "",
+    "pricediff": 0,
+    "vendorpricediff": 0,
+    "discount": 0
+  },
+  {
+    "id": 7740,
+    "optioncatid": 696,
+    "ProductName": "Front Graphics Only",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 95,
+    "vendorpricediff": 50,
+    "discount": 0
+  },
+  {
+    "id": 7741,
+    "optioncatid": 696,
+    "ProductName": "Front Graphics Only",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 150,
+    "vendorpricediff": 100,
+    "discount": 0
+  },
+  {
+    "id": 7742,
+    "optioncatid": 696,
+    "ProductName": "Front & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 195,
+    "vendorpricediff": 130,
+    "discount": 0
+  },
+  {
+    "id": 7743,
+    "optioncatid": 696,
+    "ProductName": "Front & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 300,
+    "vendorpricediff": 200,
+    "discount": 0
+  },
+  {
+    "id": 7744,
+    "optioncatid": 696,
+    "ProductName": "Front & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 375,
+    "vendorpricediff": 250,
+    "discount": 0
+  },
+  {
+    "id": 7746,
+    "optioncatid": 696,
+    "ProductName": "Front, Back & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 336,
+    "vendorpricediff": 240,
+    "discount": 0
+  },
+  {
+    "id": 7747,
+    "optioncatid": 696,
+    "ProductName": "Front, Back & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 510,
+    "vendorpricediff": 340,
+    "discount": 0
+  },
+  {
+    "id": 7758,
+    "optioncatid": 696,
+    "ProductName": "Front & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 225,
+    "vendorpricediff": 150,
+    "discount": 0
+  },
+  {
+    "id": 7759,
+    "optioncatid": 696,
+    "ProductName": "Front & Side Graphics",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 195,
+    "vendorpricediff": 130,
+    "discount": 0
+  },
+  {
+    "id": 7749,
+    "optioncatid": 697,
+    "ProductName": "SG1",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 0,
+    "vendorpricediff": 0,
+    "discount": 0
+  },
+  {
+    "id": 7750,
+    "optioncatid": 697,
+    "ProductName": "SG2",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 0,
+    "vendorpricediff": 0,
+    "discount": 0
+  },
+  {
+    "id": 7751,
+    "optioncatid": 697,
+    "ProductName": "Update to SG3",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 53,
+    "vendorpricediff": 40,
+    "discount": 0
+  },
+  {
+    "id": 7752,
+    "optioncatid": 697,
+    "ProductName": "Update to SG4",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 53,
+    "vendorpricediff": 40,
+    "discount": 0
+  },
+  {
+    "id": 7753,
+    "optioncatid": 697,
+    "ProductName": "Update to SG5",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 83,
+    "vendorpricediff": 60,
+    "discount": 0
+  },
+  {
+    "id": 7754,
+    "optioncatid": 697,
+    "ProductName": "Update to SG6",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 23,
+    "vendorpricediff": 20,
+    "discount": 0
+  },
+  {
+    "id": 7755,
+    "optioncatid": 697,
+    "ProductName": "Update to SG7",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 53,
+    "vendorpricediff": 40,
+    "discount": 0
+  },
+  {
+    "id": 7745,
+    "optioncatid": 696,
+    "ProductName": "Front Graphics Only",
+    "quantity": 1,
+    "ProductCode": "Optional Graphic",
+    "Vendor_PartNo": "",
+    "pricediff": 165,
+    "vendorpricediff": 110,
+    "discount": 0
   }
 ];
