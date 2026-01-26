@@ -39,9 +39,10 @@ module.exports.updateBuildFolder = async (req, res, next) => {
 
         downloadTasks()
             .then(() => {
-                console.log("Download finished");
-                // Update version after successful download
-                updateVersion();
+                console.log("Download finished successfully!");
+                console.log("Version.json has been updated from FTP server");
+                // Mark download as complete
+                downloadState.complete = true;
             })
             .catch(err => console.error("Download error:", err));
 
