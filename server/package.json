@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "main": "main.js",
+  "main": "index.js",
   "dependencies": {
     "axios": "^1.6.7",
     "basic-ftp": "^5.0.5",
@@ -24,88 +24,10 @@
     "xlsx": "^0.18.5",
     "xml2js": "^0.6.2"
   },
-  "devDependencies": {
-    "electron": "^31.7.7",
-    "electron-builder": "^24.13.3",
-    "electron-updater": "^6.6.2"
-  },
   "scripts": {
+    "start": "node index",
     "server": "nodemon index",
-    "dev": "nodemon -- -r dotenv/config index.js",
-    "react:build": "cd ../client && npm run build",
-    "electron:start": "electron .",
-    "electron:pack": "npm run react:build && electron-builder --dir",
-    "electron:build": "npm run react:build && electron-builder",
-    "package-app": "npm run react:build && npm run electron:build"
-  },
-  "build": {
-    "appId": "com.xyzdisplays.localapp",
-    "productName": "xyzDisplays Local App",
-    "directories": {
-      "output": "dist"
-    },
-    "win": {
-      "target": "portable",
-      "icon": "assets/favicon_XYZ_multi.ico",
-      "artifactName": "xyzDisplays-${version}-Portable.${ext}"
-    },
-    "files": [
-      "main.js",
-      "preload.js",
-      "index.js",
-      "app.js",
-      "package.json",
-      ".env",
-      "node_modules/**/*",
-      "routes/**/*",
-      "controllers/**/*",
-      "controllers/createEmail.ps1",
-      "controllers/email/**/*",
-      "middleware/**/*",
-      "models/**/*",
-      "services/**/*",
-      "config/**/*",
-      "utils/**/*",
-      "../client/build/**/*",
-      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
-      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
-      "!node_modules/*.d.ts",
-      "!node_modules/.bin",
-      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-      "!.editorconfig",
-      "!**/._*",
-      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
-      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
-      "!**/{appveyor.yml,.travis.yml,circle.yml}",
-      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
-    ],
-    "extraResources": [
-      {
-        "from": "../client/build",
-        "to": "client/build",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
-    "asarUnpack": [
-      ".env",
-      "controllers/**/*"
-    ],
-    "asar": true,
-    "nsis": {
-      "oneClick": true,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": false,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    },
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://your-updates-server.example.com/"
-      }
-    ]
+    "dev": "nodemon -- -r dotenv/config index.js"
   },
   "author": "",
   "license": "ISC"
