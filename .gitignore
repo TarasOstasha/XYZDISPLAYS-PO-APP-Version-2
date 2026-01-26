@@ -34,3 +34,5 @@ client/node_modules
 server/assets
 
 server/logs
+
+*.md
