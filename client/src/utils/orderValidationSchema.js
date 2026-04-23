@@ -63,5 +63,16 @@ export const ADD_OPTION_SCHEMA = yup.object({
   is_default: yup.boolean().required(),
 })
 
+export const IMPORT_OPTION_SCHEMA = yup.object({
+  file: yup.mixed()
+    .required('CSV file is required')
+    .test('fileType', 'Only .csv files are allowed', (value) => {
+      if (!value) return false
+      const isCsvByMime = value.type === 'text/csv'
+      const isCsvByExt = value.name.toLowerCase().endsWith('.csv')
+      return isCsvByMime || isCsvByExt
+    }),
+})
+
 // .test('is-decimal','Vendor Price must have maximum 2 digits after the decimal point',value => (value === undefined || value === null || /^\d+(\.\d{1,2})?$/.test(value.toString())))),
 // .matches(/^\d+(\.\d{1,2})?$/)

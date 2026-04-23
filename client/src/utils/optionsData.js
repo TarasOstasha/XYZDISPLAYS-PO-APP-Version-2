@@ -6,7 +6,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 123,
+    "pricediff": 135,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -17,7 +17,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 245,
+    "pricediff": 270,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -28,7 +28,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 245,
+    "pricediff": 270,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -72,8 +72,8 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "dc00130",
     "Vendor_PartNo": "154001 021HANG",
-    "pricediff": 808,
-    "vendorpricediff": 508.87,
+    "pricediff": 713,
+    "vendorpricediff": 477.1,
     "discount": 15
   },
   {
@@ -84,7 +84,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00131",
     "Vendor_PartNo": "154001 221HANG",
     "pricediff": 962,
-    "vendorpricediff": 606.38,
+    "vendorpricediff": 568.5,
     "discount": 15
   },
   {
@@ -95,7 +95,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00140",
     "Vendor_PartNo": "150001 021HANG",
     "pricediff": 999,
-    "vendorpricediff": 630.136,
+    "vendorpricediff": 590.8,
     "discount": 15
   },
   {
@@ -106,7 +106,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00141",
     "Vendor_PartNo": "150001 321HANG",
     "pricediff": 1236,
-    "vendorpricediff": 778.768,
+    "vendorpricediff": 730.1,
     "discount": 15
   },
   {
@@ -117,7 +117,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00150",
     "Vendor_PartNo": "155001 021HANG",
     "pricediff": 1010,
-    "vendorpricediff": 701.48,
+    "vendorpricediff": 657.6,
     "discount": 15
   },
   {
@@ -128,7 +128,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00151",
     "Vendor_PartNo": "155001 321HANG",
     "pricediff": 1226,
-    "vendorpricediff": 850.096,
+    "vendorpricediff": 797,
     "discount": 15
   },
   {
@@ -447,7 +447,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00160",
     "Vendor_PartNo": "153010 021 6W HANG",
     "pricediff": 2091,
-    "vendorpricediff": 1278.12,
+    "vendorpricediff": 1198.2,
     "discount": 15
   },
   {
@@ -458,7 +458,7 @@ export const OPTION_DATA = [
     "ProductCode": "dc00161",
     "Vendor_PartNo": "153010 321 6W HANG",
     "pricediff": 1842,
-    "vendorpricediff": 1450.528,
+    "vendorpricediff": 1359.9,
     "discount": 15
   },
   {
@@ -610,7 +610,7 @@ export const OPTION_DATA = [
     "ProductName": "1 x Monitor Mount (32in/20lbs max)",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "WLM-Tmount-TV", // WLM#124
+    "Vendor_PartNo": "WLM-Tmount-TV",
     "pricediff": 98,
     "vendorpricediff": 60.5,
     "discount": 15
@@ -621,7 +621,7 @@ export const OPTION_DATA = [
     "ProductName": "2 x Monitor Mount (32in/20lbs max)",
     "quantity": 2,
     "ProductCode": "option",
-    "Vendor_PartNo": "WLM-Tmount-TV", // WLM#124
+    "Vendor_PartNo": "WLM-Tmount-TV",
     "pricediff": 195,
     "vendorpricediff": 60.5,
     "discount": 15
@@ -926,11 +926,11 @@ export const OPTION_DATA = [
   {
     "id": 7139,
     "optioncatid": 571,
-    "ProductName": "Add 2 TV Mounts",
+    "ProductName": "1 x TV Mount Left or Right (20ft Walls)",
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "BLM-TV236-K",
-    "pricediff": 720,
+    "pricediff": 360,
     "vendorpricediff": 276.68,
     "discount": 15
   },
@@ -1019,7 +1019,7 @@ export const OPTION_DATA = [
     "ProductCode": "bn05565",
     "Vendor_PartNo": "BLM-2000J-B",
     "pricediff": 109,
-    "vendorpricediff": 65.10,
+    "vendorpricediff": 65.1,
     "discount": 15
   },
   {
@@ -1117,7 +1117,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Lined",
-    "pricediff": 145,
+    "pricediff": 201,
     "vendorpricediff": 109,
     "discount": 0
   },
@@ -1128,7 +1128,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Filled",
-    "pricediff": 183,
+    "pricediff": 344,
     "vendorpricediff": 138,
     "discount": 0
   },
@@ -1139,7 +1139,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Filled",
-    "pricediff": 148,
+    "pricediff": 235,
     "vendorpricediff": 111.5,
     "discount": 0
   },
@@ -1161,7 +1161,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Filled",
-    "pricediff": 169,
+    "pricediff": 405,
     "vendorpricediff": 125,
     "discount": 0
   },
@@ -1172,7 +1172,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Filled",
-    "pricediff": 195,
+    "pricediff": 490,
     "vendorpricediff": 138,
     "discount": 0
   },
@@ -1195,7 +1195,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Filled",
     "pricediff": 273,
-    "vendorpricediff": 152.5,
+    "vendorpricediff": 1559,
     "discount": 0
   },
   {
@@ -1216,7 +1216,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Foam Filled",
-    "pricediff": 247,
+    "pricediff": 1173,
     "vendorpricediff": 265.5,
     "discount": 0
   },
@@ -1249,7 +1249,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 188,
+    "pricediff": 201,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1271,7 +1271,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 266,
+    "pricediff": 341,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1315,7 +1315,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 104,
+    "pricediff": 180,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1326,7 +1326,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 7,
+    "pricediff": 46,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1337,7 +1337,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 7,
+    "pricediff": 45,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1348,7 +1348,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 22,
+    "pricediff": 59,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1370,7 +1370,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 49,
+    "pricediff": 54,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1381,7 +1381,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 956,
+    "pricediff": 755,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1392,7 +1392,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 49,
+    "pricediff": 54,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1403,7 +1403,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 49,
+    "pricediff": 54,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1414,7 +1414,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 49,
+    "pricediff": 54,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1425,7 +1425,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 49,
+    "pricediff": 54,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1436,7 +1436,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 836,
+    "pricediff": 920,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1447,7 +1447,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 794,
+    "pricediff": 873,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1458,7 +1458,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 497,
+    "pricediff": 574,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1469,7 +1469,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 368,
+    "pricediff": 405,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1480,7 +1480,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 1074,
+    "pricediff": 1118,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1491,7 +1491,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 1865,
+    "pricediff": 1391,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1502,7 +1502,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 278,
+    "pricediff": 306,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1567,9 +1567,9 @@ export const OPTION_DATA = [
     "ProductName": "10ft x 20ft Hard Case w/ Wheels",
     "quantity": 1,
     "ProductCode": "ks620",
-    "Vendor_PartNo": "10’x20’ Hard Case",
+    "Vendor_PartNo": "10'x20' Hard Case",
     "pricediff": 690,
-    "vendorpricediff": 468,
+    "vendorpricediff": 478,
     "discount": 0
   },
   {
@@ -1635,7 +1635,7 @@ export const OPTION_DATA = [
     "ProductCode": "Ks650",
     "Vendor_PartNo": "KSLowTack",
     "pricediff": 16,
-    "vendorpricediff": 11.5,
+    "vendorpricediff": 13.5,
     "discount": 0
   },
   {
@@ -1646,7 +1646,7 @@ export const OPTION_DATA = [
     "ProductCode": "Ks650",
     "Vendor_PartNo": "KSLowTack",
     "pricediff": 32,
-    "vendorpricediff": 11.5,
+    "vendorpricediff": 13.5,
     "discount": 0
   },
   {
@@ -1744,7 +1744,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 543,
+    "pricediff": 560,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -1766,7 +1766,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 272,
+    "pricediff": 280,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -2804,17 +2804,6 @@ export const OPTION_DATA = [
     "vendorpricediff": 229,
     "discount": 20
   },
-  // {
-  //   "id": 7051,
-  //   "optioncatid": 307,
-  //   "ProductName": "Ship in CA700 Case",
-  //   "quantity": 1,
-  //   "ProductCode": "MK90625",
-  //   "Vendor_PartNo": "CA700-H",
-  //   "pricediff": 318,
-  //   "vendorpricediff": 244,
-  //   "discount": 20
-  // },
   {
     "id": 7052,
     "optioncatid": 307,
@@ -2842,10 +2831,10 @@ export const OPTION_DATA = [
     "optioncatid": 261,
     "ProductName": "1 x Monitor Mount",
     "quantity": 1,
-    "ProductCode": "MK91600",
-    "Vendor_PartNo": "WLM-P-138",
+    "ProductCode": "MK91602",
+    "Vendor_PartNo": "WLM-P-138 // WLM-P-CB57",
     "pricediff": 132,
-    "vendorpricediff": 77.6,
+    "vendorpricediff": 98,
     "discount": 20
   },
   {
@@ -2853,10 +2842,10 @@ export const OPTION_DATA = [
     "optioncatid": 261,
     "ProductName": "2 x Monitor Mount",
     "quantity": 2,
-    "ProductCode": "MK91600",
+    "ProductCode": "MK91602",
     "Vendor_PartNo": "WLM-P-138 // WLM-P-CB57",
     "pricediff": 264,
-    "vendorpricediff": 77.6,
+    "vendorpricediff": 98,
     "discount": 20
   },
   {
@@ -2910,8 +2899,8 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "be7302",
     "Vendor_PartNo": "L4000C",
-    "pricediff": 179,
-    "vendorpricediff": 135.63,
+    "pricediff": 165,
+    "vendorpricediff": 125,
     "discount": 20
   },
   {
@@ -2933,7 +2922,7 @@ export const OPTION_DATA = [
     "ProductCode": "mk91600",
     "Vendor_PartNo": "WLM-P-138",
     "pricediff": 99,
-    "vendorpricediff": 77.6,
+    "vendorpricediff": 61,
     "discount": 20
   },
   {
@@ -2999,7 +2988,7 @@ export const OPTION_DATA = [
     "ProductCode": "MK90360",
     "Vendor_PartNo": "WFA-P-PS",
     "pricediff": 116,
-    "vendorpricediff": 61,
+    "vendorpricediff": 60,
     "discount": 20
   },
   {
@@ -3010,7 +2999,7 @@ export const OPTION_DATA = [
     "ProductCode": "MK90360",
     "Vendor_PartNo": "WFA-P-PS",
     "pricediff": 183,
-    "vendorpricediff": 61,
+    "vendorpricediff": 60,
     "discount": 20
   },
   {
@@ -3021,7 +3010,7 @@ export const OPTION_DATA = [
     "ProductCode": "MK90360",
     "Vendor_PartNo": "WFA-P-PS",
     "pricediff": 274,
-    "vendorpricediff": 61,
+    "vendorpricediff": 60,
     "discount": 20
   },
   {
@@ -3211,17 +3200,6 @@ export const OPTION_DATA = [
     "vendorpricediff": 229,
     "discount": 20
   },
-  // {
-  //   "id": 7053,
-  //   "optioncatid": 307,
-  //   "ProductName": "Ship in 2 x CA700 Cases",
-  //   "quantity": 2,
-  //   "ProductCode": "MK90625",
-  //   "Vendor_PartNo": "CA700-H",
-  //   "pricediff": 636,
-  //   "vendorpricediff": 244,
-  //   "discount": 20
-  // },
   {
     "id": 5626,
     "optioncatid": 333,
@@ -3294,9 +3272,9 @@ export const OPTION_DATA = [
     "ProductName": "Parts to Connect 2 Frames",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "manually",
+    "Vendor_PartNo": "DNA-P-D13",
     "pricediff": 88,
-    "vendorpricediff": 0,
+    "vendorpricediff": 19,
     "discount": 20
   },
   {
@@ -3680,7 +3658,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "Counter battery 100x100",
-    "pricediff": 1492,
+    "pricediff": 1692,
     "vendorpricediff": 0,
     "discount": 40
   },
@@ -3801,7 +3779,7 @@ export const OPTION_DATA = [
     "quantity": 3,
     "ProductCode": "nv970",
     "Vendor_PartNo": "A123189012",
-    "pricediff": 368,
+    "pricediff": 468,
     "vendorpricediff": 170,
     "discount": 40
   },
@@ -3867,7 +3845,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "nv942",
     "Vendor_PartNo": "nv39x39-ds-battery",
-    "pricediff": 883,
+    "pricediff": 1083,
     "vendorpricediff": 952.5,
     "discount": 40
   },
@@ -4132,7 +4110,7 @@ export const OPTION_DATA = [
     "ProductCode": "og025",
     "Vendor_PartNo": "O_Case",
     "pricediff": 290,
-    "vendorpricediff": 158,
+    "vendorpricediff": 171,
     "discount": 0
   },
   {
@@ -4197,7 +4175,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 375,
+    "pricediff": 593,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -4208,7 +4186,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 984,
+    "pricediff": 1530,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -4570,9 +4548,9 @@ export const OPTION_DATA = [
     "ProductName": "1 x Standard Tabletop",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL (WD,DW,S or B)",
-    "pricediff": 154,
-    "vendorpricediff": 107.4,
+    "Vendor_PartNo": "OR-TBL-WD/DW/S/B",
+    "pricediff": 162,
+    "vendorpricediff": 115.75,
     "discount": 20
   },
   {
@@ -4581,9 +4559,9 @@ export const OPTION_DATA = [
     "ProductName": "1 x Left Tabletop",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL2-L",
+    "Vendor_PartNo": "OR-TBL2-L-WD/DW/S/B",
     "pricediff": 181,
-    "vendorpricediff": 125.9,
+    "vendorpricediff": 128.76,
     "discount": 20
   },
   {
@@ -4592,9 +4570,9 @@ export const OPTION_DATA = [
     "ProductName": "1 x Right Tabletop",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL2-R",
+    "Vendor_PartNo": "OR-TBL2-R-WD/DW/S/B",
     "pricediff": 181,
-    "vendorpricediff": 125.9,
+    "vendorpricediff": 128.76,
     "discount": 20
   },
   {
@@ -4603,9 +4581,9 @@ export const OPTION_DATA = [
     "ProductName": "2 x Standard Tabletop",
     "quantity": 2,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL (WD,DW,S or B)",
-    "pricediff": 309,
-    "vendorpricediff": 215.9,
+    "Vendor_PartNo": "OR-TBL-WD/DW/S/B*2",
+    "pricediff": 324,
+    "vendorpricediff": 231.5,
     "discount": 20
   },
   {
@@ -4614,9 +4592,9 @@ export const OPTION_DATA = [
     "ProductName": "3 x Standard Tabletop",
     "quantity": 3,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL (WD,DW,S or B)",
-    "pricediff": 463,
-    "vendorpricediff": 323.3,
+    "Vendor_PartNo": "OR-TBL-WD/DW/S/B*3",
+    "pricediff": 486,
+    "vendorpricediff": 347.25,
     "discount": 20
   },
   {
@@ -4625,9 +4603,9 @@ export const OPTION_DATA = [
     "ProductName": "2 x Left Tabletop",
     "quantity": 2,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL2-L",
+    "Vendor_PartNo": "OR-TBL2-L-WD/DW/S/B*2",
     "pricediff": 362,
-    "vendorpricediff": 252.8,
+    "vendorpricediff": 257.52,
     "discount": 20
   },
   {
@@ -4636,9 +4614,9 @@ export const OPTION_DATA = [
     "ProductName": "3 x Left Tabletop",
     "quantity": 3,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL2-L",
+    "Vendor_PartNo": "OR-TBL2-L-WD/DW/S/B*3",
     "pricediff": 544,
-    "vendorpricediff": 378.7,
+    "vendorpricediff": 386.28,
     "discount": 20
   },
   {
@@ -4647,20 +4625,20 @@ export const OPTION_DATA = [
     "ProductName": "2 x Right Tabletop",
     "quantity": 2,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL2-R",
+    "Vendor_PartNo": "OR-TBL2-R-WD/DW/S/B*2",
     "pricediff": 362,
-    "vendorpricediff": 252.8,
+    "vendorpricediff": 257.52,
     "discount": 20
   },
   {
     "id": 6942,
     "optioncatid": 544,
-    "ProductName": "2 x Right Tabletop",
-    "quantity": 2,
+    "ProductName": "3 x Right Tabletop",
+    "quantity": 3,
     "ProductCode": "option",
-    "Vendor_PartNo": "TBL2-R",
+    "Vendor_PartNo": "OR-TBL2-R-WD/DW/S/B*3",
     "pricediff": 544,
-    "vendorpricediff": 378.7,
+    "vendorpricediff": 386.28,
     "discount": 20
   },
   {
@@ -4726,7 +4704,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
     "pricediff": 189,
-    "vendorpricediff": 161.80,
+    "vendorpricediff": 161.8,
     "discount": 20
   },
   {
@@ -5132,7 +5110,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "TNT-E-3X3-HWL-HW-K-3+TNT-3X3-HWL-G",
-    "pricediff": 123,
+    "pricediff": 113,
     "vendorpricediff": 81.4,
     "discount": 20
   },
@@ -5143,7 +5121,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "TNT-E-3X3-HWL-HW-K-3+TNT-3X3-HWL-GDBL",
-    "pricediff": 229,
+    "pricediff": 198,
     "vendorpricediff": 148.6,
     "discount": 20
   },
@@ -5187,8 +5165,8 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "ZM-TNT-3MX3M-FLL-WLL-GDBL",
-    "pricediff": 675,
-    "vendorpricediff": 439.4,
+    "pricediff": 455,
+    "vendorpricediff": 0,
     "discount": 20
   },
   {
@@ -5957,7 +5935,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "or66301",
     "Vendor_PartNo": "OCX-C2C-G",
-    "pricediff": 152,
+    "pricediff": 158,
     "vendorpricediff": 101.9,
     "discount": 20
   },
@@ -5979,7 +5957,7 @@ export const OPTION_DATA = [
     "quantity": 2,
     "ProductCode": "or66301",
     "Vendor_PartNo": "OCX-C2C-G",
-    "pricediff": 638,
+    "pricediff": 316,
     "vendorpricediff": 101.9,
     "discount": 20
   },
@@ -5990,7 +5968,7 @@ export const OPTION_DATA = [
     "quantity": 2,
     "ProductCode": "or66307",
     "Vendor_PartNo": "OCX-SW-G",
-    "pricediff": 1036,
+    "pricediff": 398,
     "vendorpricediff": 132.8,
     "discount": 20
   },
@@ -7805,7 +7783,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "6in Masonite Top",
-    "pricediff": 47,
+    "pricediff": 52,
     "vendorpricediff": 12,
     "discount": 0
   },
@@ -7816,7 +7794,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "12in Masonite Top",
-    "pricediff": 57,
+    "pricediff": 63,
     "vendorpricediff": 12,
     "discount": 0
   },
@@ -7827,7 +7805,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "8in Masonite Top",
-    "pricediff": 51,
+    "pricediff": 56,
     "vendorpricediff": 16,
     "discount": 0
   },
@@ -7860,7 +7838,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "2 RPM",
-    "pricediff": 90,
+    "pricediff": 99,
     "vendorpricediff": 30,
     "discount": 0
   },
@@ -7871,7 +7849,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "12in Steel Top",
-    "pricediff": 84,
+    "pricediff": 92,
     "vendorpricediff": 49,
     "discount": 0
   },
@@ -7883,7 +7861,7 @@ export const OPTION_DATA = [
     "ProductCode": "option",
     "Vendor_PartNo": "17in Masonite Top",
     "pricediff": 67,
-    "vendorpricediff": 76,
+    "vendorpricediff": 74,
     "discount": 0
   },
   {
@@ -7893,7 +7871,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "17in Steel Top",
-    "pricediff": 120,
+    "pricediff": 132,
     "vendorpricediff": 76,
     "discount": 0
   },
@@ -7904,7 +7882,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "1 RPM",
-    "pricediff": 75,
+    "pricediff": 83,
     "vendorpricediff": 30,
     "discount": 0
   },
@@ -7937,7 +7915,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "23in Steel Top",
-    "pricediff": 135,
+    "pricediff": 149,
     "vendorpricediff": 92,
     "discount": 0
   },
@@ -7948,7 +7926,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "manually",
     "Vendor_PartNo": "Add Rotating Outlet",
-    "pricediff": 300,
+    "pricediff": 330,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -7959,7 +7937,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 175,
+    "pricediff": 193,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -7970,7 +7948,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 250,
+    "pricediff": 275,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -7981,7 +7959,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 295,
+    "pricediff": 325,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -7992,7 +7970,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 350,
+    "pricediff": 385,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8003,7 +7981,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 475,
+    "pricediff": 523,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8014,7 +7992,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 525,
+    "pricediff": 578,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8025,7 +8003,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 575,
+    "pricediff": 633,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8036,7 +8014,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 420,
+    "pricediff": 462,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8047,7 +8025,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 308,
+    "pricediff": 339,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8069,7 +8047,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 350,
+    "pricediff": 385,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8080,7 +8058,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 85,
+    "pricediff": 94,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8091,7 +8069,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "option",
     "Vendor_PartNo": "manually",
-    "pricediff": 119,
+    "pricediff": 131,
     "vendorpricediff": 0,
     "discount": 0
   },
@@ -8487,8 +8465,8 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "PE8000",
     "Vendor_PartNo": "48.25.T",
-    "pricediff": 343,
-    "vendorpricediff": 245,
+    "pricediff": 413,
+    "vendorpricediff": 295,
     "discount": 0
   },
   {
@@ -8498,8 +8476,8 @@ export const OPTION_DATA = [
     "quantity": 2,
     "ProductCode": "PE8000",
     "Vendor_PartNo": "48.25.T",
-    "pricediff": 686,
-    "vendorpricediff": 490,
+    "pricediff": 413,
+    "vendorpricediff": 295,
     "discount": 0
   },
   {
@@ -8509,8 +8487,8 @@ export const OPTION_DATA = [
     "quantity": 3,
     "ProductCode": "PE8000",
     "Vendor_PartNo": "48.25.T",
-    "pricediff": 1029,
-    "vendorpricediff": 735,
+    "pricediff": 413,
+    "vendorpricediff": 295,
     "discount": 0
   },
   {
@@ -8520,8 +8498,8 @@ export const OPTION_DATA = [
     "quantity": 4,
     "ProductCode": "PE8000",
     "Vendor_PartNo": "48.25.T",
-    "pricediff": 1372,
-    "vendorpricediff": 980,
+    "pricediff": 413,
+    "vendorpricediff": 295,
     "discount": 0
   },
   {
@@ -8619,7 +8597,7 @@ export const OPTION_DATA = [
     "quantity": 1,
     "ProductCode": "Optional Graphic",
     "Vendor_PartNo": "",
-    "pricediff": 336,
+    "pricediff": 360,
     "vendorpricediff": 240,
     "discount": 0
   },
@@ -8743,5 +8721,71 @@ export const OPTION_DATA = [
     "pricediff": 165,
     "vendorpricediff": 110,
     "discount": 0
+  },
+  {
+    "id": 7367,
+    "optioncatid": 614,
+    "ProductName": "Monitor Mount for 1400L",
+    "quantity": 1,
+    "ProductCode": "MK70992",
+    "Vendor_PartNo": "DNA-P-D26",
+    "pricediff": 134,
+    "vendorpricediff": 94,
+    "discount": 20
+  },
+  {
+    "id": 7368,
+    "optioncatid": 614,
+    "ProductName": "Monitor Mount for 950L",
+    "quantity": 1,
+    "ProductCode": "MK70990",
+    "Vendor_PartNo": "DNA-P-D25",
+    "pricediff": 123,
+    "vendorpricediff": 83,
+    "discount": 20
+  },
+  {
+    "id": 7371,
+    "optioncatid": 615,
+    "ProductName": "Shelf for 950L",
+    "quantity": 1,
+    "ProductCode": "MK70994",
+    "Vendor_PartNo": "DNA-P-05",
+    "pricediff": 115,
+    "vendorpricediff": 75,
+    "discount": 20
+  },
+  {
+    "id": 7370,
+    "optioncatid": 615,
+    "ProductName": "Shelf for 1400L",
+    "quantity": 1,
+    "ProductCode": "MK70995",
+    "Vendor_PartNo": "DNA-P-06",
+    "pricediff": 127,
+    "vendorpricediff": 87,
+    "discount": 20
+  },
+  {
+    "id": 7860,
+    "optioncatid": 715,
+    "ProductName": "Rolling Hard Case",
+    "quantity": 1,
+    "ProductCode": "",
+    "Vendor_PartNo": "",
+    "pricediff": 850,
+    "vendorpricediff": 445.5,
+    "discount": 10
+  },
+  {
+    "id": 7886,
+    "optioncatid": 349,
+    "ProductName": "CA605 Hard Case (Bases Ship Separately)",
+    "quantity": 1,
+    "ProductCode": "bn03485",
+    "Vendor_PartNo": "ca605",
+    "pricediff": 256,
+    "vendorppricediff": 197,
+    "discount": 15
   }
 ];

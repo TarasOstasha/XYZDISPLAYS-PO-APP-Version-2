@@ -1128,9 +1128,11 @@ function OrderFreightForm({
                                     )}
                                   </td>
                                   <td>
-                                    {o.Vendor_Price?.[0] &&
-                                    o.discount &&
-                                    o.Quantity?.[0]
+                                    {!isNumber(o.Vendor_Price?.[0]) &&
+                                    !isNumber(o.discount) &&
+                                    o.Quantity?.[0] !== undefined &&
+                                    o.Quantity?.[0] !== null &&
+                                    String(o.Quantity?.[0]).trim() !== ''
                                       ? calculateDiscountedPrice(
                                           o.Vendor_Price?.[0],
                                           o.discount,
@@ -1261,7 +1263,7 @@ function OrderFreightForm({
                                             if (
                                               checkNextNotStartsWithTwoSameLetters(
                                                 choosenItems,
-                                              ) == true
+                                              ) === true
                                             ) {
                                               alert(
                                                 'Vendors are not the same! Please select same vendors to set shipiing address!',
@@ -1494,9 +1496,11 @@ function OrderFreightForm({
                                     )}
                                   </td>
                                   <td>
-                                    {o.Vendor_Price?.[0] &&
-                                    o.discount &&
-                                    o.Quantity?.[0]
+                                    {!isNumber(o.Vendor_Price?.[0]) &&
+                                    !isNumber(o.discount) &&
+                                    o.Quantity?.[0] !== undefined &&
+                                    o.Quantity?.[0] !== null &&
+                                    String(o.Quantity?.[0]).trim() !== ''
                                       ? calculateDiscountedPrice(
                                           o.Vendor_Price?.[0],
                                           o.discount,
