@@ -422,6 +422,33 @@ export const VENDOR_LIST = [
       "Declare value with UPS\n(DO NOT show on customer label)",
     email: ["orders@birttani.com", "nj@birttani.com", "andy@birttani.com", "sales@xyzdisplays.com"],
   },
+  {
+    name: "Tex Vision",
+    address: `
+      TexVisions
+    `,
+    discount: 0,
+    code: "tx",
+    shipInfo: "Ground on UPS B356D3",
+    shipInfoDescription:
+      "Declare value with UPS\n(DO NOT show on customer label)",
+    email: ["shop@texvisions.com", "sales@xyzdisplays.com"],
+  },
+  {
+    name: "BannerBug",
+    address: `
+      BannerBug USA
+      3401 Mary Tyler Raod
+      Birmingham, AL 35235
+      (205) 793-9600
+    `,
+    discount: 0,
+    code: "bb",
+    shipInfo: "Ground on UPS B356D3",
+    shipInfoDescription:
+      "Declare value with UPS\n(DO NOT show on customer label)",
+    email: ["david@bannerbugusa.com", "sales@xyzdisplays.com"],
+  },
 ];
 			
 

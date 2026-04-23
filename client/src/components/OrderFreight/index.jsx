@@ -97,6 +97,13 @@ function OrderFreight() {
     console.log(i);
   };
 
+  const normalizeDecimalSeparator = (value) => {
+    if (value == null) return '';
+    const parsedValue = String(value).trim();
+    if (!parsedValue) return '';
+    return parsedValue.replace(/,/g, '.');
+  };
+
   const handleToEditTop = (formikProps) => {
     setIsEditingTop(true);
 
@@ -108,7 +115,7 @@ function OrderFreight() {
       vendorCode: mapProperty('Vendor_PartNo'),
       productName: mapProperty('ProductName'),
       productQuantity: mapProperty('Quantity'),
-      vendorPrice: mapProperty('Vendor_Price'),
+      vendorPrice: mapProperty('Vendor_Price').map(normalizeDecimalSeparator),
       productPrice: mapProperty('ProductPrice'),
       productDiscount: mapProperty('discount'),
     };
@@ -132,7 +139,9 @@ function OrderFreight() {
       rerenderOrderList[index].Vendor_PartNo[0] = formikProps.values.vendorCode;
       rerenderOrderList[index].ProductName[0] = formikProps.values.productName;
       rerenderOrderList[index].Quantity[0] = formikProps.values.productQuantity;
-      rerenderOrderList[index].Vendor_Price[0] = formikProps.values.vendorPrice;
+      rerenderOrderList[index].Vendor_Price[0] = normalizeDecimalSeparator(
+        formikProps.values.vendorPrice,
+      );
       rerenderOrderList[index].ProductPrice[0] =
         formikProps.values.productPrice;
       rerenderOrderList[index].TotalPrice[0] = formikProps.values.totalAmount;
@@ -183,7 +192,9 @@ function OrderFreight() {
 
       item.ProductCode[0] = productCode[i] ?? item.ProductCode[0];
       item.Vendor_PartNo[0] = vendorCode[i] ?? item.Vendor_PartNo[0];
-      item.Vendor_Price[0] = vendorPrice[i] ?? item.Vendor_Price[0] ?? '0';
+      item.Vendor_Price[0] = normalizeDecimalSeparator(
+        vendorPrice[i] ?? item.Vendor_Price[0] ?? '0',
+      );
       item.discount[0] = productDiscount[i] ?? item.discount[0] ?? 0;
       item.ProductName[0] = productName[i] ?? item.ProductName[0];
       item.Quantity[0] = Number.isFinite(qty) ? qty : item.Quantity[0];
@@ -245,84 +256,7 @@ function OrderFreight() {
               };
               return baseProduct;
             }) || [];
-          //console.log(productDetails,'productDetails');
-          // old method
-          // const productOption =
-          //   Orders[0].OrderDetails?.flatMap((item) => {
-          //     const optionIDs =
-          //       item.OrderDetails_Options?.map(
-          //         (option) => option.OptionID?.[0],
-          //       ) || []
-          //     console.log(optionIDs, '***optionIDs***') //-----------------------------------------------
-          //     const extraProducts = optionIDs
-          //       .map((id) => {
-          //         const matchingOption = OPTION_DATA.find(
-          //           (option) => option.id === parseInt(id, 10),
-          //         )
-          //         console.log(matchingOption, '***matchingOption***') //-----------------------------------------------
-          //         //if (matchingOption && matchingOption.pricediff > 0) { // this method also check option price, if price > 0
-          //         if (matchingOption) {
-          //           //console.log(matchingOption, '***matchingOption')
-          //           // below data should be replaced from real file !!!!!
-          //           // const optionsData = [
-          //           //   {
-          //           //     id: 6666,
-          //           //     ProductName: 'Low Tack Tape 2in x 75ft KS650',
-          //           //     ProductCode: 'test',
-          //           //     Quantity: '1',
-          //           //     Vendor_PartNo: 'BRST+BRC-H+L6000D',
-          //           //     Vendor_Price: '100',
-          //           //     discount: 15,
-          //           //   },
-          //           // ]
-          //           //
-          //           return (() => {
-          //             console.log(matchingOption, '//matchingOption\\')
-          //             const option = OPTION_DATA.find(
-          //               (o) => o.id === matchingOption.id,
-          //             ) // Find a single match
-          //             console.log(option, '!!!option!!')
-          //             console.log(
-          //               [matchingOption?.quantity?.toString()],
-          //               option.ProductCode,
-          //               'matchingOption?.quantity?.toString()]',
-          //             )
-          //             if (!option) return {} // Fallback if no matching option is found
-          //             return {
-          //               ProductCode: [option.ProductCode || 'UnknownProduct'],
-          //               ProductName: [
-          //                 matchingOption.optiondesc ||
-          //                   option.ProductName ||
-          //                   'UnknownOption',
-          //               ],
-          //               ProductPrice: [
-          //                 matchingOption.pricediff?.toString() ||
-          //                   option.Vendor_Price?.toString() ||
-          //                   '0.00',
-          //               ],
-          //               //Quantity: [option.Quantity?.toString() || '1'],
-          //               // Quantity: [
-          //               //   matchingOption.quantity ||
-          //               //     option.quantity,
-          //               // ],
-          //               Quantity: [matchingOption?.quantity?.toString()], //|| option?.quantity?.toString() || "1"],
-          //               Vendor_PartNo: [option.Vendor_PartNo || 'Unknown'],
-          //               Vendor_Price: [
-          //                 matchingOption.vendorpricediff?.toString() ||
-          //                   option.Vendor_Price?.toString() ||
-          //                   '0.00',
-          //               ],
-          //               discount: [option.discount || 15],
-          //             }
-          //           })()
-          //         }
-          //         return null
-          //       })
-          //       .filter(Boolean) // Remove null values
-          //     console.log(extraProducts, 'extraProducts')
-          //     return extraProducts
-          //   }) || []
-
+          
           // small helper to safely coerce array|string|number -> number
           const num = (v, def = 0) => {
             const raw = Array.isArray(v) ? v[0] : v;
@@ -386,6 +320,28 @@ function OrderFreight() {
             ? productOption.filter((item) => Object.keys(item).length > 0)
             : [];
           console.log(filteredProductOption, '***filteredProductOption***');
+
+          // Options whose Vendor_PartNo contains "+" (e.g. OCE+SW-G, OCX+SW-G) are combined
+          // kits: fetch ProductCode so extractVendorKits can read Google_Age_Group. Other
+          // options keep the previous behavior (no extra product fetch by option ProductCode).
+          const optionVp = (item) =>
+            Array.isArray(item?.Vendor_PartNo)
+              ? item.Vendor_PartNo[0]
+              : item?.Vendor_PartNo;
+          const optionPc = (item) =>
+            Array.isArray(item?.ProductCode)
+              ? item.ProductCode[0]
+              : item?.ProductCode;
+          const isCombinedKitVendorPart = (vp) =>
+            String(vp || '').trim().includes('+');
+          const extraKitProductCodesFromOptions = filteredProductOption
+            .filter(
+              (item) =>
+                isCombinedKitVendorPart(optionVp(item)) &&
+                String(optionPc(item) || '').trim(),
+            )
+            .map((item) => String(optionPc(item)).trim());
+
           const combinedOrderDetails =
             filteredProductOption.length > 0
               ? [...Orders[0].OrderDetails, ...filteredProductOption]
@@ -395,8 +351,25 @@ function OrderFreight() {
             (item) => !item.hasOwnProperty('OrderDetailID'),
           );
           setoptionProducts(optionOrderProducts);
-          // Fetch product URLs and process vendors
-          const productUrls = productCodes.map(
+          // Fetch product URLs and process vendors (include option ProductCodes for "+" combined kits)
+          const mergedProductCodes = (() => {
+            const seen = new Set();
+            const out = [];
+            for (const c of [
+              ...productCodes,
+              ...extraKitProductCodesFromOptions,
+            ]) {
+              const s = String(c || '').trim();
+              if (!s) continue;
+              const low = s.toLowerCase();
+              if (seen.has(low)) continue;
+              seen.add(low);
+              out.push(s);
+            }
+            return out;
+          })();
+
+          const productUrls = mergedProductCodes.map(
             (code) =>
               `${API_BASE_URL}/api/products/${code.replace(/[\/,|@]/g, '-')}`, // for custom orders
           );
@@ -423,9 +396,24 @@ function OrderFreight() {
 
           console.log(productResponses, '****productResponses');
           console.log(combinedOrderDetails, '***combinedOrderDetails');
+          // Build a quantity lookup by ProductCode.
+          // Important: the same ProductCode can appear multiple times (base lines + options, etc).
+          // We must SUM quantities instead of overwriting, otherwise Split Products will
+          // "randomly" drop quantities depending on row order.
           const quantityMap = combinedOrderDetails.reduce((acc, order) => {
-            // Since ProductCode and Quantity are arrays, we take the first element.
-            acc[order.ProductCode[0]] = order.Quantity[0];
+            const codeRaw = Array.isArray(order?.ProductCode)
+              ? order.ProductCode[0]
+              : order?.ProductCode;
+            if (!codeRaw) return acc;
+
+            const key = String(codeRaw).trim().toLowerCase();
+            const qRaw = Array.isArray(order?.Quantity)
+              ? order.Quantity[0]
+              : order?.Quantity;
+            const q = parseInt(String(qRaw ?? ''), 10);
+            const qty = Number.isFinite(q) ? q : 0;
+
+            acc[key] = (acc[key] || 0) + qty;
             return acc;
           }, {});
           setItemQuantityMap(quantityMap);
@@ -438,18 +426,7 @@ function OrderFreight() {
               ? response.data.xmldata.Products
               : [response.data.xmldata.Products];
 
-            console.log(productsArray, 'productsArray');
-            // Update each product in the Products array
-            // const updatedProducts = productsArray.map((product) => {
-            //   console.log(product.ProductCode[0],'product.ProductCode***');
-            //   const productCode = product.ProductCode[0]
-            //   // Look up the quantity using the product code
-            //   const quantity = quantityMap[productCode] || null // you can set a default value if not found
-            //   console.log(quantity,'quantity');
-            //   // Return a new product object with Quantity added
-            //   return { ...product, Quantity: [quantity] }
-            // })
-
+            //console.log(productsArray, 'productsArray');
             const updatedProducts = productsArray
               .map((product) => {
                 if (!product) {
@@ -470,13 +447,7 @@ function OrderFreight() {
                 }
                 // Look up the quantity using the product code
                 //const quantity = productCode ? quantityMap[productCode] || null : null
-                const quantity = productCode
-                  ? quantityMap[
-                      Object.keys(quantityMap).find(
-                        (key) => key.toLowerCase() === productCode,
-                      )
-                    ] || null
-                  : null;
+                const quantity = productCode ? quantityMap[productCode] ?? null : null;
                 console.log(productCode, '!!! productCode !!!');
                 console.log(quantityMap, '!!! quantityMap !!!');
                 console.log(quantity, '!!! quantity !!!');
@@ -499,9 +470,7 @@ function OrderFreight() {
           });
 
           console.log(updatedProductResponses, 'updatedProductResponses');
-          //console.log(productResponses, 'updatedProductResponses')
-          // get product length with Google_Age_Group values
-          //const vendorKits = extractVendorKits(productResponses) // old version
+
           const vendorKits = extractVendorKits(updatedProductResponses);
           console.log(vendorKits, '***vendorKits***');
           //console.log(vendorKits.length, '***vendorKits.length***') // does not call
@@ -530,22 +499,6 @@ function OrderFreight() {
       }
     };
 
-    // const extractVendorKits = (productResponses) => {
-    //   //console.log(productResponses, '** productResponses***')
-    //   return productResponses
-    //     .map((item) => {
-    //       //console.log(item, '**item productResponses***')
-    //       const { xmldata: { Products } } = item.data;
-    //       //console.log(Products, '***Products***');
-    //       return Products.map((product) => {
-    //         if (Array.isArray(product.Google_Age_Group)) {
-    //           return product.Google_Age_Group.join(' // ').split(' // ');
-    //         }
-    //         return [];
-    //       });
-    //     })
-    //     .flat(2);
-    // };
     const extractVendorKits = (productResponses) => {
       console.log(productResponses, 'productResponses extractVendorKits');
       let alertShown = false; // Flag to track if the alert has been shown
@@ -596,25 +549,9 @@ function OrderFreight() {
           }
           return [];
         });
-        // return Products.flatMap((product) => {
-        //   if (Array.isArray(product.Google_Age_Group)) {
-        //     return product.Google_Age_Group.flatMap((group) =>
-        //       group.split(' // '),
-        //     )
-        //   }
-        //   return []
-        // })
+
       });
     };
-
-    // const fetchProductData = async (productUrls, type) => {
-    //   try {
-    //     return await Promise.all(productUrls.map((url) => axios.get(url, { params: { type } })))
-    //   } catch (error) {
-    //     console.error('Error fetching product data:', error)
-    //     return []
-    //   }
-    // }
 
     const fetchKitData = async (kitUrls) => {
       try {
@@ -631,49 +568,7 @@ function OrderFreight() {
     };
 
     let quantityItemObject = [];
-    // const processProductResponses = (productResponses) => {
-    //   const vendors = productResponses.map((response) => {
-    //     const { xmldata: { Products } } = response.data;
-    //     console.log(Products, '<< Products');
-    //     if (Products && Products[0] && Products[0].EAN && Products[0].EAN[0]) {
-    //       const kits = Products[0].EAN[0].split(',');
-    //       if(kits[kits.length - 1] === 'extra') {
-    //         alert('Please fill out manually!!!')
-    //       }
-    //       const parsedKits = kits.map(item => {
-    //         const match = item.match(/^(\D+\d+)(?:x(\d+))?$/);
-    //         return match ? match[1] : item;
-    //       });
-
-    //       quantityItemObject = kits.reduce((acc, item) => {
-    //         const match = item.match(/^(\D+\d+)(?:x(\d+))?$/);
-    //         if (match) {
-    //           const key = match[1];
-    //           const quantity = match[2] ? parseInt(match[2], 10) : 1;
-    //           acc[key] = quantity;
-    //         }
-    //         return acc;
-    //       }, {});
-
-    //       const kitUrls = parsedKits.map((code) => `http://localhost:5000/api/products/${code}`);
-    //       fetchKitData(kitUrls);
-    //     }
-
-    //     return Products && Products.length > 0
-    //       ? {
-    //           Vendor_PartNo: [Products[0].Vendor_PartNo[0]],
-    //           ProductCode: [Products[0].ProductCode[0]],
-    //           ProductName: [Products[0].ProductName[0]],
-    //           ProductPrice: [Products[0].ProductPrice[0]],
-    //           Vendor_Price: [Products[0].Vendor_Price[0]],
-    //           //Quantity: [1] // filled this in fetchKitData
-    //         }
-    //       : null;
-    //   });
-
-    //   return vendors.filter((vendor) => vendor !== null);
-    // };
-
+    
     const compareProductPrices = (products, orderProductDetails) => {
       const productPriceMap = {};
       //console.log(products, '<< products');
@@ -696,50 +591,6 @@ function OrderFreight() {
       return mismatchedPrices;
     };
 
-    // const processProductResponses = (productResponses, orderProductDetails) => {
-    //   console.log(productResponses, '<< productResponses');
-
-    //   const vendors = productResponses.map((response) => {
-    //     console.log(response, '<< response');
-    //     const { xmldata: { Products } } = response.data;
-
-    //     //console.log(orderProductDetails, '<< orderProductDetails');
-    //     const mismatchedPrices = compareProductPrices(Products, orderProductDetails);
-    //     //console.log(mismatchedPrices, '<< mismatchedPrices');
-    //     if (mismatchedPrices.length > 0) {
-    //       mismatchedPrices.forEach(item => {
-    //         // alert(`Mismatched Prices: Possible added option! Double check manually! ProductCode: ${item.productCode}`);
-    //         setMismatchedPrices(mismatchedPrices);
-    //         setShowModal(true);
-    //       });
-    //     } else {
-    //       console.log('All product prices match.');
-    //     }
-
-    //     if (Products && Products.length > 0) {
-    //       const product = Products[0];
-    //       let vendorPartNo = product.Vendor_PartNo[0];
-
-    //       // Check if ProductCode starts with 'or', 'OR', 'Or', or 'oR'
-    //       const productCode = product.ProductCode[0];
-    //       if (/^or$/i.test(productCode.substring(0, 2))) {
-    //         vendorPartNo = product.Google_Age_Group[0];
-    //       }
-
-    //       return {
-    //         Vendor_PartNo: [vendorPartNo],
-    //         ProductCode: [productCode],
-    //         ProductName: [product.ProductName[0]],
-    //         ProductPrice: [product.ProductPrice[0]],
-    //         Vendor_Price: [product.Vendor_Price[0]],
-    //         // Quantity: [1] // filled this in fetchKitData
-    //       };
-    //     }
-    //     return null;
-    //   });
-
-    //   return vendors.filter((vendor) => vendor !== null);
-    // };
     const processProductResponses = async (
       productResponses,
       orderProductDetails,
@@ -808,14 +659,7 @@ function OrderFreight() {
     };
 
     const updateOrderListWithVendorCodes = (orderDetails, validVendors) => {
-      //console.log(orderDetails, '***orderDetails**');
-      //console.log(rerenderOrderList,'***rerenderOrderList***');
-      // console.log(validVendors, '***validVendors***');
       const updatedOrderWithVendorCodes = orderDetails.map((order) => {
-        // console.log(
-        //   orderDetails,
-        //   '***order from updatedOrderListWithVendorCodes',
-        // )
         const matchingVendor = validVendors.find(
           (vendor) =>
             vendor.ProductCode[0].toLowerCase() ===
@@ -843,8 +687,6 @@ function OrderFreight() {
     };
 
     const processOrderDetails = (order) => {
-      //const customFieldInHandDate = order.Custom_Field_InHand[0];
-      //const orderComments = order.Order_Comments[0];
       const customFieldInHandDate =
         order.Custom_Field_InHand && order.Custom_Field_InHand[0]
           ? order.Custom_Field_InHand[0]
@@ -880,8 +722,15 @@ function OrderFreight() {
   // method to transform data in handleConfirmSplit
   const transformUpdatedProductsToUserCustomFormat = (val) => {
     return val.map((product) => {
+      const qRaw = product?.Quantity;
+      const q =
+        qRaw == null || qRaw === '' || qRaw === 'undefined'
+          ? '1'
+          : Array.isArray(qRaw)
+            ? (qRaw[0] ?? '1')
+            : qRaw;
       return {
-        Quantity: [product.Quantity] || ['1'],
+        Quantity: [String(q)],
         ProductCode: Array.isArray(product.productCode)
           ? [product.productCode[0]]
           : [product.productCode],
@@ -965,6 +814,23 @@ function OrderFreight() {
   };
 
   const handleConfirmSplit = async () => {
+    if (!itemQuantityMap || !productOptionsArr) {
+      console.warn(
+        'Split aborted: missing itemQuantityMap or productOptionsArr',
+        itemQuantityMap,
+        productOptionsArr,
+      );
+      setShowVendorKitPopup(false);
+      return;
+    }
+
+    const ensureQtyArray = (v, fallback = '1') => {
+      const raw = Array.isArray(v) ? v[0] : v;
+      if (raw == null) return [fallback];
+      const s = String(raw).trim();
+      return s && s !== 'undefined' && s !== 'null' ? [s] : [fallback];
+    };
+
     const updatedOptions = productOptionsArr.map((item) => {
       const productCode = Array.isArray(item.ProductCode)
         ? item.ProductCode[0]
@@ -979,13 +845,11 @@ function OrderFreight() {
         );
         return {
           ...item,
-          Quantity: Array.isArray(item.Quantity)
-            ? [itemQuantityMap[productCodeKey]]
-            : itemQuantityMap[productCodeKey],
+          Quantity: [String(itemQuantityMap[productCodeKey])],
         };
       } else {
         console.log(`ProductCode ${productCode} not found in itemQuantityMap - keeping original quantity:`, item.Quantity);
-        return item;
+        return { ...item, Quantity: ensureQtyArray(item.Quantity) };
       }
     });
     setUpdatedOptionsArr(updatedOptions);
@@ -993,30 +857,35 @@ function OrderFreight() {
 
     //setProductOptionsArr(updatedOptions);
     console.log(productOptionsArr, '**productOptionsArr*');
-    const vendorKitCodes = productOptionsArr.map((item) => item.Vendor_PartNo);
+    const vendorKitCodes = updatedOptions.map((item) => item.Vendor_PartNo);
     console.log(vendorKitCodes, '***vendorKitCodes***');
     // update quantity splitted kits
-    vendorKitItem.map((item) => {
+    const vendorKitItemsWithQty = (vendorKitItem || []).map((vk) => {
       const productCodeKey = Object.keys(itemQuantityMap).find(
-        (key) => key.toLowerCase() === item.ProductCode.toLowerCase(),
+        (key) => key.toLowerCase() === vk.ProductCode.toLowerCase(),
       );
-      if (productCodeKey) {
-        item.Quantity = itemQuantityMap[productCodeKey]; // Assign quantity
-      } else {
-        console.log(
-          `ProductCode ${item.ProductCode} not found in itemQuantityMap`,
-        );
-      }
+      const qty = productCodeKey ? itemQuantityMap[productCodeKey] : null;
+      return {
+        ...vk,
+        Quantity: qty != null ? String(qty) : (Array.isArray(vk.Quantity) ? (vk.Quantity[0] ?? '1') : (vk.Quantity ?? '1')),
+      };
     });
-    console.log(vendorKitItem, '***vendorKitItem***');
-    const googleAgeGroups = vendorKitItem.map((item) => item.Google_Age_Group);
+    console.log(vendorKitItemsWithQty, '***vendorKitItemsWithQty***');
+
+    const googleAgeGroups = vendorKitItemsWithQty.map(
+      (item) => item.Google_Age_Group,
+    );
     console.log(googleAgeGroups, 'googleAgeGroups');
-    //console.log(optionProducts, '***optionProducts***');
-    //console.log(orderProductDetails, '***orderProductDetails');
-    const combinedOptionsAndKits = [...vendorKitCodes, ...googleAgeGroups];
-    console.log(combinedOptionsAndKits, '***combinedOptionsAndKits***');
-    //const uniqueVendorCodes = [...new Set(combinedOptionsAndKits)];
-    //const uniqueVendorCodes = [...new Set([...productOptionsArr.map(item => item.Vendor_PartNo), ...vendorKitItem])];
+    const normalizeToken = (t) => String(t || '').trim().toLowerCase();
+    const combinedOptionsAndKits = [
+      ...new Set(
+        [...vendorKitCodes, ...googleAgeGroups]
+          .flatMap((x) => (Array.isArray(x) ? x : [x]))
+          .map((x) => String(x || '').trim())
+          .filter(Boolean),
+      ),
+    ];
+    console.log(combinedOptionsAndKits, '***combinedOptionsAndKits (deduped)***');
 
     const vendorUrls = combinedOptionsAndKits.map(
       (code) => `${API_BASE_URL}/api/vendors/${code}`,
@@ -1024,199 +893,139 @@ function OrderFreight() {
     console.log(vendorUrls, 'vendorUrls');
     const vendorResponses = await fetchProductData(vendorUrls, 'vendor');
     //console.log(vendorResponses, '***vendorResponses');
-    const updatedProducts = vendorResponses.flatMap((item) => {
+    let updatedProducts = vendorResponses.flatMap((item) => {
       console.log(item.data, '***item data***');
       const { xmldata: { Products } = {} } = item.data || {};
       return Products || [];
     });
-    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
-    //   console.log(product,'product***');
-    //   const googleAgeGroup = product.Google_Age_Group[0]
-    //   const match = vendorKitItem.find(
-    //     (vk) => vk.Google_Age_Group === googleAgeGroup,
-    //   )
-    //   return {
-    //     ...product,
-    //     Quantity: match ? [match.Quantity] : 1,
-    //   }
-    // })
-    console.log(updatedProducts, '!updatedProducts!');
-    // const updatedProductsWithQuantity = updatedProducts
-    //   .filter(
-    //     (product) => product.Google_Age_Group && product.Google_Age_Group[0],
-    //   )
-    //   .map((product) => {
-    //     const googleAgeGroup = product.Google_Age_Group[0]
-    //     const match = vendorKitItem.find((vk) => {
-    //       if(vk.Quantity === null ) {
-    //         return vk.Quantity = '1' // this section should be redevelop
-    //       }
-    //       return (
-    //         vk.Google_Age_Group.toLowerCase().trim() ===
-    //         googleAgeGroup.toLowerCase().trim()
-    //       )
-    //     })
 
-    //     return {
-    //       ...product,
-    //       Quantity: match ? [match.Quantity] : 1,
-    //     }
-    //   })
-    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
-    //   const productCode = product.ProductCode[0]
-    //   const googleAgeGroup = product.Google_Age_Group
-    //     ? product.Google_Age_Group[0]
-    //     : null
-    //   let match = productOptionsArr.find(
-    //     (option) => option.ProductCode[0] === productCode,
-    //   )
-    //   if (!match && googleAgeGroup) {
-    //     match = vendorKitItem.find(
-    //       (vk) =>
-    //         vk.Google_Age_Group.toLowerCase().trim() ===
-    //         googleAgeGroup.toLowerCase().trim(),
-    //     )
-    //   }
-    //   return {
-    //     ...product,
-    //     Quantity: match ? match.Quantity : product.Quantity,
-    //   }
-    // })
+    // Some vendors return additional decomposition hints in Google_Age_Group on the vendor products themselves
+    // (ex: pe7135 has "XV5s // cardboard_box // cardboard_box").
+    // Ensure we also fetch vendor products for any discovered tokens so they appear in the split list.
+    const splitGroupTokens = (grp) =>
+      String(grp || '')
+        .split(/\s*\/\/\s*/g) // tolerate inconsistent spacing around //
+        .map(normalizeToken)
+        .filter(Boolean);
+    const alreadyRequested = new Set(
+      combinedOptionsAndKits
+        .flatMap((x) => (Array.isArray(x) ? x : [x]))
+        .map(normalizeToken)
+        .filter(Boolean),
+    );
 
-    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
+    const discoveredTokens = new Set();
+    updatedProducts.forEach((p) => {
+      (p.Google_Age_Group || []).forEach((grp) => {
+        splitGroupTokens(grp).forEach((tok) => discoveredTokens.add(tok));
+      });
+    });
 
-    //   const productCode = product.ProductCode[0]
-    //   const googleAgeGroup = product.Google_Age_Group ? product.Google_Age_Group[0] : product.Vendor_PartNo[0]
+    const extraTokens = [...discoveredTokens].filter(
+      (tok) => tok && !alreadyRequested.has(tok),
+    );
+    if (extraTokens.length) {
+      const extraUrls = extraTokens.map(
+        (tok) => `${API_BASE_URL}/api/vendors/${tok}`,
+      );
+      console.log('Fetching extra vendor tokens:', extraTokens);
+      const extraResponses = await fetchProductData(extraUrls, 'vendor');
+      const extraProducts = extraResponses.flatMap((item) => {
+        const { xmldata: { Products } = {} } = item.data || {};
+        return Products || [];
+      });
+      // Merge (avoid duplicate product codes)
+      const seenCodes = new Set(updatedProducts.map((p) => normalizeToken(p?.ProductCode?.[0])));
+      extraProducts.forEach((p) => {
+        const code = normalizeToken(p?.ProductCode?.[0]);
+        if (!code || seenCodes.has(code)) return;
+        seenCodes.add(code);
+        updatedProducts.push(p);
+      });
+    }
 
-    //   let match = productOptionsArr.find((option) => option.ProductCode[0] === productCode)
+    // Guardrail: dedupe fetched products by ProductCode + Vendor_PartNo so
+    // mergeDuplicatedProducts doesn't double-count the same item.
+    const seenProductKeys = new Set();
+    updatedProducts = updatedProducts.filter((p) => {
+      const code = normalizeToken(p?.ProductCode?.[0]);
+      const vp = normalizeToken(p?.Vendor_PartNo?.[0]);
+      const key = `${code}::${vp}`;
+      if (!code) return false;
+      if (seenProductKeys.has(key)) return false;
+      seenProductKeys.add(key);
+      return true;
+    });
 
-    //   if (!match && googleAgeGroup) {
-    //     match = vendorKitItem.find(
-    //       (vk) =>
-    //         vk.Google_Age_Group.toLowerCase().trim() ===
-    //         googleAgeGroup.toLowerCase().trim(),
-    //     )
-    //   }
-    //   // Check if productOptionsArr has an item with Vendor_PartNo ['manually']
-    //   const manualEntry = productOptionsArr.find(
-    //     (option) =>
-    //       option.Vendor_PartNo && option.Vendor_PartNo[0] === 'manually',
-    //   )
-    //   let updatedProductList = [
-    //     {
-    //       ...product,
-    //       Quantity: match ? [match.Quantity] : product.Quantity, // Update Quantity if match is found
-    //     },
-    //   ];
-    //   console.log(updatedProductList, '***updatedProductList***');
-    //   // If a manually entered product exists, add it as a separate entry
-    //   if (manualEntry) {
-    //     updatedProductList.push({
-    //       ProductCode: manualEntry.ProductCode,
-    //       ProductName: manualEntry.ProductName,
-    //       ProductPrice: manualEntry.ProductPrice,
-    //       Vendor_PartNo: manualEntry.Vendor_PartNo,
-    //       Vendor_Price: manualEntry.Vendor_Price,
-    //       Quantity: manualEntry.Quantity,
-    //     })
-    //   }
-    //   return updatedProductList;
-    // }).flat();
-    console.log(productOptionsArr, '//productOptionsArr');
-    //   const updatedProductsWithQuantity = updatedProducts.flatMap((product) => {
-    //     console.log(product, '>> product');
-    //     const productCode = product.ProductCode[0];
-    //     const googleAgeGroup = product.Google_Age_Group ? product.Google_Age_Group[0] : null;
+    // Kit components: bundle (e.g. pe7130) splits into Vendor_PartNo entries (XV5s, XV5s-g).
+    // Cardboard comes from pe7135's Google_Age_Group (ex: "XV5s // cardboard_box // cardboard_box")
+    // so qty(cardboard_box) = count(cardboard_box tokens in pe7135 group) × totalQty(pe7135).
+    const componentQtyFromKit = {};
+    // Total pe7135 qty can come from:
+    // - explicit order lines (itemQuantityMap['pe7135'])
+    // - kit expansion tokens (vendorKitItemsWithQty where Google_Age_Group === 'XV5s')
+    const pe7135FromOrder = Number(itemQuantityMap?.pe7135) || 0;
+    const pe7135FromKit = vendorKitItemsWithQty
+      .filter(
+        (vk) =>
+          vk.Google_Age_Group &&
+          String(vk.Google_Age_Group).toLowerCase().trim() === 'xv5s',
+      )
+      .reduce((sum, vk) => sum + (parseInt(String(vk.Quantity ?? 0), 10) || 0), 0);
+    const pe7135TotalQty = pe7135FromOrder + pe7135FromKit;
 
-    //     console.log(`Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`);
-    //     console.log(updatedOptionsArr, '!!!>>> updatedOptionsArr'); // receiving correct data for options product !!!!
-    //     // Find matching product in productOptionsArr by ProductCode
-    //     let match = productOptionsArr.find((option) => option.ProductCode[0] === productCode); // !!!!ERRR no all option
-    //     console.log(match, '!!!match>>>');
-    //     if (!match && googleAgeGroup) {
-    //         match = vendorKitItem.find(
-    //             (vk) => vk.Google_Age_Group.toLowerCase().trim() === googleAgeGroup.toLowerCase().trim()
-    //         );
-    //     }
+    const pe7135Vendor = updatedProducts.find(
+      (p) => normalizeToken(p?.ProductCode?.[0]) === 'pe7135',
+    );
+    const cardboardPerPe7135 = (pe7135Vendor?.Google_Age_Group || []).reduce(
+      (cnt, grp) =>
+        cnt +
+        splitGroupTokens(grp).filter((tok) => tok === 'cardboard_box').length,
+      0,
+    );
+    updatedProducts.forEach((product) => {
+      const code = String(product.ProductCode?.[0] ?? '').trim().toLowerCase();
+      const vp = (product.Vendor_PartNo && product.Vendor_PartNo[0]) ? String(product.Vendor_PartNo[0]).trim().toLowerCase() : '';
+      if (!code) return;
+      if (vp === 'cardboard_box') {
+        if (pe7135TotalQty > 0 && cardboardPerPe7135 > 0) {
+          componentQtyFromKit[code] = cardboardPerPe7135 * pe7135TotalQty;
+        }
+        return;
+      }
+      // Sum kit rows for this vendor segment **per parent ProductCode**, then take max across parents.
+      // Same parent + duplicate segment (e.g. LUM // LUM) → multiple rows, summed (qty 2).
+      // Different parents each with one SPT-CASE → do not sum to 2 for one line; max keeps 1.
+      // Ignore kit rows where the parent ProductCode is this same product: vendor XML
+      // often repeats the line's Vendor_PartNo in Google_Age_Group, which would otherwise
+      // add fromKit on top of itemQuantityMap and double qty (e.g. 2+2=4).
+      const matchingKits = vendorKitItemsWithQty.filter(
+        (vk) =>
+          vk.Google_Age_Group &&
+          String(vk.Google_Age_Group).toLowerCase().trim() === vp &&
+          String(vk.ProductCode || '').trim().toLowerCase() !== code,
+      );
+      if (matchingKits.length) {
+        const byParent = {};
+        matchingKits.forEach((vk) => {
+          const parent = String(vk.ProductCode || '').trim().toLowerCase();
+          if (!parent) return;
+          if (!byParent[parent]) byParent[parent] = [];
+          byParent[parent].push(vk);
+        });
+        const perParentSums = Object.values(byParent).map((group) =>
+          group.reduce(
+            (sum, vk) => sum + (parseInt(String(vk.Quantity ?? 0), 10) || 0),
+            0,
+          ),
+        );
+        const qtySum =
+          perParentSums.length > 0 ? Math.max(...perParentSums) : 0;
+        componentQtyFromKit[code] = (componentQtyFromKit[code] || 0) + qtySum;
+      }
+    });
+    console.log('componentQtyFromKit', componentQtyFromKit);
 
-    //     let quantity = product.Quantity || [1];
-
-    //     if (match && match.Quantity != null) {
-    //         quantity = [match.Quantity];
-    //     }
-
-    //     console.log(`Final Quantity for ${productCode}:`, quantity);
-
-    //     // Check if productOptionsArr has an item with Vendor_PartNo ['manually']
-    //     const manualEntry = updatedOptionsArr.find((option) => {
-    //       return option.Vendor_PartNo[0] === 'manually';
-    //     }
-    //         //(option) => option.Vendor_PartNo === 'manually'
-
-    //     );
-    //     console.log(manualEntry.Quantity, '<<manualEntry');
-    //     // Create an array to hold updated products
-    //     let updatedProductList = [
-    //         {
-    //             ...product,
-    //            Quantity: quantity, // Ensure quantity is properly set
-    //         }
-    //     ];
-
-    //     if (manualEntry) { // !!!! CORRECT
-    //         console.log(`Adding manualEntry product:`, manualEntry);
-    //         updatedProductList.push({
-    //             ProductCode: manualEntry.ProductCode,
-    //             ProductName: manualEntry.ProductName,
-    //             ProductPrice: manualEntry.ProductPrice,
-    //             Vendor_PartNo: manualEntry.Vendor_PartNo,
-    //             Vendor_Price: manualEntry.Vendor_Price,
-    //             Quantity: manualEntry.Quantity || [1],
-    //         });
-    //         console.log(updatedProductList, '<< !! updatedProductList');
-    //     }
-
-    //     return updatedProductList;
-    // });
-    // 1) Build your main array WITHOUT manualEntry inside the loop
-
-    // before working code
-    // const updatedProductsWithQuantity = updatedProducts.map((product) => {
-    //   console.log(product, '>> product updatedProductsWithQuantity')
-    //   const productCode = product.ProductCode[0]
-    //   const googleAgeGroup = product.Google_Age_Group?.[0] || null
-
-    //   console.log(
-    //     `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
-    //   )
-
-    //   // Match by ProductCode in productOptionsArr
-    //   let match = productOptionsArr.find(
-    //     (option) => option.ProductCode?.[0] === productCode,
-    //   )
-
-    //   // If no match by code, try vendorKitItem by Google_Age_Group
-    //   if (!match && googleAgeGroup) {
-    //     match = vendorKitItem.find((vk) => vk.Google_Age_Group.toLowerCase().trim() === googleAgeGroup.toLowerCase().trim())
-    //   }
-
-    //   console.log(match, '!!!match!!!');
-    //   // Default quantity
-    //   let quantity = product.Quantity || ['1']
-
-    //   // If we found a match with a valid Quantity, use it
-    //   if (match && match.Quantity != null) {
-    //     quantity = Array.isArray(match.Quantity) ? match.Quantity : [match.Quantity]
-    //   }
-
-    //   console.log(`Final Quantity for ${productCode}:`, quantity)
-
-    //   // Return ONE product for each original product
-    //   return {
-    //     ...product,
-    //     Quantity: quantity,
-    //   }
-    // })
     const updatedProductsWithQuantity = updatedProducts.map((product) => {
       const productCode = product.ProductCode[0];
       const googleAgeGroup = product.Google_Age_Group?.[0] || null;
@@ -1226,38 +1035,46 @@ function OrderFreight() {
         `Processing Product: ${productCode} | Google_Age_Group: ${googleAgeGroup}`,
       );
 
-      // 1) Match by ProductCode in productOptionsArr
-      let match = productOptionsArr.find(
-        (option) => option.ProductCode?.[0] === productCode,
-      );
+      // 1) Match by ProductCode in options (case-insensitive; API may return PE8000 vs pe8000)
+      const productCodeLower = String(productCode || '').trim().toLowerCase();
+      let match = updatedOptions.find((option) => {
+        const optCode = Array.isArray(option.ProductCode)
+          ? option.ProductCode[0]
+          : option.ProductCode;
+        return String(optCode || '').trim().toLowerCase() === productCodeLower;
+      });
 
       // 2) If no match by code, try vendorKitItem by Google_Age_Group
       if (!match && googleAgeGroup) {
-        const idx = vendorKitItem.findIndex(
+        const idx = vendorKitItemsWithQty.findIndex(
           (vk) =>
-            vk.Google_Age_Group.toLowerCase().trim() ===
-            googleAgeGroup.toLowerCase().trim(),
+            vk.Google_Age_Group &&
+            String(vk.Google_Age_Group).toLowerCase().trim() ===
+              String(googleAgeGroup).toLowerCase().trim(),
         );
+        if (idx !== -1) match = vendorKitItemsWithQty[idx];
+      }
 
-        // If found, remove that ONE item from vendorKitItem
-        if (idx !== -1) {
-          match = vendorKitItem[idx];
-          // Remove it so it cannot be used again
-          vendorKitItem.splice(idx, 1);
-        }
+      // 2b) Vendor API often returns products without Google_Age_Group; match by Vendor_PartNo to kit's Google_Age_Group
+      if (!match && vendorPartNo) {
+        const idx = vendorKitItemsWithQty.findIndex(
+          (vk) =>
+            vk.Google_Age_Group &&
+            String(vk.Google_Age_Group).toLowerCase().trim() ===
+              String(vendorPartNo).toLowerCase().trim(),
+        );
+        if (idx !== -1) match = vendorKitItemsWithQty[idx];
       }
 
       console.log(match, '!!!match!!!');
 
       // 3) Default quantity
-      let quantity = product.Quantity || ['1'];
+      let quantity = ensureQtyArray(product.Quantity, '1');
       console.log(product.Quantity, 'quantity');
       
       // 4) If we found a match with a valid Quantity, use it
       if (match && match.Quantity != null) {
-        quantity = Array.isArray(match.Quantity)
-          ? match.Quantity
-          : [match.Quantity];
+        quantity = ensureQtyArray(match.Quantity, '1');
       }
       
       // 5) Special case: If Vendor_PartNo contains "OP-LN", get quantity from parent product
@@ -1269,7 +1086,7 @@ function OrderFreight() {
         console.log(`Base vendor part number:`, baseVendorPartNo);
         
         // Find the parent product in vendorKitItem whose Google_Age_Group starts with the base
-        const parentKit = vendorKitItem.find((vk) => 
+        const parentKit = vendorKitItemsWithQty.find((vk) => 
           vk.Google_Age_Group && 
           vk.Google_Age_Group.toLowerCase().trim().startsWith(baseVendorPartNo.toLowerCase().trim())
         );
@@ -1283,7 +1100,7 @@ function OrderFreight() {
           
           if (productCodeKey) {
             const kitQuantity = itemQuantityMap[productCodeKey];
-            quantity = [kitQuantity.toString()];
+            quantity = [String(kitQuantity)];
             console.log(`OP-LN detected! Parent product: ${parentKit.ProductCode}, Setting quantity to: ${kitQuantity}`);
           } else {
             console.log(`Parent ProductCode ${parentKit.ProductCode} not found in itemQuantityMap`);
@@ -1293,22 +1110,28 @@ function OrderFreight() {
           console.log(`Parent kit with Google_Age_Group starting with "${baseVendorPartNo}" not found in vendorKitItem`);
         }
       }
-      
+
+      // 6) Total = order lines (itemQuantityMap) + kit components (componentQtyFromKit).
+      // e.g. pe7131: 1 standalone + 2 from pe7130 bundle = 3; pe7135: 0 + 2 from bundle = 2.
+      // cardboard_box: sum of all kit segments "cardboard_box" (e.g. 2+2=4 from "XV5s // cardboard_box // cardboard_box").
+      const fromOrder = Number(itemQuantityMap[productCodeLower]) || 0;
+      const fromKit = Number(componentQtyFromKit[productCodeLower]) || 0;
+      const totalQty = fromOrder + fromKit;
+      if (totalQty > 0) {
+        quantity = [String(totalQty)];
+        console.log(`Quantity for ${productCode}: order=${fromOrder} + kit=${fromKit} =>`, quantity);
+      }
+
       console.log(product.Vendor_PartNo, 'product.Vendor_PartNo');
       console.log(`Final Quantity for ${productCode}:`, quantity);
 
-      // 6) Return ONE product for each original product
+      // 7) Return product with resolved quantity
       return {
         ...product,
         Quantity: quantity,
       };
     });
 
-    // 2) Find the manual entry in updatedOptionsArr ONCE
-    // const manualEntry = updatedOptionsArr.find(
-    //   (option) => option.Vendor_PartNo?.[0] === 'manually',
-    //   //option.Vendor_PartNo && option.Vendor_PartNo[0] === 'manually',
-    // )
     const manualEntry = Array.isArray(updatedOptionsArr)
       ? updatedOptionsArr.find(
           (option) => option?.Vendor_PartNo?.[0] === 'manually',
@@ -1328,6 +1151,50 @@ function OrderFreight() {
       });
     }
 
+    // 3b) Reduce hardware vendor cost by (cardboard cost × cardboard qty). If 48.25.T is present, also remove cardboard from list.
+    const cardboardIdx = updatedProductsWithQuantity.findIndex(
+      (p) => String(p.Vendor_PartNo?.[0] || '').toLowerCase().trim() === 'cardboard_box',
+    );
+    if (cardboardIdx !== -1) {
+      const cardboard = updatedProductsWithQuantity[cardboardIdx];
+      const cardboardQty = parseInt(String(cardboard.Quantity?.[0] ?? 0), 10) || 0;
+      const cardboardUnitCost = parseFloat(String(cardboard.Vendor_Price?.[0] ?? 0)) || 0;
+      // Hardware: ProductCode starts with "pe" and ends with "5" (e.g. pe7135, pe7115, pe7145)
+      const hardware = updatedProductsWithQuantity.find((p) => {
+        const code = String(p.ProductCode?.[0] || '').trim().toLowerCase();
+        return code.startsWith('pe') && code.endsWith('5');
+      });
+      if (hardware) {
+        const hwQtyRaw = parseInt(String(hardware.Quantity?.[0] ?? 0), 10);
+        const hwQty = Number.isFinite(hwQtyRaw) ? hwQtyRaw : 0;
+        const hwCurrent = parseFloat(String(hardware.Vendor_Price?.[0] ?? 0)) || 0;
+        // Total $ to pull out of hardware: unit cardboard cost × count of deductions.
+        // Use max(cardboard line qty, hardware qty) so e.g. $50 × 2 hardware = $100 when cardboard row still shows qty 1.
+        const deductionCount =
+          hwQty > 0 ? Math.max(cardboardQty, hwQty) : cardboardQty;
+        const reduction = cardboardUnitCost * deductionCount;
+
+        // Zero/invalid quantity must render as $0.00, never empty.
+        if (hwQty <= 0) {
+          hardware.Vendor_Price = ['0.00'];
+        } else if (reduction > 0) {
+          const hwNewUnit = (hwCurrent * hwQty - reduction) / hwQty;
+          hardware.Vendor_Price = [String(Math.max(0, hwNewUnit).toFixed(2))];
+          console.log('Hardware vendor cost reduced by cardboard (cost × deductionCount):', reduction);
+        } else if (!hardware.Vendor_Price?.[0]) {
+          // Keep UI consistent: prefer explicit zero over empty value.
+          hardware.Vendor_Price = ['0.00'];
+        }
+      }
+      const hasCase4825T = updatedProductsWithQuantity.some(
+        (p) => String(p.Vendor_PartNo?.[0] || '').trim() === '48.25.T',
+      );
+      if (hasCase4825T) {
+        updatedProductsWithQuantity.splice(cardboardIdx, 1);
+        console.log('48.25.T present: removed cardboard from list');
+      }
+    }
+
     // 4) Now you have ONE array with no duplicates
     console.log(
       updatedProductsWithQuantity,
@@ -1337,13 +1204,7 @@ function OrderFreight() {
     console.log(updatedProducts, '|| updatedProducts');
     console.log(updatedProductsWithQuantity, '|| updatedProductsWithQuantity');
     console.log(productOptionsArr, '***productOptionsArr***');
-    // console.log(
-    //   updatedProductsWithQuantity,
-    //   '***updatedProductsWithQuantity***',
-    // )
-    //console.log(updatedProducts, '***updatedProducts***')
-    // merge products with same product code
-    //const mergedProducts = mergeDuplicatedProducts(updatedProducts) // old version
+
     const mergedProducts = mergeDuplicatedProducts(updatedProductsWithQuantity);
     console.log(mergedProducts, '***mergedProducts***');
     // Define keys to copy from old rerenderOrderList
@@ -1380,11 +1241,55 @@ function OrderFreight() {
       transformUpdatedProductsToUserCustomFormat(userCustomProducts);
     console.log(normalizedUpdatedProducts, 'normalizedUpdatedProducts');
 
-    const modOrderList = [
-      ...normalizedUpdatedProducts,
+    // ProductCodes already produced by the split (e.g. or6700 from kit) — do not also keep
+    // the same ProductCode from optionProducts or userCustomProducts, or mergeDuplicatedProducts
+    // will sum qty (7+7=14).
+    const splitProductCodes = new Set(
+      mergedProducts.map((p) =>
+        String(
+          Array.isArray(p?.ProductCode) ? p.ProductCode[0] : p?.ProductCode || '',
+        )
+          .trim()
+          .toLowerCase(),
+      ).filter(Boolean),
+    );
+
+    const productCodeKey = (item) => {
+      const pc = Array.isArray(item?.ProductCode)
+        ? item.ProductCode[0]
+        : item?.ProductCode;
+      return String(pc || '').trim().toLowerCase();
+    };
+
+    // Custom rows that duplicate a split line would double quantity when mergeDuplicatedProducts runs.
+    const normalizedUpdatedProductsDeduped = normalizedUpdatedProducts.filter(
+      (item) => {
+        const code = productCodeKey(item);
+        return !(code && splitProductCodes.has(code));
+      },
+    );
+
+    // After split: drop "+" combined bundle lines; drop option rows that duplicate a split line.
+    const optionProductsAfterSplit = (Array.isArray(optionProducts)
+      ? optionProducts
+      : []
+    ).filter((item) => {
+      const vp = Array.isArray(item?.Vendor_PartNo)
+        ? item.Vendor_PartNo[0]
+        : item?.Vendor_PartNo;
+      if (String(vp || '').trim().includes('+')) return false;
+      const code = productCodeKey(item);
+      if (code && splitProductCodes.has(code)) return false;
+      return true;
+    });
+
+    const modOrderListRaw = [
+      ...normalizedUpdatedProductsDeduped,
       ...updatedOrderList.flat(Infinity),
-      //...optionProducts, // add existing options
+      ...optionProductsAfterSplit,
     ];
+    // Re-merge to avoid duplicate rows after adding optionProducts back.
+    const modOrderList = mergeDuplicatedProducts(modOrderListRaw);
     console.log(modOrderList, 'modOrderList');
     setRerenderOrderList(modOrderList);
 

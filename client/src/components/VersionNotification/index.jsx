@@ -47,7 +47,7 @@ function VersionNotification() {
         checkVersion();
 
         // Then check every 30 seconds
-        const interval = setInterval(checkVersion, 30000);
+        const interval = setInterval(checkVersion, 300000);
 
         return () => clearInterval(interval);
     }, [API_BASE_URL]);

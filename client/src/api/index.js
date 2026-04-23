@@ -12,6 +12,8 @@ export const getProductById = id => axiosInstance.get(`/products${id}`);
 
 export const saveOption = option => axiosInstance.post(`/option`, option);
 
+export const saveOptionsFile = (options) => axiosInstance.post('/option/save-options-file', options);
+
 export const getOptions = () => axiosInstance.get('/option');
 
 // for future
