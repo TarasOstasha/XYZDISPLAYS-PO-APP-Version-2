@@ -101,7 +101,34 @@ function OrderFreight() {
     if (value == null) return '';
     const parsedValue = String(value).trim();
     if (!parsedValue) return '';
-    return parsedValue.replace(/,/g, '.');
+
+    // Keep digits, separators and minus; drop currency symbols/text.
+    const cleaned = parsedValue.replace(/[^\d,.-]/g, '');
+    if (!cleaned) return '';
+
+    const lastComma = cleaned.lastIndexOf(',');
+    const lastDot = cleaned.lastIndexOf('.');
+    const decimalSeparator =
+      lastComma > lastDot ? ',' : lastDot > lastComma ? '.' : null;
+
+    if (!decimalSeparator) {
+      return cleaned.replace(/,/g, '').replace(/\./g, '');
+    }
+
+    const negative = cleaned.includes('-') ? '-' : '';
+    const unsigned = cleaned.replace(/-/g, '');
+    const splitIndex = unsigned.lastIndexOf(decimalSeparator);
+
+    const integerPart = unsigned
+      .slice(0, splitIndex)
+      .replace(/[.,]/g, '')
+      .replace(/\D/g, '');
+    const decimalPart = unsigned
+      .slice(splitIndex + 1)
+      .replace(/[.,]/g, '')
+      .replace(/\D/g, '');
+
+    return decimalPart ? `${negative}${integerPart}.${decimalPart}` : `${negative}${integerPart}`;
   };
 
   const handleToEditTop = (formikProps) => {

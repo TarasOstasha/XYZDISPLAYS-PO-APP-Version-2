@@ -1082,12 +1082,7 @@ function OrderFreightForm({
                                             Website order item
                                           </b>
                                         ) : (
-                                          (() => {
-                                            return calculatePrice(
-                                              o.Vendor_Price?.[0],
-                                              o.Quantity?.[0],
-                                            );
-                                          })()
+                                          `$${formattedPrice(o.Vendor_Price?.[0])}`
                                         )}
                                       </span>
                                     )}
@@ -1434,9 +1429,9 @@ function OrderFreightForm({
                                                   Website order item
                                                 </b>;
                                               })()
-                                            : formattedPrice(
+                                            : `$${formattedPrice(
                                                 o.Vendor_Price?.[0],
-                                              )
+                                              )}`
                                           // : calculatePrice(
                                           //     o.Vendor_Price?.[0],
                                           //     o.Quantity?.[0],
