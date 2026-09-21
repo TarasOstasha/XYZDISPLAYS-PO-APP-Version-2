@@ -77,7 +77,7 @@ export const OPTION_DATA = [
     "discount": 15
   },
   {
-    "id": 4286,
+    "id": 8105,
     "optioncatid": 157,
     "ProductName": "IG-2 HANG (with Power Outlet)",
     "quantity": 1,
@@ -217,6 +217,28 @@ export const OPTION_DATA = [
     "Vendor_PartNo": "WLM-Mount-L",
     "pricediff": 534,
     "vendorpricediff": 382,
+    "discount": 15
+  },
+  {
+    "id": 7961,
+    "optioncatid": 156,
+    "ProductName": "Monitor Mount (40in/25lbs max)",
+    "quantity": 1,
+    "ProductCode": "option",
+    "Vendor_PartNo": "WLM-P-170",
+    "pricediff": 150,
+    "vendorpricediff": 115,
+    "discount": 15
+  },
+  {
+    "id": 7960,
+    "optioncatid": 156,
+    "ProductName": "Monitor Mount up to 40in",
+    "quantity": 1,
+    "ProductCode": "option",
+    "Vendor_PartNo": "WLM-P-169",
+    "pricediff": 150,
+    "vendorpricediff": 115,
     "discount": 15
   },
   {
@@ -2827,14 +2849,36 @@ export const OPTION_DATA = [
     "discount": 20
   },
   {
+    "id": 7051,
+    "optioncatid": 307,
+    "ProductName": "Ship in CA700 Case",
+    "quantity": 1,
+    "ProductCode": "MK90625",
+    "Vendor_PartNo": "CA700-H",
+    "pricediff": 318,
+    "vendorpricediff": 244,
+    "discount": 20
+  },
+  {
+    "id": 7053,
+    "optioncatid": 307,
+    "ProductName": "Ship in 2 x CA700 Cases",
+    "quantity": 2,
+    "ProductCode": "MK90625",
+    "Vendor_PartNo": "CA700-H",
+    "pricediff": 636,
+    "vendorpricediff": 318,
+    "discount": 20
+  },
+  {
     "id": 5070,
     "optioncatid": 261,
     "ProductName": "1 x Monitor Mount",
     "quantity": 1,
     "ProductCode": "MK91602",
-    "Vendor_PartNo": "WLM-P-138 // WLM-P-CB57",
-    "pricediff": 132,
-    "vendorpricediff": 98,
+    "Vendor_PartNo": "WLM-P-171",
+    "pricediff": 176,
+    "vendorpricediff": 135,
     "discount": 20
   },
   {
@@ -2843,9 +2887,9 @@ export const OPTION_DATA = [
     "ProductName": "2 x Monitor Mount",
     "quantity": 2,
     "ProductCode": "MK91602",
-    "Vendor_PartNo": "WLM-P-138 // WLM-P-CB57",
-    "pricediff": 264,
-    "vendorpricediff": 98,
+    "Vendor_PartNo": "WLM-P-171",
+    "pricediff": 352,
+    "vendorpricediff": 135,
     "discount": 20
   },
   {
@@ -4194,7 +4238,7 @@ export const OPTION_DATA = [
     "id": 1974,
     "optioncatid": 42,
     "ProductName": "2 x LED ECO",
-    "quantity": 2,
+    "quantity": 1,
     "ProductCode": "or68130",
     "Vendor_PartNo": "LUM-LED7-ORL-B",
     "pricediff": 216,
@@ -6913,7 +6957,7 @@ export const OPTION_DATA = [
     "ProductName": "Silver Countertop",
     "quantity": 1,
     "ProductCode": "or66309",
-    "Vendor_PartNo": "OCX-CTP-S",
+    "Vendor_PartNo": "SILVER",
     "pricediff": 99,
     "vendorpricediff": 54.7,
     "discount": 20
@@ -6924,7 +6968,7 @@ export const OPTION_DATA = [
     "ProductName": "Natural Countertop",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "OCX-CT-WD",
+    "Vendor_PartNo": "ANATURAL",
     "pricediff": 99,
     "vendorpricediff": 60.8,
     "discount": 20
@@ -6935,7 +6979,7 @@ export const OPTION_DATA = [
     "ProductName": "Black Countertop",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "OCX-CT-B",
+    "Vendor_PartNo": "BLACK",
     "pricediff": 99,
     "vendorpricediff": 60.8,
     "discount": 20
@@ -6946,7 +6990,7 @@ export const OPTION_DATA = [
     "ProductName": "Mahogany Countertop",
     "quantity": 1,
     "ProductCode": "option",
-    "Vendor_PartNo": "OCX-CT-DW",
+    "Vendor_PartNo": "DARKWOOD",
     "pricediff": 99,
     "vendorpricediff": 60.8,
     "discount": 20
@@ -8481,6 +8525,17 @@ export const OPTION_DATA = [
     "discount": 0
   },
   {
+    "id": 7971,
+    "optioncatid": 732,
+    "ProductName": "2 x Side Panels",
+    "quantity": 1,
+    "ProductCode": "option",
+    "Vendor_PartNo": "manually",
+    "pricediff": 100,
+    "vendorpricediff": 50,
+    "discount": 0
+  },
+  {
     "id": 7659,
     "optioncatid": 688,
     "ProductName": "Ships in 3 Hard Cases",
@@ -8787,5 +8842,16 @@ export const OPTION_DATA = [
     "pricediff": 256,
     "vendorppricediff": 197,
     "discount": 15
-  }
+  },
+  {
+    "id": 7968,
+    "optioncatid": 416,
+    "ProductName": "Add Collector Ring (Rotating Wires)",
+    "quantity": 1,
+    "ProductCode": "manually",
+    "Vendor_PartNo": "170050 311 60W",
+    "pricediff": 200,
+    "vendorppricediff": 150,
+    "discount": 0
+  },
 ];

@@ -1,4 +1,5 @@
 const Client = require('basic-ftp').Client;
+const { Writable } = require('stream');
 
 // Get version from FTP server
 module.exports.getFTPVersion = async (req, res, next) => {
@@ -15,12 +16,16 @@ module.exports.getFTPVersion = async (req, res, next) => {
         
         console.log('Connected to FTP to check version');
         
-        // Download version.json from FTP to memory
+        // Download version.json from FTP to memory using a proper writable stream
         const chunks = [];
-        await client.downloadTo({
-            write: (chunk) => chunks.push(chunk),
-            close: () => {}
-        }, '/server/version.json');
+        const writableStream = new Writable({
+            write(chunk, encoding, callback) {
+                chunks.push(chunk);
+                callback();
+            }
+        });
+        
+        await client.downloadTo(writableStream, '/server/version.json');
         
         // Parse the version data
         const versionData = JSON.parse(Buffer.concat(chunks).toString());
