@@ -60,8 +60,9 @@ export const VENDOR_LIST = [
     shipInfoDescription:
       "Declare value with UPS\n(DO NOT show on customer label)",
     email: [
-      "john.ulatoski@orbus.com",
-      "josh@orbus.com",
+      // "john.ulatoski@orbus.com",
+      // "josh@orbus.com",
+      "successpod1@orbus.com",
       "sales@xyzdisplays.com",
     ],
   },
@@ -357,10 +358,13 @@ export const VENDOR_LIST = [
     shipInfoDescription:
       "Declare value with UPS\n(DO NOT show on customer label)",
     email: [
-      "Hannicka@wsdisplay.com",
-      "atheena@wsdisplay.com",
-      "yesenia@wsdisplay.com",
-      "sales@xyzdisplays.com",
+      "Yesenia@wsdisplay.com",
+      "Atheena@wsdisplay.com",
+      "keith.s@wsdisplay.com",
+      "Jennifer@wsdisplay.com",
+      "Meridian@wsdisplay.com",
+      "accountmanager@wsdisplay.com",
+      "modco@wsdisplay.com"
     ],
   },
   {
