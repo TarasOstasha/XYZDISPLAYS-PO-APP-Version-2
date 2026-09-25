@@ -20,7 +20,7 @@ export const VENDOR_LIST = [
     shipInfo: "Freight",
     shipInfoDescription: "",
     email: [
-      "James.M@Ledscopic.com; thomas.h@osakititan.com; sales@xyzdisplays.com",
+      "James.M@Ledscopic.com; thomas.h@osakititan.com; isaac.z@ledscopic.com; sales@xyzdisplays.com",
     ],
   },
   {
