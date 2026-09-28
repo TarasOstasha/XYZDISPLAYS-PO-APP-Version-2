@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { saveOrder } from '../../../api';
+import { openOutlookDraft, saveOrder } from '../../../api';
 import { VENDOR_LIST } from '../../../utils/vendorsData';
 
 export const useOrderForm = ({
@@ -83,7 +83,22 @@ export const useOrderForm = ({
       values.productTableData.push(...rerenderOrderList);
     }
 
-    const orderData = await saveOrder(values);
+    const { data: orderData } = await saveOrder(values);
+
+    if (orderData?.email) {
+      try {
+        await openOutlookDraft(orderData.email);
+      } catch (err) {
+        console.error('Outlook helper error:', err);
+        window.alert(
+          'Could not open Outlook.\n\n' +
+            'Start the XYZ Outlook Helper on this PC (outlook-helper\\Start-OutlookHelper.bat),\n' +
+            'then try again.\n\n' +
+            (err?.message || '')
+        );
+      }
+    }
+
     values.productTableData.splice(0, values.productTableData.length);
     console.log(values.productCode, '<< values');
   };

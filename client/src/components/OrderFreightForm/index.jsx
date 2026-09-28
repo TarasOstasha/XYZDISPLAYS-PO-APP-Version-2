@@ -12,7 +12,7 @@ import React from 'react';
 import styles from './OrderFreightForm.module.scss';
 import { useState, useEffect, useRef } from 'react';
 import AddProductPopUp from '../AddProductPopUp';
-import { saveOrder } from '../../api';
+import { openOutlookDraft, saveOrder } from '../../api';
 import MarkupAmount from '../MarkupAmount';
 
 function OrderFreightForm({
@@ -125,7 +125,22 @@ function OrderFreightForm({
       // console.log(values, '<< values');
     }
 
-    const orderData = await saveOrder(values);
+    const { data: orderData } = await saveOrder(values);
+
+    if (orderData?.email) {
+      try {
+        await openOutlookDraft(orderData.email);
+      } catch (err) {
+        console.error('Outlook helper error:', err);
+        window.alert(
+          'Could not open Outlook.\n\n' +
+            'Start the XYZ Outlook Helper on this PC (outlook-helper\\Start-OutlookHelper.bat),\n' +
+            'then try again.\n\n' +
+            (err?.message || '')
+        );
+      }
+    }
+
     //console.log(values,'values***');
     //console.log(values.productTableData);
     //formikBag.resetForm()
