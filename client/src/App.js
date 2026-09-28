@@ -6,6 +6,7 @@ import AddOption from './pages/AddOption';
 import UpdateFolder from './pages/UpdateFolderButton';
 import React, { useEffect, useState } from 'react';
 import GuardedRoute from './pages/Auth/GuardedRoute';
+import VersionNotification from './components/VersionNotification';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
   };  
   return (
     <Router>
+      <VersionNotification />
       <Switch>
         {/* <Route exact path="/">
           <Home />

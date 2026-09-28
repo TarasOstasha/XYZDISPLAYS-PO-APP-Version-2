@@ -342,14 +342,14 @@ module.exports.saveOrder = async (req, res, next) => {
         orderNotes,
     } = req.body // general data
 
-    // console.log(req.body, '<< req.body');
-    // console.log(vendorEmails, '<< vendorEmails');
+    //console.log(req.body, '<< req.body');
+    console.log(vendorEmails, '<< vendorEmails');
   
     const orderDataTable = orderData(productTableData);
     const emailTemplateTable = emailTemplate(vendorAddress, po, date, ship, shipInfoDescription, inHand, shipTo, orderNotes);
     
-    // Define email content
-    const to = vendorEmails.join(';');
+    // Build email content for the local Outlook helper (browser opens Outlook on the user's PC)
+    const to = Array.isArray(vendorEmails) ? vendorEmails.join(';') : 'sales@xyzdisplays.com';
     const subject = `xyzDisplays // Purchase Order ${po}`;
     const htmlContent = `
       <html>
@@ -360,31 +360,17 @@ module.exports.saveOrder = async (req, res, next) => {
         </body>
       </html>
     `;
-    // Write the HTML content to a temporary file
-    const tmpHtmlFilePath = path.join(os.tmpdir(), 'emailContent.html');
-    fs.writeFileSync(tmpHtmlFilePath, htmlContent, 'utf8');
 
-    // Path to the PowerShell script
-    const scriptPath = path.join(__dirname, 'createEmail.ps1');
-
-    // Command to execute the PowerShell script
-    const command = `powershell -File "${scriptPath}" -htmlFilePath "${tmpHtmlFilePath}" -to "${to}" -subject "${subject}"`;
-
-    //Execute the PowerShell script
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
+    res.status(201).json({
+      success: true,
+      email: {
+        to,
+        subject,
+        html: htmlContent,
+      },
     });
-
-    res.status(201).send('Success');
   } catch (error) {
     console.log('err', error)
+    next(error)
   }
 }

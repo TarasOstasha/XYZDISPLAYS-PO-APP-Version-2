@@ -6,7 +6,7 @@
 .pnp.js
 
 # localData
-src/utils/vendorsData.js
+# src/utils/vendorsData.js
 
 # testing
 /coverage

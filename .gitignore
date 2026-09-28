@@ -2,6 +2,12 @@ node_modules/
 
 server/.vscode/
 
+client/.vscode/
+
+.vscode/settings.json
+
+.vscode/
+
 server/node_modules/
 
 server/tests/
@@ -10,4 +16,23 @@ server/.env
 
 client/build
 
+
 client/node_modules
+
+server/dist/
+
+**/dist/
+
+client/dist
+
+client/node_modules
+
+/build
+
+/dist
+
+server/assets
+
+server/logs
+
+*.md

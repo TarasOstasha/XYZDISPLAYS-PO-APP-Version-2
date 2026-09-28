@@ -19,27 +19,27 @@ module.exports.getProducts = async (req, res, next) => {
 module.exports.getProductById = async (req, res, next) => {
     // console.log('getProductById router***');
   try {
-    const { id } = req.params
-    //console.log(id, '**id')
+    const { id } = req.params;
+    const { type } = req.query;
+    //let url;
     const url = `${process.env.PRODUCT}${id}`
-    //const url = `${process.env.URL}32424`;
-    //const url = 'https://jsonplaceholder.typicode.com/users';
-
-    // Make the GET request
+    // if (type === 'product') {
+    //   url = `${process.env.PRODUCT}${id}`;
+    // } else if (type === 'vendor') {
+    //   url = `${process.env.VENDORPRODUCT}${id}`;
+    // } else {
+    //   return res.status(400).send({ error: 'Invalid type parameter' });
+    // }
     axios
       .get(url)
       .then((response) => {
-        // Handle successful response
-        //console.log('Response data:', response.data);
         const xmlData = response.data
-        // console.log(xmlData, '<< products data');
         const parser = new xml2js.Parser()
         parser.parseString(xmlData, (err, result) => {
           if (err) {
             console.error('Error parsing XML:', err)
           } else {
             const productJson = JSON.stringify(result, null, 2)
-            //console.log(productJson, '<< productJson');
             res.status(200).send(productJson)
           }
         })
@@ -51,21 +51,18 @@ module.exports.getProductById = async (req, res, next) => {
             error.response.status,
             'Server responded with a non-2xx status',
           )
-          //console.error('Server responded with a non-2xx status:', error.response.status);
-          //console.error('Response data:', error.response.data);
         } else if (error.request) {
           createHttpError(504, 'No response received from the server')
           //console.error('No response received from the server:', error.request);
         } else {
           createHttpError(404, 'Not Found')
-          //console.error('Error setting up the request:', error.message);
         }
       })
-    //res.status(200).send('hello wordl');
   } catch (error) {
     //console.log('err');
     next(error)
   }
 }
+
 
 

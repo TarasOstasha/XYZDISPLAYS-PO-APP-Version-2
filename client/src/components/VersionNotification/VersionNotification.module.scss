@@ -1,0 +1,163 @@
+.version-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.version-notification-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 400px;
+    max-width: 500px;
+}
+
+.version-notification-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.version-notification-message {
+    flex: 1;
+    
+    strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.95;
+        line-height: 1.4;
+    }
+    
+    .progress-bar-container {
+        width: 100%;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px 0 8px 0;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+        transition: width 0.3s ease;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    
+    .progress-text {
+        font-size: 12px;
+        margin-top: 5px !important;
+        opacity: 0.9;
+    }
+}
+
+.version-notification-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 13px;
+        white-space: nowrap;
+        
+        &:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+    
+    .btn-refresh {
+        background: white;
+        color: #667eea;
+        
+        &:hover:not(:disabled) {
+            background: #f8f9fa;
+        }
+    }
+    
+    .btn-dismiss {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        
+        &:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    }
+}
+
+// Responsive design for smaller screens
+@media (max-width: 768px) {
+    .version-notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .version-notification-content {
+        min-width: unset;
+        max-width: unset;
+        padding: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .version-notification-actions {
+        flex-direction: row;
+        width: 100%;
+        
+        button {
+            flex: 1;
+        }
+    }
+}
