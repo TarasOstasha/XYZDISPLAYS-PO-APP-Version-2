@@ -15,7 +15,7 @@ const ImprovedAddProductPopUp = ({ rerenderOrderList, onFormValuesChange, isEdit
   const API_BASE_URL = useMemo(() => 
     window.location.hostname === 'localhost'
       ? 'http://localhost:5000'
-      : 'http://server:5000',
+      : 'https://xyzdisplays-po-app-version-2-1.onrender.com',
     []
   );
 
