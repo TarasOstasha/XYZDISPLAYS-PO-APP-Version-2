@@ -348,8 +348,7 @@ module.exports.saveOrder = async (req, res, next) => {
     const orderDataTable = orderData(productTableData);
     const emailTemplateTable = emailTemplate(vendorAddress, po, date, ship, shipInfoDescription, inHand, shipTo, orderNotes);
     
-    // Define email content
-    //const to = vendorEmails.join(';') ;
+    // Build email content for the local Outlook helper (browser opens Outlook on the user's PC)
     const to = Array.isArray(vendorEmails) ? vendorEmails.join(';') : 'sales@xyzdisplays.com';
     const subject = `xyzDisplays // Purchase Order ${po}`;
     const htmlContent = `
@@ -361,40 +360,17 @@ module.exports.saveOrder = async (req, res, next) => {
         </body>
       </html>
     `;
-    // Write the HTML content to a temporary file
-    const tmpHtmlFilePath = path.join(os.tmpdir(), 'emailContent.html');
-    fs.writeFileSync(tmpHtmlFilePath, htmlContent, 'utf8');
 
-    // Path to the PowerShell script
-    // Try development path first, if it doesn't exist, use production path
-    const devScriptPath = path.join(__dirname, 'createEmail.ps1');
-    const prodScriptPath = process.resourcesPath 
-      ? path.join(process.resourcesPath, 'app.asar.unpacked', 'controllers', 'createEmail.ps1')
-      : devScriptPath;
-    
-    const scriptPath = fs.existsSync(devScriptPath) ? devScriptPath : prodScriptPath;
-    
-    console.log('PowerShell script path:', scriptPath);
-    console.log('Script exists:', fs.existsSync(scriptPath));
-
-    // Command to execute the PowerShell script
-    const command = `powershell -File "${scriptPath}" -htmlFilePath "${tmpHtmlFilePath}" -to "${to}" -subject "${subject}"`;
-
-    //Execute the PowerShell script
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
+    res.status(201).json({
+      success: true,
+      email: {
+        to,
+        subject,
+        html: htmlContent,
+      },
     });
-
-    res.status(201).send('Success');
   } catch (error) {
     console.log('err', error)
+    next(error)
   }
 }
