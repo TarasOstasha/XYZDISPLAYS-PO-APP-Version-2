@@ -6,7 +6,7 @@
 //     const API_BASE_URL =
 //     window.location.hostname === 'localhost'
 //       ? 'http://localhost:5000'
-//       : 'http://server:5000'; 
+//       : 'https://xyzdisplays-po-app-version-2-1.onrender.com'; 
 
 //     const [loading, setLoading] = useState(false);
 //     const [message, setMessage] = useState('');
@@ -58,7 +58,7 @@ import Footer from '../../components/Footer';
 function FetchFolderButton() {
     const API_BASE_URL = window.location.hostname === 'localhost'
         ? 'http://localhost:5000'
-        : 'http://server:5000';
+        : 'https://xyzdisplays-po-app-version-2-1.onrender.com';
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
