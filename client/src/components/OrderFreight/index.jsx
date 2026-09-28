@@ -21,7 +21,7 @@ function OrderFreight() {
   const API_BASE_URL =
     window.location.hostname === 'localhost'
       ? 'http://localhost:5000'
-      : 'http://server:5000';
+      : 'https://xyzdisplays-po-app-version-2-1.onrender.com';
 
   let discountRenderFlag = false;
   const [mismatchedPrices, setMismatchedPrices] = useState([]);

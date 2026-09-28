@@ -5,7 +5,7 @@ function VersionNotification() {
     // Support both localhost:3000 (client) and localhost:5000 (server direct access)
     const API_BASE_URL = window.location.hostname === 'localhost'
         ? (window.location.port === '5000' ? 'http://localhost:5000' : 'http://localhost:5000')
-        : 'http://server:5000';
+        : 'https://xyzdisplays-po-app-version-2-1.onrender.com';
 
     const [showNotification, setShowNotification] = useState(false);
     const [newVersion, setNewVersion] = useState('');
