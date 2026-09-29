@@ -19,16 +19,7 @@ function Auth({ onSubmit, loginError }) {
       };
     
       const handleSubmit = ({ login, password }) => {
-        // You can perform your registration logic here
-        //console.log('Submitted:', values);
-        // const ifValid = {
-        //     login: 'xyz',
-        //     password: '1111'
-        // }
-        //const isValidLogin = login === ifValid.login && password === ifValid.password;
-        //setAuthorization(isValidLogin)
-        onSubmit({login, password})
-        console.log(loginError);
+        onSubmit({ login, password });
       };  
   return (
     <div className={styles.formWrapper}>

@@ -8,11 +8,17 @@ const vendorRouter = require('./vendorRouter');
 const updateFolderProgressRouter = require('./updateFolderProgressRouter');
 const versionRouter = require('./versionRouter');
 const ftpVersionRouter = require('./ftpVersionRouter');
+const authRouter = require('./authRouter');
+const { requireAuth } = require('../middleware/auth');
 
 
 const router = Router();
 
-// api
+// public
+router.use('/auth', authRouter);
+
+// protected
+router.use(requireAuth);
 router.use('/orders', orderRouter);
 router.use('/products', productRouter);
 router.use('/vendors', vendorRouter);

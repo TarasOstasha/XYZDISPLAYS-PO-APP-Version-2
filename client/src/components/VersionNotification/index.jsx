@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './VersionNotification.module.scss';
+import { API_BASE_URL, getAuthHeaders, getAuthToken } from '../../api';
 
 function VersionNotification() {
-    // Support both localhost:3000 (client) and localhost:5000 (server direct access)
-    const API_BASE_URL = window.location.hostname === 'localhost'
-        ? (window.location.port === '5000' ? 'http://localhost:5000' : 'http://localhost:5000')
-        : 'https://xyzdisplays-po-app-version-2-1.onrender.com';
 
     const [showNotification, setShowNotification] = useState(false);
     const [newVersion, setNewVersion] = useState('');
@@ -16,8 +13,12 @@ function VersionNotification() {
         // Check for version updates every 30 seconds
         const checkVersion = async () => {
             try {
+                if (!getAuthToken()) return;
+
                 // Check FTP version (source of truth)
-                const response = await fetch(`${API_BASE_URL}/api/ftpVersion`);
+                const response = await fetch(`${API_BASE_URL}/api/ftpVersion`, {
+                    headers: getAuthHeaders(),
+                });
                 if (response.ok) {
                     const data = await response.json();
                     const ftpVersion = data.version;
@@ -55,7 +56,9 @@ function VersionNotification() {
     const pollProgress = () => {
         const interval = setInterval(async () => {
             try {
-                const res = await fetch(`${API_BASE_URL}/api/updateFolder/progress`);
+                const res = await fetch(`${API_BASE_URL}/api/updateFolder/progress`, {
+                    headers: getAuthHeaders(),
+                });
                 const data = await res.json();
                 setProgress(data);
         
@@ -83,6 +86,7 @@ function VersionNotification() {
             // Trigger the same update process as "Update APP" button
             const response = await fetch(`${API_BASE_URL}/api/updateFolder`, {
                 method: 'GET',
+                headers: getAuthHeaders(),
             });
 
             if (response.ok) {
