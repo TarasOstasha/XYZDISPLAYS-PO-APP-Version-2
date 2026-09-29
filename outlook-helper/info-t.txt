@@ -1,0 +1,6 @@
+*** On each sales PC
+Copy the outlook-helper folder
+Run Install-Startup.bat once
+Run Start-OutlookHelper.bat (keep it open)
+Confirm Outlook has sales@xyzdisplays.com
+More detail: outlook-helper/README.md.

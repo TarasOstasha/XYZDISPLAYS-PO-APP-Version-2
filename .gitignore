@@ -35,4 +35,7 @@ server/assets
 
 server/logs
 
+outlook-helper/helper.log
+outlook-helper/helper.pid
+
 *.md

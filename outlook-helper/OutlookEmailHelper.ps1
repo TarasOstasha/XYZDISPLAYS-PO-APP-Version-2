@@ -1,16 +1,38 @@
 # XYZ Displays Outlook Helper
 # Listens on http://127.0.0.1:17890 so the browser app can open Outlook drafts locally.
+# Designed to run hidden in the background (no console window required).
 
 $ErrorActionPreference = "Stop"
 $Port = 17890
 $Prefix = "http://127.0.0.1:$Port/"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $CreateEmailScript = Join-Path $ScriptDir "createEmail.ps1"
+$LogFile = Join-Path $ScriptDir "helper.log"
+$PidFile = Join-Path $ScriptDir "helper.pid"
+
+function Write-HelperLog {
+    param ([string]$Message)
+    $line = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  $Message"
+    try {
+        Add-Content -LiteralPath $LogFile -Value $line -Encoding UTF8 -ErrorAction SilentlyContinue
+    } catch { }
+    # Also write to host if a console is attached (debug runs)
+    try { Write-Host $line } catch { }
+}
 
 if (-not (Test-Path $CreateEmailScript)) {
-    Write-Error "Missing createEmail.ps1 next to OutlookEmailHelper.ps1"
+    Write-HelperLog "ERROR: Missing createEmail.ps1"
     exit 1
 }
+
+# Single instance: if already listening, exit quietly
+try {
+    $existing = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
+    if ($existing) {
+        Write-HelperLog "Already running on port $Port (PID $($existing[0].OwningProcess)). Exiting."
+        exit 0
+    }
+} catch { }
 
 # Allow binding without admin for localhost
 netsh http add urlacl url=$Prefix user=$env:USERNAME > $null 2>&1
@@ -21,18 +43,12 @@ $listener.Prefixes.Add($Prefix)
 try {
     $listener.Start()
 } catch {
-    Write-Host "Failed to start listener on $Prefix"
-    Write-Host $_.Exception.Message
-    Write-Host "Is another copy of the helper already running?"
+    Write-HelperLog "Failed to start listener on $Prefix : $($_.Exception.Message)"
     exit 1
 }
 
-Write-Host "============================================"
-Write-Host " XYZ Outlook Helper is running"
-Write-Host " Listening: $Prefix"
-Write-Host " Keep this window open while using the PO app"
-Write-Host " Press Ctrl+C to stop"
-Write-Host "============================================"
+$PID | Set-Content -LiteralPath $PidFile -Encoding ASCII -ErrorAction SilentlyContinue
+Write-HelperLog "XYZ Outlook Helper started (PID $PID) on $Prefix"
 
 function Write-JsonResponse {
     param (
@@ -123,6 +139,7 @@ try {
                 Remove-Item -Path $tmpPayload -ErrorAction SilentlyContinue
 
                 if ($proc.ExitCode -ne 0) {
+                    Write-HelperLog "Outlook script failed (exit $($proc.ExitCode)) for $to | $subject"
                     Write-JsonResponse -Response $response -StatusCode 500 -Body @{
                         ok    = $false
                         error = "Outlook script failed with exit code $($proc.ExitCode). Is Outlook installed and signed in as sales@xyzdisplays.com?"
@@ -130,7 +147,7 @@ try {
                     continue
                 }
 
-                Write-Host "$(Get-Date -Format 'HH:mm:ss') Opened Outlook draft -> $to | $subject"
+                Write-HelperLog "Opened Outlook draft -> $to | $subject"
                 Write-JsonResponse -Response $response -StatusCode 200 -Body @{
                     ok      = $true
                     message = "Outlook draft opened"
@@ -143,7 +160,7 @@ try {
                 error = "Not found. Use GET /health or POST /create-email"
             }
         } catch {
-            Write-Host "Request error: $($_.Exception.Message)"
+            Write-HelperLog "Request error: $($_.Exception.Message)"
             try {
                 Write-JsonResponse -Response $response -StatusCode 500 -Body @{
                     ok    = $false
@@ -155,8 +172,10 @@ try {
         }
     }
 } finally {
+    Write-HelperLog "Helper stopping (PID $PID)"
     if ($listener.IsListening) {
         $listener.Stop()
     }
     $listener.Close()
+    Remove-Item -LiteralPath $PidFile -ErrorAction SilentlyContinue
 }
