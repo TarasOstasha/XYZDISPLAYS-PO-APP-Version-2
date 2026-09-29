@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
@@ -7,63 +7,73 @@ import UpdateFolder from './pages/UpdateFolderButton';
 import React, { useEffect, useState } from 'react';
 import GuardedRoute from './pages/Auth/GuardedRoute';
 import VersionNotification from './components/VersionNotification';
-
+import {
+  clearAuth,
+  getAuthToken,
+  loginRequest,
+  setAuthSession,
+  verifySession,
+} from './api';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
   const [loginError, setLoginError] = useState(false);
 
   useEffect(() => {
-    // Check localStorage for authentication status on app load
-    const storedLoginStatus = localStorage.getItem('isLoggedIn');
-    if (storedLoginStatus === 'true') {
-      setIsLoggedIn(true);
-    }
-  },[])
+    const restoreSession = async () => {
+      const token = getAuthToken();
+      if (!token) {
+        clearAuth();
+        setIsLoggedIn(false);
+        setAuthReady(true);
+        return;
+      }
 
-  const onSubmit = ({login, password}) => {
+      try {
+        await verifySession();
+        setIsLoggedIn(true);
+      } catch (_) {
+        clearAuth();
+        setIsLoggedIn(false);
+      } finally {
+        setAuthReady(true);
+      }
+    };
 
-    const ifValid = {
-        login: 'xyz',
-        password: '1111'
-    }
-    const isValidLogin = login === ifValid.login && password === ifValid.password;
-    // isValidLogin ? setIsLoggedIn(true) : setIsLoggedIn(false)
-    if(isValidLogin) {
+    restoreSession();
+  }, []);
+
+  const onSubmit = async ({ login, password }) => {
+    try {
+      const { data } = await loginRequest(login, password);
+      setAuthSession({ token: data.token, login: data.login });
       setIsLoggedIn(true);
       setLoginError(false);
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('login', login);
-    } else {
+    } catch (_) {
+      clearAuth();
       setIsLoggedIn(false);
       setLoginError(true);
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('login');
     }
+  };
 
-  };  
+  if (!authReady) {
+    return null;
+  }
+
   return (
     <Router>
       <VersionNotification />
       <Switch>
-        {/* <Route exact path="/">
-          <Home />
-        </Route> */}
         <GuardedRoute exact path="/" component={Home} isAuthenticated={isLoggedIn} />
-        {/* <GuardedRoute exact path="/option" component={AddOption} isAuthenticated={isLoggedIn} /> */}
-        <Route exact path="/option"><AddOption /></Route>
+        <GuardedRoute exact path="/option" component={AddOption} isAuthenticated={isLoggedIn} />
         <Route exact path="/auth">
           {isLoggedIn ? <Redirect to="/" /> : <Auth onSubmit={onSubmit} loginError={loginError} />}
         </Route>
-        {/* <Route path="/users/:id">
-          <UserProfile />
-        </Route> */}
-        <Route exact path="/updateFolder">
-          <UpdateFolder />
-        </Route>
+        <GuardedRoute exact path="/updateFolder" component={UpdateFolder} isAuthenticated={isLoggedIn} />
       </Switch>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

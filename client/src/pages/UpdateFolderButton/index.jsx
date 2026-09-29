@@ -54,19 +54,18 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { API_BASE_URL, getAuthHeaders } from '../../api';
 
 function FetchFolderButton() {
-    const API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:5000'
-        : 'https://xyzdisplays-po-app-version-2-1.onrender.com';
-
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [progress, setProgress] = useState(null);
 
     const pollProgress = () => {
         const interval = setInterval(async () => {
-            const res = await fetch(`${API_BASE_URL}/api/updateFolder/progress`);
+            const res = await fetch(`${API_BASE_URL}/api/updateFolder/progress`, {
+                headers: getAuthHeaders(),
+            });
             const data = await res.json();
             setProgress(data);
     
@@ -84,7 +83,9 @@ function FetchFolderButton() {
         setProgress(null);
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/updateFolder`);
+            const res = await fetch(`${API_BASE_URL}/api/updateFolder`, {
+                headers: getAuthHeaders(),
+            });
             const data = await res.json();
             setMessage(data.message);
 
