@@ -134,7 +134,8 @@ function OrderFreightForm({
         console.error('Outlook helper error:', err);
         window.alert(
           'Could not open Outlook.\n\n' +
-            'Start the XYZ Outlook Helper on this PC (outlook-helper\\Start-OutlookHelper.bat),\n' +
+            'The XYZ Outlook Helper is not running on this PC.\n' +
+            'Run outlook-helper\\Start-OutlookHelper.bat (or Install-Startup.bat once),\n' +
             'then try again.\n\n' +
             (err?.message || '')
         );
