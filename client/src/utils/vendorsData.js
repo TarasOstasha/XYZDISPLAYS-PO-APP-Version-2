@@ -183,7 +183,7 @@ export const VENDOR_LIST = [
     shipInfo: "Ground",
     shipInfoDescription:
       "Declare value with Fedex\n(DO NOT show on customer label)",
-    email: ["audrey@easternsigns.net", "sales@xyzdisplays.com"],
+    email: ["audrey@easternsigns.net", "sales@xyzdisplays.com", "sales006@eastern-signs.com"],
   },
   {
     name: "United_Visual",
