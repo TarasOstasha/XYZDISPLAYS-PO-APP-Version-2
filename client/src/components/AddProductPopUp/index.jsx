@@ -296,6 +296,23 @@ function AddProductPopUp({ rerenderOrderList, onFormValuesChange, isEditingTop }
                           component="div"
                         />
                         <Modal.Footer>
+                          <Button
+                            variant="outline-secondary"
+                            type="button"
+                            onClick={() => {
+                              formikProps.setValues({
+                                productCode: '0',
+                                vendorCode: '0',
+                                productName: '0',
+                                quantity: '0',
+                                webPrice: '0',
+                                Vendor_Price: '0',
+                                discount: '0',
+                              })
+                            }}
+                          >
+                            Fill Out Form
+                          </Button>
                           <Button variant="secondary" onClick={handleClose}>
                             Close
                           </Button>
