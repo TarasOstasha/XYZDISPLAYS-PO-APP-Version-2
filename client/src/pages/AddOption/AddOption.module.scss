@@ -30,3 +30,19 @@ $base-success: aquamarine;
 h1 {
   text-align: center;
 }
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.success {
+  margin-top: 12px;
+  color: green;
+}
+.fileLabel {
+  display: block;
+  margin-bottom: 12px;
+}
+.fileInfo {
+  margin-bottom: 12px;
+}

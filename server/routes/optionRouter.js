@@ -13,7 +13,8 @@ const upload = multer({
 
 optionRouter
   .route('/')
-  .post(upload.single("file"), optionController.saveOption)
+  .get(optionController.exportOptions)
+  .post(upload.single("file"), optionController.saveOption);
 
 optionRouter.post(
   "/save-options-file",

@@ -82,6 +82,9 @@ export const saveOptionsFile = (options) =>
 
 export const getOptions = () => axiosInstance.get('/option');
 
+export const exportOptionsCsv = () =>
+  axiosInstance.get('/option', { responseType: 'blob' });
+
 // for future
 export const getOptionById = (id) => axiosInstance.get(`/option${id}`);
 
