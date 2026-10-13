@@ -1,0 +1,14 @@
+PO option fix
+https://xyzdisplays-po-app.vercel.app/option
+csv col format:
+---
+|id|  |optioncatid|	|optionsdesc|	|pricediff|	|vendorpricediff|	|optionsdesc_sidenote|
+---   -------------	-------------	-----------	-----------------	----------------------
+
+optionsdesc_sidenote format:
+q=1|sku=bn03495|disc=15|vendor=CA905
+
+q → quantity
+sku → ProductCode
+disc → discount
+vendor → Vendor_PartNo
