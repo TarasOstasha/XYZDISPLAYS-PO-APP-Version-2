@@ -6,7 +6,24 @@ import styles from './AddOption.module.scss'
 import { IMPORT_OPTION_SCHEMA } from '../../utils/orderValidationSchema'
 import { saveOptionsFile, exportOptionsCsv } from '../../api'
 import { OPTION_DATA } from "../../utils/optionsData"
-import { parseCsvFile, mergeOptionsFromCsv } from '../../utils/mergeOptionsFromCsv'
+import { parseCsvFile, mergeOptionsFromCsv, REQUIRED_CSV_COLUMNS } from '../../utils/mergeOptionsFromCsv'
+
+const CSV_FIELD_INFO = {
+  id: 'Option ID (used to match / update existing options)',
+  optioncatid: 'Option category ID',
+  optionsdesc: 'Option / product name',
+  pricediff: 'Price difference',
+  vendorpricediff: 'Vendor price difference',
+  optionsdesc_sidenote:
+    'Encoded meta: q=quantity|sku=ProductCode|disc=discount|vendor=Vendor_PartNo',
+}
+
+const SIDENOTE_KEYS = [
+  { key: 'q', mapsTo: 'quantity' },
+  { key: 'sku', mapsTo: 'ProductCode' },
+  { key: 'disc', mapsTo: 'discount' },
+  { key: 'vendor', mapsTo: 'Vendor_PartNo' },
+]
 
 function AddOption() {
   const initialValues = {
@@ -123,6 +140,54 @@ function AddOption() {
             </form>
           )}
         </Formik>
+
+        <section className={styles.fieldsSection}>
+          <h2>Required import fields</h2>
+          <table className={styles.fieldsTable}>
+            <thead>
+              <tr>
+                <th>CSV column</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {REQUIRED_CSV_COLUMNS.map((col) => (
+                <tr key={col}>
+                  <td>
+                    <code>{col}</code>
+                  </td>
+                  <td>{CSV_FIELD_INFO[col] ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h3>optionsdesc_sidenote keys</h3>
+          <table className={styles.fieldsTable}>
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Maps to</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SIDENOTE_KEYS.map(({ key, mapsTo }) => (
+                <tr key={key}>
+                  <td>
+                    <code>{key}</code>
+                  </td>
+                  <td>
+                    <code>{mapsTo}</code>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className={styles.example}>
+            Example:{' '}
+            <code>q=1|sku=bn03495|disc=15|vendor=CA905</code>
+          </p>
+        </section>
       </div>
       <Footer />
     </div>
