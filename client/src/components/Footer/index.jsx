@@ -22,12 +22,12 @@ const vendorCatalog = [
   {
     vendor: 'TV Liquidator',
     link:
-      'https://drive.google.com/file/d/10IIxMkNAWSU9GGgcPCsllzPu-haQgajh/view?usp=drive_link',
+      'https://drive.google.com/file/d/1wBZ3SN_20Cc90W1SXC1uLy2cpmg-Hx-e/view?usp=sharing',
   },
   {
     vendor: 'Smart Media',
     link:
-      'https://drive.google.com/file/d/1-0wcA6A8KhQHWlB6_npTEEawXUaoJq7M/view?usp=drive_link',
+      'https://drive.google.com/file/d/1JUfbMVXc_e1e10x-cGx540w4sXq3wv_l/view?usp=sharing',
   },
   {
     vendor: 'Showdown',
@@ -37,12 +37,12 @@ const vendorCatalog = [
   {
     vendor: 'PE',
     link:
-      'https://drive.google.com/file/d/1ROi84TsTygF-aKYXgGOcBFZIukwvY7oj/view?usp=drive_link',
+      'https://docs.google.com/spreadsheets/d/19fDvfqo5i5uYZj6xJaBXz-_UOuKBEVAI/edit?usp=sharing&ouid=105022464589270043327&rtpof=true&sd=true',
   },
   {
     vendor: 'Orbus',
     link:
-      'https://drive.google.com/file/d/1QdDTpWsMHAE2Be2FKhJqWbHk6ryROEe5/view?usp=drive_link',
+      'https://docs.google.com/spreadsheets/d/1UrRzQIOIwLj5jOpbnDt3CGLfr-LI7No0/edit?usp=sharing&ouid=105022464589270043327&rtpof=true&sd=true',
   },
   {
     vendor: 'Novodek',
@@ -67,7 +67,7 @@ const vendorCatalog = [
   {
     vendor: 'KS Intl',
     link:
-      'https://drive.google.com/file/d/1krQVmvPS8Pq3UAvymz8eK5BMHlEH68St/view?usp=drive_link',
+      'https://drive.google.com/file/d/1Q9HM1MMj4rD83QkCmJBxPIxMW1SGfAlH/view?usp=sharing',
   },
   {
     vendor: 'Gold Metal TLT',
@@ -77,17 +77,17 @@ const vendorCatalog = [
   {
     vendor: 'Dynapac',
     link:
-      'https://docs.google.com/spreadsheets/d/1SUOGbH5W_8M5fIc1WGumMBdKPTi9OtVi/edit?usp=sharing&ouid=105022464589270043327&rtpof=true&sd=true',
+      'https://docs.google.com/spreadsheets/d/1D3JbbJqdgDAbmxOs-yZJqtW0ygfdmSKV/edit?usp=drive_link&ouid=105022464589270043327&rtpof=true&sd=true',
   },
   {
     vendor: 'Case Design',
     link:
-      'https://drive.google.com/file/d/1TciMeA2fqYvS-PIB54gZXJ4ZvTyhG_Ev/view?usp=sharing',
+      'https://drive.google.com/file/d/1dINN2wsOLO3kgj-0JF6HntAIcMMPvhvp/view?usp=sharing',
   },
   {
     vendor: 'BrandStand',
     link:
-      'https://drive.google.com/file/d/1LewuOGixoBk0ySnGy_L6tBTFolwLzGEr/view?usp=sharing',
+      'https://drive.google.com/file/d/1ME3UPUgnkP3wJFWAWClTUDFd0LxFuDbF/view?usp=sharing',
   },
   {
     vendor: 'Bowman Displays',
