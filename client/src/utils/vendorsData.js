@@ -453,6 +453,20 @@ export const VENDOR_LIST = [
       "Declare value with UPS\n(DO NOT show on customer label)",
     email: ["david@bannerbugusa.com", "sales@xyzdisplays.com"],
   },
+  {
+    name: "Emerald Carpets, Inc.",
+    address: `
+      2860 N Dug Gap Rd SW.
+      Dalton, GA 30720-4946 
+      (800) 235-9902  
+    `,
+    discount: 0,
+    code: "ec",
+    shipInfo: "Ground on UPS B356D3",
+    shipInfoDescription:
+      "Declare value with UPS\n(DO NOT show on customer label)",
+    email: ["fowens@emeraldcarpets.com", "bhenderson@emeraldcarpets.com"],
+  }
 ];
 			
 
