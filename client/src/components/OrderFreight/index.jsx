@@ -498,7 +498,18 @@ function OrderFreight() {
 
           console.log(updatedProductResponses, 'updatedProductResponses');
 
-          const vendorKits = extractVendorKits(updatedProductResponses);
+          // Google_Color: replace base order lines only. Option rows stay as-is (appended below).
+          const substitutedProductResponses =
+            await resolveGoogleColorSubstitutions(
+              updatedProductResponses,
+              productCodes,
+            );
+          console.log(
+            substitutedProductResponses,
+            'substitutedProductResponses',
+          );
+
+          const vendorKits = extractVendorKits(substitutedProductResponses);
           console.log(vendorKits, '***vendorKits***');
           //console.log(vendorKits.length, '***vendorKits.length***') // does not call
           setVendorKitsLenght(vendorKits.length);
@@ -510,7 +521,7 @@ function OrderFreight() {
 
           const validVendors = await processProductResponses(
             //productResponses,
-            updatedProductResponses,
+            substitutedProductResponses,
             combinedOrderDetails,
           );
           //console.log(validVendors, '***validVendors***')
@@ -524,6 +535,110 @@ function OrderFreight() {
       } catch (error) {
         console.error('Error fetching order data:', error);
       }
+    };
+
+    // When Google_Color holds a ProductCode (e.g. KS200 → EC700), replace the whole
+    // product record with that buy-from item. Keep order qty + original web price.
+    // Only ordered base ProductCodes are eligible — option/kit-only fetches are skipped
+    // so order options remain unchanged as separate PO lines.
+    const resolveGoogleColorSubstitutions = async (
+      productResponses,
+      orderedProductCodes = [],
+    ) => {
+      const getField = (product, key) => {
+        const raw = product?.[key];
+        if (Array.isArray(raw)) return String(raw[0] ?? '').trim();
+        if (raw == null) return '';
+        return String(raw).trim();
+      };
+
+      const orderedSet = new Set(
+        (orderedProductCodes || [])
+          .map((c) => String(c || '').trim().toLowerCase())
+          .filter(Boolean),
+      );
+
+      return Promise.all(
+        productResponses.map(async (response) => {
+          const productsArray = Array.isArray(response.data?.xmldata?.Products)
+            ? response.data.xmldata.Products
+            : response.data?.xmldata?.Products
+              ? [response.data.xmldata.Products]
+              : [];
+
+          const updatedProducts = await Promise.all(
+            productsArray.map(async (product) => {
+              if (!product) return product;
+
+              const googleColor = getField(product, 'Google_Color');
+              const originalCode = getField(product, 'ProductCode');
+              if (
+                !googleColor ||
+                !originalCode ||
+                googleColor.toLowerCase() === originalCode.toLowerCase()
+              ) {
+                return product;
+              }
+
+              // Do not substitute products that were only fetched for option/kit expansion
+              if (
+                orderedSet.size > 0 &&
+                !orderedSet.has(originalCode.toLowerCase())
+              ) {
+                return product;
+              }
+
+              try {
+                const safeCode = googleColor.replace(/[\/,|@]/g, '-');
+                const subResponse = await axios.get(
+                  `${API_BASE_URL}/api/products/${safeCode}`,
+                  { params: { type: 'product' } },
+                );
+                const subProducts = subResponse.data?.xmldata?.Products;
+                const replacement = Array.isArray(subProducts)
+                  ? subProducts[0]
+                  : subProducts;
+
+                if (!replacement || !getField(replacement, 'ProductCode')) {
+                  console.warn(
+                    `Google_Color "${googleColor}" on ${originalCode} did not resolve; keeping original.`,
+                  );
+                  return product;
+                }
+
+                console.log(
+                  `Google_Color substitute: ${originalCode} → ${getField(replacement, 'ProductCode')}`,
+                );
+
+                return {
+                  ...replacement,
+                  // Keep what the customer ordered (qty + web/sell price)
+                  Quantity: product.Quantity,
+                  ProductPrice: product.ProductPrice,
+                  OriginalProductCode: [originalCode],
+                };
+              } catch (err) {
+                console.error(
+                  `Failed to fetch Google_Color substitute "${googleColor}" for ${originalCode}:`,
+                  err,
+                );
+                return product;
+              }
+            }),
+          );
+
+          return {
+            ...response,
+            data: {
+              ...response.data,
+              xmldata: {
+                ...response.data.xmldata,
+                Products: updatedProducts,
+              },
+            },
+          };
+        }),
+      );
     };
 
     const extractVendorKits = (productResponses) => {
@@ -658,6 +773,9 @@ function OrderFreight() {
             : vendorPartNo;
         }
         console.log(product);
+        const originalProductCode = product.OriginalProductCode
+          ? product.OriginalProductCode[0]
+          : null;
         return {
           Vendor_PartNo: [vendorPartNo],
           ProductCode: [productCode],
@@ -665,6 +783,9 @@ function OrderFreight() {
           ProductPrice: [product.ProductPrice ? product.ProductPrice[0] : ''],
           Vendor_Price: [product.Vendor_Price ? product.Vendor_Price[0] : ''],
           Quantity: [product.Quantity ? product.Quantity[0] : ''],
+          ...(originalProductCode
+            ? { OriginalProductCode: [originalProductCode] }
+            : {}),
         };
       });
       return vendors.filter((vendor) => vendor !== null);
@@ -687,12 +808,43 @@ function OrderFreight() {
 
     const updateOrderListWithVendorCodes = (orderDetails, validVendors) => {
       const updatedOrderWithVendorCodes = orderDetails.map((order) => {
-        const matchingVendor = validVendors.find(
-          (vendor) =>
-            vendor.ProductCode[0].toLowerCase() ===
-            order.ProductCode[0].toLowerCase(),
+        // Option rows (from OPTION_DATA) have no OrderDetailID — keep them as-is
+        const isOptionRow = !Object.prototype.hasOwnProperty.call(
+          order,
+          'OrderDetailID',
         );
+        const orderCode = String(
+          Array.isArray(order?.ProductCode)
+            ? order.ProductCode[0]
+            : order?.ProductCode || '',
+        )
+          .trim()
+          .toLowerCase();
+
+        const matchingVendor = validVendors.find((vendor) => {
+          const substitutedFrom = String(
+            vendor.OriginalProductCode?.[0] || '',
+          )
+            .trim()
+            .toLowerCase();
+          const vendorCode = String(vendor.ProductCode?.[0] || '')
+            .trim()
+            .toLowerCase();
+
+          // Never overwrite option lines with a Google_Color-substituted base product
+          if (isOptionRow && substitutedFrom) {
+            return false;
+          }
+
+          // Substituted products merge only onto the original ordered base line
+          if (substitutedFrom) {
+            return substitutedFrom === orderCode;
+          }
+
+          return vendorCode === orderCode;
+        });
         //console.log(matchingVendor, 'matchingVendor')
+        // Option rows without a normal product match stay exactly as built from OPTION_DATA
         return matchingVendor ? { ...order, ...matchingVendor } : order;
       });
       //console.log(updatedOrderWithVendorCodes, '***updatedOrderWithVendorCodes***');

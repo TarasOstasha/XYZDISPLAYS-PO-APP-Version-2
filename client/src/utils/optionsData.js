@@ -1916,12 +1916,12 @@ export const OPTION_DATA = [
   {
     "id": 6673,
     "optioncatid": 493,
-    "ProductName": "#6 ReBond Carpet Padding 6ft x 45ft KS680",
+    "ProductName": "#6 ReBond Carpet Padding 6ft x 45ft EC680",
     "quantity": 1,
-    "ProductCode": "ks680",
-    "Vendor_PartNo": "KSCarpetPad",
+    "ProductCode": "ec680",
+    "Vendor_PartNo": "12Rebond",
     "pricediff": 242,
-    "vendorpricediff": 173,
+    "vendorpricediff": 121.50,
     "discount": 0
   },
   {
@@ -11658,5 +11658,27 @@ export const OPTION_DATA = [
     "pricediff": 300,
     "vendorpricediff": 12.59,
     "discount": 20
+  },
+  {
+    "id": 8182,
+    "optioncatid": 494,
+    "ProductName": "Low Tack Tape 2in x 75ft",
+    "quantity": 1,
+    "ProductCode": "bs650",
+    "Vendor_PartNo": "XYZLowTack",
+    "pricediff": 21,
+    "vendorpricediff": 15,
+    "discount": 0
+  },
+  {
+    "id": 8183,
+    "optioncatid": 494,
+    "ProductName": "2 x Low Tack Tape 2in x 75ft",
+    "quantity": 2,
+    "ProductCode": "bs650",
+    "Vendor_PartNo": "XYZLowTack",
+    "pricediff": 42,
+    "vendorpricediff": 15,
+    "discount": 0
   }
 ];
